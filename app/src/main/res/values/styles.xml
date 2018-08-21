@@ -1,0 +1,34 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item tools:targetApi="21"
+            name="android:windowContentTransitions">true</item>
+        <item  tools:targetApi="26"
+            name="android:autofilledHighlight">@android:color/transparent</item>
+
+    </style>
+
+    <style name="AppIntroTheme" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="AppTheme.TransparentStatusBar" parent="AppTheme">
+        <item tools:targetApi="19"
+            name="android:windowTranslucentStatus">true</item>
+        <item tools:targetApi="21"
+            name="android:statusBarColor">@android:color/transparent</item>
+        <item tools:targetApi="21"
+            name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item  tools:targetApi="26"
+            name="android:autofilledHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="AppEditText" parent="AppTheme">
+        <item name="colorControlNormal">@color/blueGreyD2</item>
+       <item name="colorControlActivated">@color/blueGreyD2</item>
+
+    </style>
+</resources>

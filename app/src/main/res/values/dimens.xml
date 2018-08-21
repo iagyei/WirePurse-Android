@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="roundedEditTextBorderSize">1dp</dimen>
+    <dimen name="roundedEditTextHeight">40dp</dimen>
+    <dimen name="roundedEditTextPadding">10dp</dimen>
+    <dimen name="roundedEditTextFontSize">22sp</dimen>
+    <dimen name="socialLoginBtnHeight">50dp</dimen>
+    <dimen name="socialLoginBtnMarginTop">15dp</dimen>
+</resources>
