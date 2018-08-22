@@ -91,7 +91,7 @@
                         app:hintAnimationEnabled="false"
                         app:hintEnabled="false"
                         app:errorEnabled="true"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="6dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/passwordInput"
@@ -111,13 +111,39 @@
                         android:id="@+id/submitEmailLogin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="6dp"
                         android:background="@drawable/login_button"
-                        android:textSize="@dimen/roundedEditTextFontSize"
                         android:text="@string/login"
                         android:theme="@style/AppTheme"
                         android:textColor="@color/colorAccentText"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         />
+
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/resetPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/rounded_outlined_btn"
+                            android:text="@string/reset_password"
+                            app:backgroundTint="@color/colorAccent"
+                            android:textColor="@color/colorAccent"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/signup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/rounded_outlined_btn"
+                            android:text="@string/signup"
+                            app:backgroundTint="@color/purple"
+                            android:textColor="@color/purpleDarken2"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            />
+
                 </LinearLayout>
 
 

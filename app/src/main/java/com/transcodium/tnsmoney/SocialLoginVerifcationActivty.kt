@@ -122,7 +122,7 @@ class SocialLoginVerification : AppCompatActivity() {
     /**
      * verify code
      */
-    fun verifyCode() = launch(UI){
+    private fun verifyCode() = launch(UI){
 
         val appAlert = AppAlert(mActivity)
 
@@ -152,7 +152,7 @@ class SocialLoginVerification : AppCompatActivity() {
 
         val veriyStatus = TnsApi(mActivity)
                 .post(uri,postParams)
-                .await()
+
 
 
         p.hide()

@@ -89,4 +89,8 @@
     <string name="initialization_error_message">Pre  startup initialization checkup failed, App will close</string>
     <string name="ok">Okay !</string>
 
+    <string name="reset_password">Reset Password</string>
+
+    <string name="signup">Signup</string>
+
 </resources>

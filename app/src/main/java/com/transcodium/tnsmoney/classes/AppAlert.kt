@@ -26,9 +26,11 @@ class AppAlert(val activity: Activity) {
 
     private val duration = 8000L
 
-    val alertObj by lazy {
+   private fun alertObj(): Alerter {
 
-        Alerter.create(activity)
+        if(Alerter.isShowing){ Alerter.hide() }
+
+       return Alerter.create(activity)
                 .enableVibration(false)
                 .enableIconPulse(true)
                 .setDismissable(true)
@@ -41,7 +43,7 @@ class AppAlert(val activity: Activity) {
      */
     fun error(message: Any,autoClose : Boolean = false){
 
-        if(Alerter.isShowing){ Alerter.hide() }
+        val alertObj = alertObj()
 
         val messageStr = if(message is Int){
             activity.getString(message)
@@ -68,7 +70,7 @@ class AppAlert(val activity: Activity) {
      */
     fun success(message: Any,autoClose : Boolean = true) {
 
-        if(Alerter.isShowing){ Alerter.hide() }
+        val alertObj = alertObj()
 
         val messageStr = if(message is Int){
             activity.getString(message)
@@ -93,6 +95,7 @@ class AppAlert(val activity: Activity) {
      * showStatus
      */
     fun showStatus(status: Status){
+
 
         if(Alerter.isShowing){ Alerter.hide() }
 

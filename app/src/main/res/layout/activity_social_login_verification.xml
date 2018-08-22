@@ -84,6 +84,7 @@
                         app:backgroundTint="@color/colorAccent"
                         android:text="@string/verify"
                         android:textColor="@color/whiteAlpha70"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         />
 
 

@@ -76,16 +76,16 @@ class TnsApi(val activity: Activity) {
      * @param requestPath The path of the uri
      * @return
      */
-     fun  get(
+     suspend fun  get(
              requestPath: String,
              requestParams: List<Pair<String,Any>>? = listOf(),
              hasAuth: Boolean = true
-    ): Deferred<Status> {
+    ): Status {
 
         val request = requestPath.httpGet(requestParams)
 
         //execute api request
-       return execApiRequest(request,hasAuth)
+       return execApiRequest(request,hasAuth)!!
     }//end get requests
 
     /**
@@ -93,25 +93,26 @@ class TnsApi(val activity: Activity) {
      * @param requestPath The path of the uri
      * @return
      */
-      fun  post(
+      suspend fun  post(
             requestPath: String,
             requestParams: List<Pair<String,Any>>? = listOf(),
             hasAuth: Boolean = true
-    ): Deferred<Status> {
+     ): Status {
 
         val request = requestPath.httpPost(requestParams)
 
         //execute api request
-        return execApiRequest(request,hasAuth)
+        return execApiRequest(request,hasAuth)!!
     }//end get requests
 
 
     /**
      * execApiRequest
      */
-   private  fun execApiRequest(
+   private suspend fun execApiRequest(
             requestObj: Request,
-            hasAuth: Boolean = true): Deferred<Status>{
+            hasAuth: Boolean = true
+    ): Status? {
 
         if(hasAuth){
 
@@ -152,7 +153,16 @@ class TnsApi(val activity: Activity) {
             }
         }//end
 
-        return apiData
+        val requestStatus = apiData.await()
+
+        //check if there is an error, but check if its a severe,
+        //a severe
+        if(requestStatus.isError() && requestStatus.isSevere()){
+            Account(activity).doLogout(requestStatus)
+            return null
+        }
+
+        return requestStatus
     }//end fun
 
 }//end class

@@ -41,7 +41,7 @@ class VerificationCode(val activity: AppCompatActivity) {
 
         val resendStatus = TnsApi(activity)
                 .post(uri)
-                .await()
+
 
         p.hide()
 

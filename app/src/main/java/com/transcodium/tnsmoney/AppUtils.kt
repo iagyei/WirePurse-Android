@@ -215,5 +215,5 @@ fun isMarshmallowOrHeigher() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
  *hideAlert
  **/
 fun hideAlert(activity: Activity) {
-    if(Alerter.isShowing){ Alerter.clearCurrent(activity) }
+    if(Alerter.isShowing){ Alerter.hide() }
 }//end

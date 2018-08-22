@@ -34,6 +34,8 @@ import org.json.JSONObject
        private var type: String = ""
        private var data : Any? = null
 
+       private var isSevere = false
+
 
        private var code = 0
 
@@ -43,6 +45,12 @@ import org.json.JSONObject
         }
 
 
+        /**
+         * isSevere
+         */
+         fun isSevere(): Boolean{
+            return this.isSevere
+        }
 
         /**
          * success
@@ -110,7 +118,8 @@ import org.json.JSONObject
         fun error(
                 message: Any? = "",
                 data: Any? = null,
-                code: Int? = null
+                code: Int? = null,
+                isSevere: Boolean? = false
         ): Status{
 
             this.isError = true
@@ -126,6 +135,8 @@ import org.json.JSONObject
             this.data = data
 
             this.code = code ?: StatusCodes.FAILED
+
+            this.isSevere = isSevere!!
 
             return this
         }
@@ -240,9 +251,10 @@ import org.json.JSONObject
 
             if(alertType == "error"){
                 return this.error(
-                        data.optString("message",""),
-                         data.get("data") as Any,
-                         data.optInt("code",StatusCodes.FAILED)
+                      message = data.optString("message",""),
+                      data    =  data.get("data") as Any,
+                      code   =  data.optInt("code",StatusCodes.FAILED),
+                      isSevere = data.optBoolean("isSevere",false)
 
                 )
             }else if(alertType == "success") {
@@ -266,7 +278,7 @@ import org.json.JSONObject
         }//end
 
         /*
-        *toJson
+        * toJson
          */
         fun toJsonString(): String {
             return toJsonObject().toString()
@@ -277,10 +289,11 @@ import org.json.JSONObject
          */
        fun toJsonObject(): JSONObject {
            return JSONObject(mapOf(
-                   "type" to type,
-                   "message" to message,
-                   "code" to code,
-                   "data" to data
+                   "type"     to type,
+                   "message"  to message,
+                   "code"     to code,
+                   "data"     to data,
+                   "isSevere" to isSevere
            ))
        }//end
 

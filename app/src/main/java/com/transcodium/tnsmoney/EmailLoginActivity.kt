@@ -25,14 +25,16 @@ class EmailLoginActivity : RootActivity() {
 
         submitEmailLogin.setOnClickListener{processEmailLogin()}
 
+        loginFormBackFab.setOnClickListener{
+            mActivity.onBackPressed()
+        }
+
     }
 
     /**
      * processEmailLogin
      */
     private fun processEmailLogin() = launch(UI){
-
-        hideAlert(mActivity)
 
         var hasError = false
         emailAddressInputLayout.error = ""
@@ -55,6 +57,7 @@ class EmailLoginActivity : RootActivity() {
 
         //dont continue if error
         if(hasError){
+            vibrate()
             return@launch
         }
 

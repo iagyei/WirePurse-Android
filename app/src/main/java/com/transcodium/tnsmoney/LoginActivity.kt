@@ -61,6 +61,10 @@ class LoginActivity : RootActivity() {
 
         setContentView(R.layout.activity_login)
 
+        val i = Intent()
+
+
+
         loginWithEmail.setOnClickListener{startClassActivity(EmailLoginActivity::class.java)}
 
 

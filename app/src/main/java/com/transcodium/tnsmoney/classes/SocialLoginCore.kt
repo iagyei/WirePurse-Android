@@ -99,7 +99,7 @@ class SocialLoginCore(val activity: AppCompatActivity) {
                         requestParams = requestParam,
                         hasAuth = false
                 )
-                .await()
+
 
 
         progress.hide()

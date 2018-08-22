@@ -74,7 +74,7 @@ class Account(val activity: Activity) {
         val loginStatus = TnsApi(activity).post(
                 "/auth/login",
                 loginParam
-        ).await()
+        )
 
         //hide progress
         progress.hide()
