@@ -58,7 +58,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".EmailLoginActivity" />
-        <activity android:name=".RootActivity"></activity>
+        <activity android:name=".RootActivity" />
+        <activity android:name=".DrawerActivity" />
+        <activity android:name=".AboutActivity" />
     </application>
 
 </manifest>

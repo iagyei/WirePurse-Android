@@ -17,6 +17,7 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.classes.Anim
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.SocialLoginCore
@@ -24,6 +25,7 @@ import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.experimental.launch
+import org.json.JSONObject
 
 class LoginActivity : RootActivity() {
 
@@ -61,9 +63,16 @@ class LoginActivity : RootActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val i = Intent()
+        val bundle = intent?.extras
 
+        val status: String? = bundle?.getString("status")
 
+        if(status != null){
+            val statusObj = Status.fromJson(JSONObject(status))
+            AppAlert(this).showStatus(statusObj)
+        }else{
+            Log.e("Status",status.toString())
+        }
 
         loginWithEmail.setOnClickListener{startClassActivity(EmailLoginActivity::class.java)}
 

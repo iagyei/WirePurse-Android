@@ -18,12 +18,9 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.core.content.edit
 import com.transcodium.mothership.core.Status
-import com.transcodium.tnsmoney.R
-import com.transcodium.tnsmoney.merge
-import kotlinx.coroutines.experimental.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigInteger
 
@@ -42,7 +39,12 @@ class SecureSharedPref(val activity: Activity) {
      */
     fun put(key: String, value: Any): Status {
 
-        val encryptDataStatus = Crypt.encrypt(mContext,value)
+        val rawData = when(value){
+            is JSONObject, is JSONArray -> value.toString()
+            else -> value
+        }
+
+        val encryptDataStatus = Crypt.encrypt(mContext,rawData)
 
         if(encryptDataStatus.isError()){
             //lets check reason

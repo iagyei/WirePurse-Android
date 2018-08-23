@@ -34,6 +34,7 @@ class AppEntry : AppCompatActivity() {
                 nextActivityClass = LoginActivity::class.java
             }
 
+            nextActivityClass = HomeActivity::class.java
 
             startClassActivity(nextActivityClass, true)
 

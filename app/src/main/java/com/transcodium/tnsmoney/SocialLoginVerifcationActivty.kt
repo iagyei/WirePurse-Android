@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import com.transcodium.tnsmoney.classes.AppAlert
-import com.transcodium.tnsmoney.classes.Progress
-import com.transcodium.tnsmoney.classes.TnsApi
-import com.transcodium.tnsmoney.classes.VerificationCode
+import com.transcodium.tnsmoney.classes.*
 import kotlinx.android.synthetic.main.activity_social_login_verification.*
 import kotlinx.android.synthetic.main.verification_code_layout.*
 import kotlinx.coroutines.experimental.android.UI
@@ -104,7 +101,7 @@ class SocialLoginVerification : AppCompatActivity() {
 
         val id = verificationData.optString("id")
 
-        val resendStatus = VerificationCode(mActivity).resend(id)
+        val resendStatus = VerificationCode(mActivity).resend(id,false)
 
         if(resendStatus.isError()){
             AppAlert(mActivity).showStatus(resendStatus)
@@ -150,21 +147,32 @@ class SocialLoginVerification : AppCompatActivity() {
                 Pair("verification_code",codeInt)
         )
 
-        val veriyStatus = TnsApi(mActivity)
-                .post(uri,postParams)
+        val verifyStatus = TnsApi(mActivity)
+                            .post(
+                                    requestPath = uri,
+                                    requestParams = postParams,
+                                    hasAuth = false
+                            )
 
 
 
         p.hide()
 
 
-        if(veriyStatus.isError()){
-            appAlert.showStatus(veriyStatus)
+        if(verifyStatus.isError()){
+            appAlert.showStatus(verifyStatus)
             return@launch
         }
 
         //lets save the data
+        val data = verifyStatus.getData<JSONObject>()!!
 
+        val saveData = Account(mActivity).saveUserInfo(data)
+
+
+        if(saveData.isSuccess()) {
+            mActivity.startClassActivity(HomeActivity::class.java, true)
+        }
 
     }//end fun
 

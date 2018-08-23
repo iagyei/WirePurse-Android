@@ -2,12 +2,10 @@ package com.transcodium.tnsmoney
 
 import android.os.Bundle
 
-class HomeActivity : DrawerActivity() {
+class AboutActivity : DrawerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        setContentView(R.layout.activity_home)
-
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_about)
     }
 }

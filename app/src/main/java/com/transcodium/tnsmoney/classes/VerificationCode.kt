@@ -27,7 +27,7 @@ class VerificationCode(val activity: AppCompatActivity) {
     /**
      * resend
      */
-    suspend fun resend(id: String): Status {
+    suspend fun resend(id: String,hasAuth:Boolean? = true): Status {
 
         val p = Progress(activity)
 
@@ -40,7 +40,10 @@ class VerificationCode(val activity: AppCompatActivity) {
         val uri = "/auth/verification-code/$id/resend"
 
         val resendStatus = TnsApi(activity)
-                .post(uri)
+                .post(
+                        requestPath = uri,
+                        hasAuth = hasAuth!!
+                )
 
 
         p.hide()

@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.transcodium.mothership.core.Status
+import com.transcodium.tnsmoney.HomeActivity
 import com.transcodium.tnsmoney.R
 import com.transcodium.tnsmoney.SocialLoginVerification
 import com.transcodium.tnsmoney.startClassActivity
@@ -134,9 +135,16 @@ class SocialLoginCore(val activity: AppCompatActivity) {
                     data = activityData
             )
 
+            return
         }//end if
 
 
+        //save user data
+        val saveData = Account(activity).saveUserInfo(data)
+
+        if(saveData.isSuccess()) {
+            activity.startClassActivity(HomeActivity::class.java, true)
+        }
     }//end fun
 
 

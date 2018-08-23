@@ -93,4 +93,23 @@
 
     <string name="signup">Signup</string>
 
+    <string name="critical_error_message">A critical error occurred, please relogin. (Code: %1$s)</string>
+
+    <string name="failed_to_generate_security_keys">Failed to create security keys</string>
+
+    <string name="auth_required">Authentication required</string>
+
+    <string name="drawer_open">Drawer Open</string>
+
+    <string name="drawer_close">Drawer Close</string>
+
+    <string name="setting">Setting</string>
+
+    <string name="support">Support</string>
+
+    <string name="logout">Logout</string>
+
+    <string name="about">About</string>
+
+
 </resources>

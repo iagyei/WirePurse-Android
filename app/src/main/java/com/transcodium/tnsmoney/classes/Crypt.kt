@@ -246,7 +246,10 @@ class Crypt {
 
                 if(keyPair == null){
                     Log.e("SECURITY_KEYPAIR_ERROR","Failed to create or fetch encryption keypair")
-                    return Status.error("failed_to_generate_security_keys")
+                    return Status.error(
+                            message = R.string.failed_to_generate_security_keys,
+                            isSevere = true
+                    )
                 }
             }
 
@@ -263,7 +266,11 @@ class Crypt {
                 Status.success(data = result)
 
             }catch (e: Exception){
-                Status.error("rsa_data_encryption_failed")
+                Status.error(
+                        message = "rsa_data_encryption_failed",
+                        code = StatusCodes.RSA_ENCRYPTION_FAILED,
+                        isSevere = true
+                )
             }
 
         }//en encrypt
@@ -315,7 +322,8 @@ class Crypt {
 
                 Status.error(
                         message = "data_decryption_failed_1",
-                        code = StatusCodes.APP_KEY_DECRYPTION_FAILED
+                        code = StatusCodes.APP_KEY_DECRYPTION_FAILED,
+                        isSevere = true
                 )
             }//end
 
@@ -460,28 +468,42 @@ class Crypt {
                 data as ByteArray
             }
 
-            val encryptedData = cipher.doFinal(
-                    dataToEncrypt
-            )
+            return  try {
 
-            val byteOut = ByteArrayOutputStream()
+               val encryptedData = cipher.doFinal(
+                        dataToEncrypt
+                )
 
-            val dataHashMap = hashMapOf<String,ByteArray>(
-                    "encrypted_data" to encryptedData,
-                    "iv" to ivBytes
-            )
+                val byteOut = ByteArrayOutputStream()
 
-            ObjectOutputStream(byteOut).writeObject(dataHashMap)
+                val dataHashMap = hashMapOf<String, ByteArray>(
+                        "encrypted_data" to encryptedData,
+                        "iv" to ivBytes
+                )
 
-
-            //convert to base64 string
-            val result = Base64.encodeToString(
-                    byteOut.toByteArray(),
-                    Base64.DEFAULT
-            )
+                ObjectOutputStream(byteOut).writeObject(dataHashMap)
 
 
-            return Status.success(data = result)
+                //convert to base64 string
+                val result = Base64.encodeToString(
+                        byteOut.toByteArray(),
+                        Base64.DEFAULT
+                )
+
+
+                Status.success(data = result)
+            }catch (e: Exception){
+                Log.e("AES_ENCRYPTION_ERROR",
+                        "Failed to create AES Encryption: ${e.cause}")
+
+                e.printStackTrace()
+
+                Status.error(
+                        message = R.string.data_encryption_error,
+                        isSevere = true
+                )
+            }
+
         }//end rsa encrypt
 
         /**

@@ -28,10 +28,13 @@ import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.*
 import kotlinx.coroutines.experimental.Deferred
 import org.jetbrains.anko.coroutines.experimental.bg
+import org.json.JSONObject
 import java.util.*
 
 
 class TnsApi(val activity: Activity) {
+
+     private var HAS_AUTH = true
 
     /**
      * requestHeaders
@@ -82,10 +85,12 @@ class TnsApi(val activity: Activity) {
              hasAuth: Boolean = true
     ): Status {
 
+        HAS_AUTH = hasAuth
+
         val request = requestPath.httpGet(requestParams)
 
         //execute api request
-       return execApiRequest(request,hasAuth)!!
+       return execApiRequest(request)
     }//end get requests
 
     /**
@@ -96,27 +101,34 @@ class TnsApi(val activity: Activity) {
       suspend fun  post(
             requestPath: String,
             requestParams: List<Pair<String,Any>>? = listOf(),
-            hasAuth: Boolean = true
+            hasAuth: Boolean? = true
      ): Status {
+
+        HAS_AUTH = hasAuth!!
 
         val request = requestPath.httpPost(requestParams)
 
         //execute api request
-        return execApiRequest(request,hasAuth)!!
+        return execApiRequest(request)
     }//end get requests
+
+
+    /*
+     * setHasAuth
+     */
+    fun setHasAuth(hasAuth: Boolean): TnsApi{
+        HAS_AUTH = hasAuth
+        return this
+    }
 
 
     /**
      * execApiRequest
      */
    private suspend fun execApiRequest(
-            requestObj: Request,
-            hasAuth: Boolean = true
-    ): Status? {
+            requestObj: Request
+    ): Status {
 
-        if(hasAuth){
-
-         }
 
         //run in background
         val apiData: Deferred<Status> = bg {
@@ -124,6 +136,46 @@ class TnsApi(val activity: Activity) {
             if(!API_ENDPOINT.startsWith("https")){
                //return@bg Status.error(R.string.secure_url_required)
             }
+
+            //if it has auth, process it
+            if(HAS_AUTH){
+
+                //lets get user auth info
+                val authInfo = SecureSharedPref(activity)
+                                    .getJsonObject("user_info",null)
+
+                if(authInfo == null){
+                    return@bg Status.error(
+                            message = "auth_not_found",
+                            isSevere = true
+                    )
+                }//end if
+
+                val accessTokenStatus = getAccessToken(authInfo)
+
+                if(accessTokenStatus.isError()){
+
+                    if(accessTokenStatus.isSevere()){
+                        Account(activity).doLogout(accessTokenStatus)
+                    }
+
+                    return@bg accessTokenStatus
+                }//end if error
+
+                //get access token
+                val accessToken = accessTokenStatus.getData<String>()
+
+                val userId = authInfo.optString("user_id","")
+
+                //var userEmail = authInfo.optString("user_email")
+
+                //add the headers
+                requestObj.header(
+                        Pair("x-user-id",userId),
+                        Pair("Authorization","Bearer $accessToken")
+                )
+            }//end handle auth data
+
 
             try{
 
@@ -157,12 +209,63 @@ class TnsApi(val activity: Activity) {
 
         //check if there is an error, but check if its a severe,
         //a severe
-        if(requestStatus.isError() && requestStatus.isSevere()){
-            Account(activity).doLogout(requestStatus)
-            return null
-        }
+       if(requestStatus.isError() && requestStatus.isSevere()){
+
+           Log.e("CRITICAL_ERROR",requestStatus.toJsonString())
+
+            val code =  requestStatus.code()
+            val err = activity.getString(R.string.critical_error_message,code.toString())
+
+            val status = Status.error(
+                    message = err,
+                    code = code
+            )
+
+            Account(activity).doLogout(status)
+
+            return status
+        }//end if
 
         return requestStatus
     }//end fun
+
+
+    /**
+     * getAccessToken Check if access token has expired, if it has expired
+     * regenerate before send it back
+     */
+    fun getAccessToken(authInfo : JSONObject): Status {
+
+        val tokenData: JSONObject? = authInfo.optJSONObject("token_data") ?: null
+
+        if(tokenData == null){
+            return Status.error(
+                    message = R.string.auth_required,
+                    isSevere = true
+            )
+        }
+
+        val expiry = tokenData.optInt("expiry",0)
+        val accessToken = tokenData.optString("access_token","")
+
+        if(accessToken.isNullOrEmpty()){
+            return Status.error(
+                    message = R.string.auth_required,
+                    isSevere = true
+            )
+        }
+
+        //lets get current time in milliseconds
+        val now = Calendar.getInstance().timeInMillis
+
+
+        if(expiry > now){
+            return Status.success(data = accessToken)
+        }
+
+        //if we here,, then lets update access token
+        return Status.success(data = accessToken)
+    }//end
+
 
 }//end class

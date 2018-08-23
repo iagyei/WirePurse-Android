@@ -76,6 +76,8 @@ dependencies {
     implementation "com.madgag.spongycastle:prov:$spongy_castle_version"
     implementation "androidx.multidex:multidex:2.0.0"
 
+    implementation "com.google.android.material:material:$androidx_version"
+
     implementation('com.twitter.sdk.android:twitter:3.3.0@aar') {
         transitive = true
     }

@@ -22,10 +22,11 @@ class StatusCodes {
         const val SUCCESS     = 200
         const val FAILED      = 300
         const val NEUTRAL     = 400
-        const val EMAIL_LOGIN_DATA_NULL = 500
-        const val MISSING_APP_KEY = 600
-        const val DATA_DECRYTION_FAILED = 700
-        const val DATA_ENCRYPTION_FAILED = 800
-        val APP_KEY_DECRYPTION_FAILED = 900
+        const val EMAIL_LOGIN_DATA_NULL = 550
+        const val MISSING_APP_KEY = 650
+        const val DATA_DECRYTION_FAILED = 750
+        const val DATA_ENCRYPTION_FAILED = 850
+        const val APP_KEY_DECRYPTION_FAILED = 900
+        const val RSA_ENCRYPTION_FAILED = 1050
     }
 }

@@ -17,7 +17,9 @@
 package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.edit
 import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.*
@@ -94,29 +96,48 @@ class Account(val activity: Activity) {
         }
 
         //save data
-        activity.secureSharedPref().put("user_info", data)
+        saveUserInfo(data)
 
         return Status.success(message = R.string.login_success)
     }//end
+
+
+    /**
+     * save UserInfo
+     */
+    fun saveUserInfo(userInfo: JSONObject): Status{
+
+       if(userInfo.has("email")){
+           userInfo.put("user_email",userInfo.getString("email"))
+       }
+
+       return activity.secureSharedPref().put("user_info",userInfo)
+    }//end fun
 
     /**
      * doLogout
      */
     fun doLogout(status: Status? = null){
 
-        activity.sharedPref().edit().remove("user_info").apply()
+        activity.sharedPref().edit{
+            remove("user_data")
+        }
 
         var bundle: Bundle? = null
 
         if(status != null){
+
+            Log.e("LOGOUT_STATUS",status.toJsonString())
+
             bundle = Bundle()
             bundle.putString("status",status.toJsonString())
         }
 
-        activity.startClassActivity(
-                activityClass = LoginActivity::class.java,
-                clearActivityStack = true,
-                data = bundle
+
+       activity.startClassActivity(
+               activityClass = LoginActivity::class.java,
+               clearActivityStack = true,
+               data = bundle
         )
 
     }
