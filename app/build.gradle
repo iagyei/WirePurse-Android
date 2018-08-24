@@ -82,6 +82,8 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.couchbase.lite:couchbase-lite-android:2.0.0'
+
 }
 
 

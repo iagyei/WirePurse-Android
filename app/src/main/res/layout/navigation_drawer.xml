@@ -9,32 +9,56 @@
     android:background="@color/colorPrimaryDark"
     app:elevation="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/nav_header" />
+        <include
+            android:id="@+id/nav_header_include"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/nav_header"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <View
+            android:id="@+id/divider_1"
             android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:background="@color/whiteAlpha30"
+            android:layout_height="0.1dp"
+            android:background="@color/whiteAlpha50P"
+            app:layout_constraintTop_toBottomOf="@id/nav_header_include"
             />
 
         <ListView
             android:id="@+id/drawerListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/whiteAlpha30"
-            android:dividerHeight="0.2dp">
-        </ListView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.2dp"
-            android:background="@color/whiteAlpha30"
+            android:divider="@color/whiteAlpha50P"
+            android:dividerHeight="0.1dp"
+            app:layout_constraintTop_toBottomOf="@id/divider_1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             />
 
-    </LinearLayout>
+
+        <View
+            android:id="@+id/divider_2"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="@color/whiteAlpha50P"
+            app:layout_constraintTop_toBottomOf="@id/drawerListView"
+            />
+
+        <TextView
+            android:id="@+id/copyrightTNS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:text="@string/copyright_transcodium"
+            android:textColor="@color/whiteAlpha30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.navigation.NavigationView>

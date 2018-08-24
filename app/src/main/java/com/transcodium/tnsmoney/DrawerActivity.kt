@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ListView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
@@ -16,11 +17,17 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
-import kotlinx.android.synthetic.main.app_bar.*
 import org.jetbrains.anko.find
+import android.animation.ValueAnimator
+import android.util.Log
+import android.view.Menu
+
 
 open class DrawerActivity : AppCompatActivity() {
 
+    val mActivity by lazy{
+        this
+    }
 
     //lazy init vals
     private val toolbar: Toolbar by lazy{
@@ -70,6 +77,9 @@ open class DrawerActivity : AppCompatActivity() {
         //set toolbar as actionbar
         setSupportActionBar(toolbar)
 
+        //disable actionbar title
+        supportActionBar?.title = ""
+
         //remove elevation
         drawerLayout.drawerElevation = 0f
 
@@ -108,6 +118,8 @@ open class DrawerActivity : AppCompatActivity() {
 
         //lets set drawer listener
         drawerLayout.addDrawerListener(drawerToggle)
+
+
 
         //lets set drawer item click listener
         navView.setNavigationItemSelectedListener{
@@ -219,6 +231,14 @@ open class DrawerActivity : AppCompatActivity() {
         //onConfigurationChanged
         drawerToggle.onConfigurationChanged(newConfig)
     }//end
+
+    /**
+     * onCreatOptionsMenu
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
 
     //set Header info

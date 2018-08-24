@@ -16,6 +16,8 @@
         <color name="loginBgGradientStart">#E621d4fd</color>
         <color name="loginBgGradientEnd">#E6b721ff</color>
         <color name="whiteAlpha30">#D9ffffff</color>
+        <color name="whiteAlpha60Percent">#99ffffff</color>
+        <color name="blackAlpha30Percent">#4D000000</color>
         <color name="loginInputBgTint">#b0bec5</color>
         <color name="blueGrey">#607d8b</color>
         <color name="blueGreyL4">#cfd8dc</color>
@@ -30,5 +32,7 @@
         <color name="purpleDarken2">#7b1fa2</color>
         <color name="purple">#9c27b0</color>
         <color name="colorLinkedin">#4376B1</color>
+        <color name="white">#ffffff</color>
+        <color name="whiteAlpha50P">#80ffffff</color>
 </resources>
 

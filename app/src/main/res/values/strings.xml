@@ -111,5 +111,10 @@
 
     <string name="about">About</string>
 
+    <string name="wallet">Wallet</string>
 
+    <string name="exchange">Exchange</string>
+    <string name="w">w</string>
+    <string name="e">e</string>
+    <string name="current_balance">Current Balance</string>
 </resources>
