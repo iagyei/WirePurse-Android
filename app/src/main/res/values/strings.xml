@@ -117,4 +117,7 @@
     <string name="w">w</string>
     <string name="e">e</string>
     <string name="current_balance">Current Balance</string>
+
+    <string name="network_not_available">Network or internet connection cannot be detected,
+        Please fix the issue and try again</string>
 </resources>

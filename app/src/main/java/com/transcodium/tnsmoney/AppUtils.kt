@@ -17,27 +17,18 @@
 package com.transcodium.tnsmoney
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.view.View
-import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
-import com.tapadoo.alerter.Alerter
-import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.SecureSharedPref
 import org.json.JSONObject
 import java.util.*
-import kotlin.reflect.KClass
 
 /**
  * Activity.sharedPref
@@ -66,25 +57,14 @@ fun Activity.minimizeApp(){
  */
 fun Activity.hideStatusBar(){
 
-    //jellybean and lower
-    if(Build.VERSION.SDK_INT < 16){
-        window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-    }
-    else{//else if greater than android 4
+    //get decor view
+    val decorView: View = window.decorView
 
-        //get decor view
-        val decorView: View = window.decorView
+    //fullscreen flag
+    val uiOptions: Int = View.SYSTEM_UI_FLAG_FULLSCREEN
 
-        //fullscreen flag
-        val uiOptions: Int = View.SYSTEM_UI_FLAG_FULLSCREEN
-
-        //set ui visibility to full screen
-        decorView.systemUiVisibility = uiOptions
-    }//end if
-
+    //set ui visibility to full screen
+    decorView.systemUiVisibility = uiOptions
 }//end function
 
 
@@ -216,5 +196,16 @@ fun isMarshmallowOrHeigher() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
  *hideAlert
  **/
 fun hideAlert(activity: Activity) {
-    if(Alerter.isShowing){ Alerter.hide() }
+    //if(Alerter.isShowing){ Alerter.hide() }
+}//end
+
+/**
+ * isNetworkAvailable
+ **/
+fun Activity.isNetworkAvailable(): Boolean {
+
+    val conManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetInfo = conManager.activeNetworkInfo
+
+    return (activeNetInfo != null && activeNetInfo.isConnected)
 }//end

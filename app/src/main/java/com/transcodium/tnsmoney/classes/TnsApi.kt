@@ -48,17 +48,17 @@ class TnsApi(val activity: Activity) {
         val lang = Locale.getDefault().language
 
         val deviceName = android.os.Build.MODEL
-        val deviceMan = android.os.Build.MANUFACTURER
+        val deviceMan = android.os.Build.MANUFACTURER ?: ""
         val deviceBuild = android.os.Build.DEVICE
         val osVer = Build.VERSION.RELEASE
 
         val userAgent = "$appName $serviceId/$appVersion (Linux; Android $osVer; $deviceMan $deviceName )"
 
-        Log.e("USER_AGENT",userAgent)
+        //Log.e("USER_AGENT",userAgent)
 
         mutableMapOf(
                 "x-device-id"  to activity.getDeviceId(),
-                "x-service-id" to  serviceId,
+                "x-service-name" to  serviceId,
                 "x-api-key"    to API_KEY,
                 "User-Agent"   to userAgent,
                 "Accept-Language" to lang
@@ -129,6 +129,10 @@ class TnsApi(val activity: Activity) {
             requestObj: Request
     ): Status {
 
+        //check if we have a network request
+        if(!activity.isNetworkAvailable()){
+            return Status.error(R.string.network_not_available)
+        }
 
         //run in background
         val apiData: Deferred<Status> = bg {

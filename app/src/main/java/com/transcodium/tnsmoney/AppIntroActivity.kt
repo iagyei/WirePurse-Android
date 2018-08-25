@@ -1,6 +1,5 @@
 package com.transcodium.tnsmoney
 
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.transition.Explode
@@ -11,12 +10,8 @@ import androidx.fragment.app.Fragment
 import com.github.paolorotolo.appintro.AppIntro
 import com.github.paolorotolo.appintro.AppIntroFragment
 import com.github.paolorotolo.appintro.model.SliderPage
-import com.transcodium.tnsmoney.R
 import com.transcodium.tnsmoney.classes.AppIntroData
-import com.transcodium.tnsmoney.hideStatusBar
-import com.transcodium.tnsmoney.minimizeApp
-import com.transcodium.tnsmoney.sharedPref
-import org.json.JSONObject
+
 
 class AppIntroActivity : AppIntro() {
 

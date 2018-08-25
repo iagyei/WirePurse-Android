@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ListView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
@@ -18,8 +17,6 @@ import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
 import org.jetbrains.anko.find
-import android.animation.ValueAnimator
-import android.util.Log
 import android.view.Menu
 
 
