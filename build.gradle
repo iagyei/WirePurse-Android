@@ -6,13 +6,14 @@ buildscript {
     ext.anko_version='0.10.5'
     ext.fuel_version = '1.14.0'
     ext.spongy_castle_version = '1.58.0.0'
+    ext.work_version = '1.0.0-alpha07'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha06'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha05'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.0.1'
         // NOTE: Do not place your application dependencies here; they belong

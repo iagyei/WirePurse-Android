@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:focusable="true"
     android:paddingTop="20dp"
@@ -14,7 +15,8 @@
         android:id="@+id/menuIcon"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:tint="#1e88e5"/>
+        app:tint="@color/whiteAlpha50P"
+        app:tintMode="src_in"/>
 
     <TextView
         android:id="@+id/menuTitle"
@@ -23,7 +25,7 @@
         android:textSize="22sp"
         android:layout_marginStart="10dp"
         android:maxLines="1"
-        android:textColor="@color/whiteAlpha30"
+        android:textColor="@color/whiteAlpha50P"
         />
 
 </LinearLayout>

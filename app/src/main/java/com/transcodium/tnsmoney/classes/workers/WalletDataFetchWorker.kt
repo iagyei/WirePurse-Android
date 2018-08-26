@@ -14,11 +14,22 @@
 #  created_at 25/08/2018
  **/
 
-package com.transcodium.tnsmoney.classes
+package com.transcodium.tnsmoney.classes.workers
 
-import com.facebook.stetho.inspector.protocol.module.Worker
+import android.app.Activity
+import androidx.work.Worker
+import org.json.JSONObject
 
 class WalletDataFetchWorker : Worker() {
 
+    val ACTIVITY: Activity? = null
+    val USER_INFO: JSONObject? = null
 
-}
+    /**
+     * doWork
+     */
+    override fun doWork(): Result {
+
+    }
+
+}//end class

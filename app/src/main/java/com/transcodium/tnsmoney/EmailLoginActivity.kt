@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
+
 class EmailLoginActivity : RootActivity() {
 
     private val mActivity by lazy {

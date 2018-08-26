@@ -20,11 +20,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.view.View
+import androidx.core.content.ContextCompat
+import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.SecureSharedPref
 import org.json.JSONObject
@@ -196,7 +199,7 @@ fun isMarshmallowOrHeigher() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
  *hideAlert
  **/
 fun hideAlert(activity: Activity) {
-    //if(Alerter.isShowing){ Alerter.hide() }
+    if(Alerter.isShowing){ Alerter.hide() }
 }//end
 
 /**
@@ -209,3 +212,41 @@ fun Activity.isNetworkAvailable(): Boolean {
 
     return (activeNetInfo != null && activeNetInfo.isConnected)
 }//end
+
+/**
+fun Int.darken(fraction: Double): Int {
+
+    var color = this
+    var red = Color.red(color)
+    var green = Color.green(color)
+    var blue = Color.blue(color)
+    red = darkenColor(red, fraction)
+    green = darkenColor(green, fraction)
+    blue = darkenColor(blue, fraction)
+    val alpha = Color.alpha(color)
+
+    return Color.argb(alpha, red, green, blue)
+}
+
+ fun darkenColor(color: Int, fraction: Double): Int {
+    return Math.max(color - color * fraction, 0.0).toInt()
+}
+
+fun Int.lighten(fraction: Double): Int {
+
+    var color = this
+
+    var red = Color.red(color)
+    var green = Color.green(color)
+    var blue = Color.blue(color)
+    red = lightenColor(red, fraction)
+    green = lightenColor(green, fraction)
+    blue = lightenColor(blue, fraction)
+    val alpha = Color.alpha(color)
+    return Color.argb(alpha, red, green, blue)
+}
+
+private fun lightenColor(color: Int, fraction: Double): Int {
+    return Math.min(color + color * fraction, 255.0).toInt()
+}
+*/

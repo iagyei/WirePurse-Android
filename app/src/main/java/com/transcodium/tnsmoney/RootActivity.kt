@@ -16,9 +16,12 @@
 
 package com.transcodium.tnsmoney
 
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Gravity
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.transcodium.tnsmoney.classes.Anim
 
@@ -32,5 +35,6 @@ open class RootActivity : AppCompatActivity() {
         )
 
         super.onCreate(savedInstanceState, persistentState)
+
     }
 }

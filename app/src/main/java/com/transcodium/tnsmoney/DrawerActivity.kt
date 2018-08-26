@@ -3,11 +3,11 @@ package com.transcodium.tnsmoney
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ListView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -16,8 +16,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
-import org.jetbrains.anko.find
 import android.view.Menu
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import kotlinx.android.synthetic.main.navigation_drawer.*
 
 
 open class DrawerActivity : AppCompatActivity() {
@@ -48,9 +50,6 @@ open class DrawerActivity : AppCompatActivity() {
         this
     }
 
-    private val mDrawerListView by lazy{
-        find<ListView>(R.id.drawerListView)
-    }
 
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -70,6 +69,15 @@ open class DrawerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+            )
+        }
 
         //set toolbar as actionbar
         setSupportActionBar(toolbar)
@@ -112,6 +120,11 @@ open class DrawerActivity : AppCompatActivity() {
 
         }//end toggle  options and events
 
+        drawerToggle.drawerArrowDrawable.color = ContextCompat.getColor(
+                this,
+                R.color.white
+        )
+
 
         //lets set drawer listener
         drawerLayout.addDrawerListener(drawerToggle)
@@ -128,29 +141,29 @@ open class DrawerActivity : AppCompatActivity() {
         val listData = mutableListOf(
 
                 DrawerListModel(
-                        R.drawable.ic_mail,
+                        R.drawable.ic_settings_white_24dp,
                         getString(R.string.setting),
                         AboutActivity::class.java),
 
                 DrawerListModel(
-                        R.drawable.ic_mail,
+                        R.drawable.ic_info_black_24dp,
                         getString(R.string.support),
                         AboutActivity::class.java),
 
                 DrawerListModel(
-                        R.drawable.ic_mail,
+                        R.drawable.ic_email_24dp,
                         getString(R.string.about),
                         AboutActivity::class.java),
 
                 DrawerListModel(
-                        R.drawable.ic_mail,
+                        R.drawable.ic_toys_black_24dp,
                         getString(R.string.logout),
                         AboutActivity::class.java)
 
         )//end list data
 
         //lets create populate menu list
-        mDrawerListView.adapter = DrawerListAdapter(this,listData)
+        drawerListView.adapter = DrawerListAdapter(this,listData)
     }//end oncreate
 
 
