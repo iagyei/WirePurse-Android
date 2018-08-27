@@ -22,7 +22,7 @@ import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import com.transcodium.mothership.core.Status
+import com.transcodium.tnsmoney.classes.Status
 import java.math.BigInteger
 import javax.crypto.Cipher
 import javax.security.auth.x500.X500Principal
@@ -30,7 +30,6 @@ import android.util.Base64
 import android.util.Log
 import androidx.core.content.edit
 import com.transcodium.tnsmoney.*
-import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream

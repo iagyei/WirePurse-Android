@@ -21,7 +21,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.HomeActivity
 import com.transcodium.tnsmoney.R
 import com.transcodium.tnsmoney.SocialLoginVerification

@@ -12,13 +12,9 @@
 #  https://transcodium.com
  **/
 
-package com.transcodium.mothership.core
+package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
-import android.util.Log
-import com.transcodium.tnsmoney.R
-import com.transcodium.tnsmoney.classes.StatusCodes
-import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONObject
 
 /**

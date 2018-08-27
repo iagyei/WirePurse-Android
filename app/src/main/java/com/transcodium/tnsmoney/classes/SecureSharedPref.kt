@@ -19,20 +19,19 @@ package com.transcodium.tnsmoney.classes
 import android.app.Activity
 import android.content.Context
 import androidx.core.content.edit
-import com.transcodium.mothership.core.Status
+import com.transcodium.tnsmoney.sharedPref
 import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigInteger
 
+
 class SecureSharedPref(val activity: Activity) {
 
 
-    val sharedPref by lazy {
-        activity.getPreferences(Context.MODE_PRIVATE)
-    }
-
 
     val mContext = activity as Context
+
+    val sharedPref = activity.sharedPref()
 
     /**
      * put
@@ -54,6 +53,7 @@ class SecureSharedPref(val activity: Activity) {
 
         val encryptedData = encryptDataStatus.getData<String>()
 
+
         sharedPref.edit{
             putString(key, encryptedData)
         }
@@ -69,6 +69,8 @@ class SecureSharedPref(val activity: Activity) {
 
       //lets check if exists
       val data = sharedPref.getString(key,"")
+
+        //Log.e("KEY ---  $key",data)
 
         if(data.isNullOrEmpty()){
             return null

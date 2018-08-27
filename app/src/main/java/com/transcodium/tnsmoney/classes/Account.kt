@@ -17,11 +17,10 @@
 package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.edit
-import com.transcodium.mothership.core.Status
+import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 

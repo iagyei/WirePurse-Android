@@ -12,7 +12,7 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.transcodium.mothership.core.Status
+import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.SocialLoginCore
 import com.twitter.sdk.android.core.*

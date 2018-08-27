@@ -24,7 +24,6 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
-import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.*
 import kotlinx.coroutines.experimental.Deferred
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -148,14 +147,17 @@ class TnsApi(val activity: Activity) {
                 val authInfo = SecureSharedPref(activity)
                                     .getJsonObject("user_info",null)
 
+
                 if(authInfo == null){
                     return@bg Status.error(
-                            message = "auth_not_found",
+                            message = activity.getString(R.string.auth_not_found),
                             isSevere = true
                     )
                 }//end if
 
+                //fetch the access token from the file
                 val accessTokenStatus = getAccessToken(authInfo)
+
 
                 if(accessTokenStatus.isError()){
 
@@ -168,6 +170,7 @@ class TnsApi(val activity: Activity) {
 
                 //get access token
                 val accessToken = accessTokenStatus.getData<String>()
+
 
                 val userId = authInfo.optString("user_id","")
 
@@ -240,24 +243,28 @@ class TnsApi(val activity: Activity) {
      */
     fun getAccessToken(authInfo : JSONObject): Status {
 
-        val tokenData: JSONObject? = authInfo.optJSONObject("token_data") ?: null
+
+        val tokenData: JSONObject? = authInfo.getJSONObject("token_data") ?: null
 
         if(tokenData == null){
             return Status.error(
-                    message = R.string.auth_required,
+                    message = activity.getString(R.string.auth_required),
                     isSevere = true
             )
         }
 
+
         val expiry = tokenData.optInt("expiry",0)
-        val accessToken = tokenData.optString("access_token","")
+
+        val accessToken = tokenData.optString("token","")
 
         if(accessToken.isNullOrEmpty()){
             return Status.error(
-                    message = R.string.auth_required,
+                    message = activity.getString(R.string.auth_required),
                     isSevere = true
             )
         }
+
 
         //lets get current time in milliseconds
         val now = Calendar.getInstance().timeInMillis

@@ -16,11 +16,14 @@
 
 package com.transcodium.tnsmoney.classes
 
+import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
+import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.R
 
-class CoinInfo {
+class Coin {
 
     companion object {
 
@@ -43,6 +46,27 @@ class CoinInfo {
                     colors[coin] ?: R.color.colorPrimaryDark
             )
         }
+
+        /**
+         * fetch userCoins
+         */
+        suspend fun fetchUserCoins(activity: Activity): Status {
+
+            val uri = "/user-coins"
+
+            val dataStatus = TnsApi(activity)
+                    .get(uri)
+
+            if(dataStatus.isError()){
+                Log.e("FETCH_USER_COIN_INFO",dataStatus.toJsonString())
+                return dataStatus
+            }
+
+
+            println(dataStatus.toJsonString())
+
+            return Status.success()
+        }//end
 
     }
 }

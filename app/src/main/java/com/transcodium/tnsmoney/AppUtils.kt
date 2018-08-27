@@ -20,13 +20,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.SecureSharedPref
@@ -37,7 +36,7 @@ import java.util.*
  * Activity.sharedPref
  * @return SharedPreference
  */
-fun Activity.sharedPref() = getPreferences(MODE_PRIVATE)
+fun Activity.sharedPref() = getDefaultSharedPreferences(this)
 
 /**
  * secureSharedPre

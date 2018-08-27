@@ -17,7 +17,11 @@
 package com.transcodium.tnsmoney.classes.workers
 
 import android.app.Activity
+import android.util.Log
 import androidx.work.Worker
+import com.transcodium.tnsmoney.classes.TnsApi
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
 class WalletDataFetchWorker : Worker() {
@@ -30,6 +34,12 @@ class WalletDataFetchWorker : Worker() {
      */
     override fun doWork(): Result {
 
-    }
+        launch {
+
+
+        }//end launch
+
+        return Result.SUCCESS
+    }//end fun
 
 }//end class

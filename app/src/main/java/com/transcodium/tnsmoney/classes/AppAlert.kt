@@ -18,7 +18,6 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import com.tapadoo.alerter.Alerter
-import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.R
 import com.transcodium.tnsmoney.vibrate
 

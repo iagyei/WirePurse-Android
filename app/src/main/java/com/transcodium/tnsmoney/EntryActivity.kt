@@ -3,9 +3,12 @@ package com.transcodium.tnsmoney
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.transcodium.tnsmoney.classes.Crypt
 import org.jetbrains.anko.alert
 import com.facebook.stetho.Stetho
+import com.transcodium.tnsmoney.classes.SecureSharedPref
+
 class AppEntry : AppCompatActivity() {
 
 

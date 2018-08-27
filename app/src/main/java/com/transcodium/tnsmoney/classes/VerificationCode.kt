@@ -17,9 +17,7 @@
 package com.transcodium.tnsmoney.classes
 
 import androidx.appcompat.app.AppCompatActivity
-import com.transcodium.mothership.core.Status
 import com.transcodium.tnsmoney.R
-import kotlinx.android.synthetic.main.verification_code_layout.*
 
 class VerificationCode(val activity: AppCompatActivity) {
 
