@@ -7,7 +7,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="0dp"
     app:cardBackgroundColor="@color/colorPrimaryDark"
-    app:contentPadding="8dp"
     app:cardCornerRadius="0dp"
     app:cardUseCompatPadding="false">
 
@@ -46,6 +45,33 @@
             android:elegantTextHeight="true"
             android:layout_marginTop="2dp"
             />
+
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sideNavBg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tabTextColor="@color/whiteAlpha70"
+            android:padding="0dp"
+            app:tabInlineLabel="true"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@color/white">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/history"/>
+        </com.google.android.material.tabs.TabLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -120,6 +120,10 @@
 
     <string name="auth_not_found">Authentication not found</string>
 
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+
+    <string name="history">History</string>
     <string name="network_not_available">Network or internet connection cannot be detected,
         Please fix the issue and try again</string>
 </resources>

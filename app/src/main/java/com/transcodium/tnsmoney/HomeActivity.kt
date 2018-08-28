@@ -1,13 +1,11 @@
 package com.transcodium.tnsmoney
 
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
-import com.transcodium.tnsmoney.classes.Coin
-import kotlinx.android.synthetic.main.activity_home.*
+import android.view.Gravity
+import com.transcodium.tnsmoney.classes.Anim
+import com.transcodium.tnsmoney.classes.CoinsCore
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.app_bar.view.*
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
 
@@ -19,16 +17,18 @@ class HomeActivity : DrawerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        Anim(this).slideWindow(
+                Gravity.START,
+                Gravity.END
+        )
+
         setContentView(R.layout.activity_home)
 
         super.onCreate(savedInstanceState)
 
-        launch(UI) {
-            //lets fetch the data
-            Coin.fetchUserCoins(homeActivity)
+        launch {
+            CoinsCore.fetchUserCoins(mActivity, true)
         }
-
-        toolbar.topToolbarTitle.text = "Bitcoin"
 
     }
 }

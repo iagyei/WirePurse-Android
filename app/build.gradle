@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.transcodium.tnsmoney"
@@ -84,7 +85,8 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.couchbase.lite:couchbase-lite-android:2.0.0'
+    implementation 'com.google.android:flexbox:1.0.0'
+
 }
 
 

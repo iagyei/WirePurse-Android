@@ -16,6 +16,7 @@
 
 package com.transcodium.tnsmoney
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -34,7 +35,19 @@ open class RootActivity : AppCompatActivity() {
                 Gravity.END
         )
 
+
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+            )
+        }
+
         super.onCreate(savedInstanceState, persistentState)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
     }
 }

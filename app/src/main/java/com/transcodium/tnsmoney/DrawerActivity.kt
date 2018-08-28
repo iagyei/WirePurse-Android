@@ -1,14 +1,15 @@
 package com.transcodium.tnsmoney
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
@@ -16,13 +17,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
-import android.view.Menu
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.transcodium.tnsmoney.classes.Anim
 import kotlinx.android.synthetic.main.navigation_drawer.*
 
 
 open class DrawerActivity : AppCompatActivity() {
+
 
     val mActivity by lazy{
         this
@@ -68,8 +69,13 @@ open class DrawerActivity : AppCompatActivity() {
     }//end on start
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
 

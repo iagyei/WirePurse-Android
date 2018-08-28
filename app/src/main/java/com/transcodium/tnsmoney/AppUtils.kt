@@ -18,8 +18,9 @@ package com.transcodium.tnsmoney
 
 import android.app.Activity
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -31,6 +32,7 @@ import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.SecureSharedPref
 import org.json.JSONObject
 import java.util.*
+
 
 /**
  * Activity.sharedPref
@@ -249,3 +251,26 @@ private fun lightenColor(color: Int, fraction: Double): Int {
     return Math.min(color + color * fraction, 255.0).toInt()
 }
 */
+
+/**
+ * calculateColumns
+ **/
+fun Activity.calColumns(minWidth: Int): Int {
+
+    val displayMetrics = resources.displayMetrics
+    val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+    return (dpWidth / minWidth).toInt()
+}
+
+
+/**
+ * rotate
+ */
+fun Bitmap.rotate(degree: Float, pivotX: Float, pivotY: Float): Bitmap{
+
+    val m = Matrix().apply {
+        postRotate(degree,pivotX,pivotY)
+    }
+
+    return Bitmap.createBitmap(this, 0, 0, width, height, m, true)
+}
