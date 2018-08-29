@@ -15,7 +15,7 @@
         app:elevation="0dp"
         app:layout_scrollFlags="enterAlways">
 
-        <TextView
+        <TextSwitcher
             android:id="@+id/topToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

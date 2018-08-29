@@ -18,6 +18,7 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import android.content.Context
+import android.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +40,8 @@ class CoinsCore {
                 "eth" to R.color.colorETH,
                 "btc" to R.color.colorBTC,
                 "xmr" to R.color.colorXMR,
-                "ltc" to R.color.colorLTC
+                "ltc" to R.color.colorLTC,
+                "eos" to R.color.colorEOS
             )
 
         }//end colors
@@ -50,7 +52,8 @@ class CoinsCore {
                 "eth" to R.drawable.ic_eth,
                 "btc" to R.drawable.ic_btc,
                 "xmr" to R.drawable.ic_xmr,
-                "ltc" to R.drawable.ic_ltc
+                "ltc" to R.drawable.ic_ltc,
+                "eos" to R.drawable.ic_eos
             )
         }
 
@@ -132,6 +135,10 @@ class CoinsCore {
                 rc.swapAdapter(adapter,true)
 
             }else{
+
+                val toolbar = activity.findViewById<Toolbar>(R.id.topToolbarTitle)
+
+                val tnsCoinName = tnsCoinInfo.getString("")
 
                 val calColumn = activity.calColumns(160)
 

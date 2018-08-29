@@ -22,8 +22,10 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RotateDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -60,6 +62,7 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
                             parent,
                             false) as CardView
 
+
         return RViewHolder(card)
     }
 
@@ -75,11 +78,14 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
         val card = holder.itemView
 
+        card.setOnClickListener{v-> handleCardClick(v,position)}
+
+
         val coinColor = CoinsCore.getColor(activity,symbol)
 
         //val coinColorLight = coinColor.lighten(0.1)
 
-        val coinColorAlpha = ColorUtils.setAlphaComponent(coinColor,220)
+        val coinColorAlpha = ColorUtils.setAlphaComponent(coinColor,200)
 
         val coinIcon = CoinsCore.getIcon(symbol)
 
@@ -107,6 +113,15 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
         val coinNameTvText = "$coinName ($symbol)"
 
         card.findViewById<TextView>(R.id.coinName).text = coinNameTvText
+
+    }//en fun
+
+    /**
+     * handleCardClick
+     */
+    fun handleCardClick(v: View,position: Int){
+
+        Log.i("CARD_CLIKED",position.toString())
     }
 
     override fun getItemCount() = dataSet.size
