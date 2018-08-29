@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 import android.net.ConnectivityManager
 import android.os.Build
@@ -214,8 +215,8 @@ fun Activity.isNetworkAvailable(): Boolean {
     return (activeNetInfo != null && activeNetInfo.isConnected)
 }//end
 
-/**
-fun Int.darken(fraction: Double): Int {
+
+ fun Int.darken(fraction: Double): Int {
 
     var color = this
     var red = Color.red(color)
@@ -229,11 +230,11 @@ fun Int.darken(fraction: Double): Int {
     return Color.argb(alpha, red, green, blue)
 }
 
- fun darkenColor(color: Int, fraction: Double): Int {
+ private fun darkenColor(color: Int, fraction: Double): Int {
     return Math.max(color - color * fraction, 0.0).toInt()
-}
+ }
 
-fun Int.lighten(fraction: Double): Int {
+ fun Int.lighten(fraction: Double): Int {
 
     var color = this
 
@@ -247,10 +248,10 @@ fun Int.lighten(fraction: Double): Int {
     return Color.argb(alpha, red, green, blue)
 }
 
-private fun lightenColor(color: Int, fraction: Double): Int {
-    return Math.min(color + color * fraction, 255.0).toInt()
-}
-*/
+    private fun lightenColor(color: Int, fraction: Double): Int {
+        return Math.min(color + color * fraction, 255.0).toInt()
+    }
+
 
 /**
  * calculateColumns

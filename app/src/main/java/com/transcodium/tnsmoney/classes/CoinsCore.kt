@@ -18,23 +18,13 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.util.Log
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.R
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import org.json.JSONArray
 import org.json.JSONObject
-import com.google.android.flexbox.JustifyContent
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.calColumns
 
 
@@ -47,16 +37,20 @@ class CoinsCore {
             mapOf(
                 "tns" to R.color.colorTNS,
                 "eth" to R.color.colorETH,
-                "btc" to R.color.colorBTC
+                "btc" to R.color.colorBTC,
+                "xmr" to R.color.colorXMR,
+                "ltc" to R.color.colorLTC
             )
 
         }//end colors
 
         private val icons by lazy {
             mapOf(
-                "tns" to R.drawable.tns,
-                "eth" to R.drawable.eth,
-                "btc" to R.drawable.btc
+                "tns" to R.drawable.ic_tns_normal,
+                "eth" to R.drawable.ic_eth,
+                "btc" to R.drawable.ic_btc,
+                "xmr" to R.drawable.ic_xmr,
+                "ltc" to R.drawable.ic_ltc
             )
         }
 

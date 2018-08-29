@@ -31,11 +31,13 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.transcodium.tnsmoney.R
+import com.transcodium.tnsmoney.lighten
 import com.transcodium.tnsmoney.rotate
 import org.json.JSONObject
 
@@ -75,29 +77,36 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
         val coinColor = CoinsCore.getColor(activity,symbol)
 
+        //val coinColorLight = coinColor.lighten(0.1)
+
+        val coinColorAlpha = ColorUtils.setAlphaComponent(coinColor,220)
+
         val coinIcon = CoinsCore.getIcon(symbol)
 
-        val r = activity.resources
+        val resources = activity.resources
 
-        val bgImg = BitmapFactory
-                            .decodeResource(r,coinIcon)
-                            .rotate(45f,50f,30f)
-                            .toDrawable(r)
 
-        bgImg.alpha = 180
+        val bgImg = ResourcesCompat.getDrawable(
+                resources,
+                coinIcon,
+                null
+        )
+
+        bgImg?.alpha = 180
+
 
         card.background = bgImg
 
+
         card.findViewById<ConstraintLayout>(R.id.contentMain)
-                .setBackgroundColor(coinColor)
+                .setBackgroundColor(coinColorAlpha)
 
         card.findViewById<LinearLayout>(R.id.coinNameWrapper)
             .setBackgroundColor(coinColor)
 
         val coinNameTvText = "$coinName ($symbol)"
 
-        card.findViewById<TextView>(R.id.coinName)
-                .text = coinNameTvText
+        card.findViewById<TextView>(R.id.coinName).text = coinNameTvText
     }
 
     override fun getItemCount() = dataSet.size
