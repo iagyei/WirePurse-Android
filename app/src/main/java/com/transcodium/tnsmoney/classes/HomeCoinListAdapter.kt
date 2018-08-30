@@ -18,12 +18,6 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.RotateDrawable
-import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,16 +25,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.transcodium.tnsmoney.R
-import com.transcodium.tnsmoney.lighten
-import com.transcodium.tnsmoney.rotate
+import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
 
@@ -48,12 +36,17 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
     : RecyclerView.Adapter<HomeCoinListAdapter.RViewHolder>() {
 
     var context: Context? = null
+    var activity: Activity? = null
+    var selectedItemPos = 0
+
 
     class RViewHolder(card: CardView): RecyclerView.ViewHolder(card)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RViewHolder {
 
         context = parent.context
+
+        activity = (context as Activity)
 
         val card = LayoutInflater
                     .from(context)
@@ -74,14 +67,13 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
         val symbol   = coinInfo.getString("symbol").toLowerCase()
 
-        val activity = (context as Activity)
 
         val card = holder.itemView
 
         card.setOnClickListener{v-> handleCardClick(v,position)}
 
 
-        val coinColor = CoinsCore.getColor(activity,symbol)
+        val coinColor = CoinsCore.getColor(activity!!,symbol)
 
         //val coinColorLight = coinColor.lighten(0.1)
 
@@ -89,7 +81,7 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
         val coinIcon = CoinsCore.getIcon(symbol)
 
-        val resources = activity.resources
+        val resources = activity!!.resources
 
 
         val bgImg = ResourcesCompat.getDrawable(
@@ -112,7 +104,7 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
         val coinNameTvText = "$coinName ($symbol)"
 
-        card.findViewById<TextView>(R.id.coinName).text = coinNameTvText
+        card.findViewById<TextView>(R.id.coinNameTv).text = coinNameTvText
 
     }//en fun
 
@@ -121,8 +113,17 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
      */
     fun handleCardClick(v: View,position: Int){
 
-        Log.i("CARD_CLIKED",position.toString())
-    }
+       if(selectedItemPos == position){
+           return
+       }
+
+        //change current coin
+        selectedItemPos = position
+
+       val coinInfo = dataSet[position]
+
+       CoinsCore.updateHomeCoinInfoCard(activity!!,coinInfo)
+    }//end fun
 
     override fun getItemCount() = dataSet.size
 }

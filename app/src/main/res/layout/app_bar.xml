@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="?attr/actionBarSize"
     android:background="?attr/colorPrimaryDark"
+    android:fitsSystemWindows="true"
     app:elevation="0dp">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,7 +16,8 @@
         app:elevation="0dp"
         app:layout_scrollFlags="enterAlways">
 
-        <TextSwitcher
+
+        <TextView
             android:id="@+id/topToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

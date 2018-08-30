@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/coinInfoView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,41 +14,53 @@
         android:layout_height="match_parent">
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/user_balance"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="60,000,000 BTC"
-            android:textColor="@color/whiteAlpha30"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="24sp"
-            app:textAllCaps="true"
-            app:layout_constraintTop_toTopOf="parent"
-            android:elegantTextHeight="true"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/user_balance_usd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="100,000,000 USD"
-            android:textColor="@color/whiteAlpha30"
-            app:layout_constraintEnd_toEndOf="@id/user_balance"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            app:textAllCaps="true"
-            app:layout_constraintTop_toBottomOf="@id/user_balance"
-            android:elegantTextHeight="true"
-            android:layout_marginTop="2dp"
-            />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/balanceFirstDigit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteAlpha30"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="1"
+                android:textSize="70sp"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userBalanceDecimal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteAlpha30"
+                app:layout_constraintStart_toEndOf="@id/balanceFirstDigit"
+                android:textSize="22sp"
+                android:textAlignment="center"
+                app:textAllCaps="true"
+                app:layout_constraintTop_toTopOf="@id/balanceFirstDigit"
+                android:layout_marginTop="20dp"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/coinTicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteAlpha30"
+                app:layout_constraintStart_toEndOf="@id/balanceFirstDigit"
+                android:textSize="22sp"
+                android:textAlignment="center"
+                app:textAllCaps="true"
+                app:layout_constraintTop_toBottomOf="@id/userBalanceDecimal"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/sideNavBg"
+            android:background="@color/coinInfoMenuTab"
             app:layout_constraintBottom_toBottomOf="parent"
             app:tabTextColor="@color/whiteAlpha70"
             android:padding="0dp"
@@ -65,12 +76,18 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/receive"/>
+                android:text="@string/receive"
+                android:clickable="true"
+                android:focusable="true"
+                />
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/history"/>
+                android:text="@string/more"
+                android:clickable="true"
+                android:focusable="true" />
         </com.google.android.material.tabs.TabLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

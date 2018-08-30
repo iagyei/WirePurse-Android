@@ -126,4 +126,8 @@
     <string name="history">History</string>
     <string name="network_not_available">Network or internet connection cannot be detected,
         Please fix the issue and try again</string>
+
+    <string name="updating">Updating..</string>
+
+    <string name="more">More</string>
 </resources>

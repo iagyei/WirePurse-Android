@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,8 +19,11 @@ import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.alpha
 import com.transcodium.tnsmoney.classes.Anim
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import org.jetbrains.anko.withAlpha
 
 
 open class DrawerActivity : AppCompatActivity() {
@@ -39,7 +43,7 @@ open class DrawerActivity : AppCompatActivity() {
         findViewById<DrawerLayout>(R.id.drawer_layout)
     }
 
-    private val navView: NavigationView by lazy{
+    private val navView by lazy{
         findViewById<NavigationView>(R.id.navView)
     }
 
@@ -50,7 +54,6 @@ open class DrawerActivity : AppCompatActivity() {
     val context: Context by lazy {
         this
     }
-
 
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -71,9 +74,6 @@ open class DrawerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -101,6 +101,7 @@ open class DrawerActivity : AppCompatActivity() {
         //set the scrim color (the dark overlay fading when the drawer is opened)
         drawerLayout.setScrimColor(Color.TRANSPARENT)
 
+        var statusBarColor: Int? = null
 
         //drawer options and events
         drawerToggle = object: ActionBarDrawerToggle(
@@ -120,9 +121,39 @@ open class DrawerActivity : AppCompatActivity() {
 
                 contentView.translationX = (offset * drawerView.width)
 
+                //if
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+                    if(statusBarColor == null){
+                        statusBarColor = window.statusBarColor
+                    }
+
+                    //alpha
+                    val alphaVal = (255 - ((offset / 1) * 255)).toInt()
+
+                    val statusBarColorAlpha = statusBarColor!!.withAlpha(alphaVal)
+
+                    window.statusBarColor = statusBarColorAlpha
+                }//end if
+
                 super.onDrawerSlide(drawerView, offset)
             }//end
 
+            override fun onDrawerClosed(drawerView: View) {
+
+                //if
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                    if (statusBarColor != null) {
+                         window.statusBarColor = statusBarColor!!
+                    }
+
+                    statusBarColor = null
+
+                }//end
+
+                super.onDrawerClosed(drawerView)
+            }//end
 
         }//end toggle  options and events
 
@@ -152,12 +183,12 @@ open class DrawerActivity : AppCompatActivity() {
                         AboutActivity::class.java),
 
                 DrawerListModel(
-                        R.drawable.ic_info_black_24dp,
+                        R.drawable.ic_email_24dp,
                         getString(R.string.support),
                         AboutActivity::class.java),
 
                 DrawerListModel(
-                        R.drawable.ic_email_24dp,
+                        R.drawable.ic_info_black_24dp,
                         getString(R.string.about),
                         AboutActivity::class.java),
 

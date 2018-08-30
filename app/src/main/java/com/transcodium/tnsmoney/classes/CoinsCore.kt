@@ -16,17 +16,27 @@
 
 package com.transcodium.tnsmoney.classes
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
-import android.widget.Toolbar
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.transcodium.tnsmoney.R
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
-import com.transcodium.tnsmoney.calColumns
+import kotlinx.android.synthetic.main.activity_home.*
+import android.view.ViewAnimationUtils
+import android.view.animation.AnimationUtils
+import androidx.cardview.widget.CardView
+import androidx.core.graphics.ColorUtils
+import com.transcodium.tnsmoney.*
+import kotlinx.android.synthetic.main.app_bar.*
+import java.util.*
 
 
 class CoinsCore {
@@ -106,6 +116,52 @@ class CoinsCore {
             return dataStatus
         }//end
 
+        /**
+         * updateHomeCoinCardColor
+         */
+        fun updateHomeCoinInfoCard(
+                activity: Activity,
+                coinInfo: JSONObject
+        ){
+           activity.apply{
+
+               val coinName = coinInfo.getString("name")
+
+               val symbol   = coinInfo.getString("symbol").toLowerCase()
+
+               activity.setToolbarTitle(coinName)
+
+               val coinColor = CoinsCore.getColor(this,symbol)
+
+               val coinColorDarken = coinColor.darken(0.1)
+
+               val view = coinInfoCard as CardView
+
+               val oldColor = view.cardBackgroundColor.defaultColor
+
+               val cardBgAnim = ObjectAnimator.ofInt(toolbar,
+                       "backgroundColor",
+                       oldColor,
+                       coinColorDarken
+               )
+
+               cardBgAnim.addUpdateListener{ ls->
+
+                   val animColor = ls.animatedValue as Int
+
+                   view.setCardBackgroundColor(animColor)
+
+                   activity.setStatusBarColor(animColor)
+               }
+
+               cardBgAnim.duration = 1000
+
+               cardBgAnim.setEvaluator(ArgbEvaluator())
+
+               cardBgAnim.start()
+           }//end
+
+        }//end fun
 
         /**
          * update home coins UI
@@ -128,26 +184,27 @@ class CoinsCore {
 
             val adapter = HomeCoinListAdapter(sortedData)
 
-            val rc = activity.findViewById<RecyclerView>(R.id.coinsListRecycler)
+            val recyclerView = activity.findViewById<RecyclerView>(R.id.coinsListRecycler)
 
-            if(rc.adapter != null) {
+            if(recyclerView.adapter != null) {
 
-                rc.swapAdapter(adapter,true)
+                recyclerView.swapAdapter(adapter,true)
 
             }else{
 
-                val toolbar = activity.findViewById<Toolbar>(R.id.topToolbarTitle)
+                val tnsCoinName = tnsCoinInfo.getString("name") ?: "LOL"
 
-                val tnsCoinName = tnsCoinInfo.getString("")
+                //update tns coin name
+                activity.setToolbarTitle(tnsCoinName)
 
                 val calColumn = activity.calColumns(160)
 
-                val gl = GridLayoutManager(activity,calColumn)
+                val gridLayout = GridLayoutManager(activity,calColumn)
 
-                rc.layoutManager = gl
+                recyclerView.layoutManager = gridLayout
 
 
-                rc.adapter = adapter
+                recyclerView.adapter = adapter
             }
 
         }//end fun

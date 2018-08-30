@@ -16,6 +16,9 @@
 
 package com.transcodium.tnsmoney
 
+import android.animation.Animator
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -27,10 +30,18 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
+import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.TextSwitcher
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.SecureSharedPref
+import kotlinx.android.synthetic.main.app_bar.*
+import org.jetbrains.anko.find
 import org.json.JSONObject
 import java.util.*
 
@@ -275,3 +286,43 @@ fun Bitmap.rotate(degree: Float, pivotX: Float, pivotY: Float): Bitmap{
 
     return Bitmap.createBitmap(this, 0, 0, width, height, m, true)
 }
+
+
+/**
+ * updateHomeUICoinName
+ */
+fun Activity.setToolbarTitle(
+        titleText: String
+){
+
+    val txtView = find<TextView>(R.id.topToolbarTitle)
+        txtView.animate()
+                .translationY(txtView.height.toFloat())
+                .alpha(0f)
+                .setDuration(500)
+                .withEndAction {
+
+                    txtView.text = titleText
+
+                    txtView.animate()
+                            .alpha(1f)
+                            .translationY(0f)
+                            .setDuration(500)
+                            .start()
+
+                }.start()
+}//end
+
+
+/**
+ * setStatusBarColor
+ **/
+fun Activity.setStatusBarColor(color: Int){
+
+    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+        return
+    }
+
+    window.statusBarColor = color
+}
+

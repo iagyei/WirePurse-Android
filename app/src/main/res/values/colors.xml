@@ -41,5 +41,6 @@
         <color name="colorLTC">#616161</color>
         <color name="colorEOS">#000000</color>
         <color name="sideNavBg">#027dc0</color>
+        <color name="coinInfoMenuTab">#0272af</color>
 </resources>
 
