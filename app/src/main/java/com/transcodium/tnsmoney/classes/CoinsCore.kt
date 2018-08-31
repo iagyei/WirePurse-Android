@@ -33,9 +33,11 @@ import kotlinx.android.synthetic.main.activity_home.*
 import android.view.ViewAnimationUtils
 import android.view.animation.AnimationUtils
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnStart
 import androidx.core.graphics.ColorUtils
 import com.transcodium.tnsmoney.*
 import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.android.synthetic.main.home_coin_info.*
 import java.util.*
 
 
@@ -125,11 +127,17 @@ class CoinsCore {
         ){
            activity.apply{
 
+               val animDuration = 1000L
+
                val coinName = coinInfo.getString("name")
 
                val symbol   = coinInfo.getString("symbol").toLowerCase()
 
-               activity.setToolbarTitle(coinName)
+               //user balance
+               val userBalance = coinInfo.optDouble("balance",0.0)
+
+               //split userBalance
+               val userBalanceSplit = userBalance.toString().split(".")
 
                val coinColor = CoinsCore.getColor(this,symbol)
 
@@ -154,9 +162,38 @@ class CoinsCore {
                    activity.setStatusBarColor(animColor)
                }
 
-               cardBgAnim.duration = 1000
+               cardBgAnim.duration = animDuration
 
                cardBgAnim.setEvaluator(ArgbEvaluator())
+
+               cardBgAnim.doOnStart {
+
+                   activity.setToolbarTitle(coinName)
+
+                   //update userBalance the same when
+                   //the bg anim starts
+                   userBalanceView.animate()
+                           .alpha(0f)
+                           .setDuration(animDuration/2)
+                           .withEndAction{
+
+                               coinTicker.text = symbol
+
+                               //set user balance
+                               balanceFirstDigit.text = userBalanceSplit[0]
+
+                               val balanceDecimal = ".${userBalanceSplit[1]}"
+
+                               userBalanceDecimal.text = balanceDecimal
+
+                               userBalanceView
+                                       .animate()
+                                       .alpha(1f)
+                                       .setDuration(animDuration/2)
+                                       .start()
+
+                           }.start()
+               }//end do on start
 
                cardBgAnim.start()
            }//end
@@ -192,10 +229,8 @@ class CoinsCore {
 
             }else{
 
-                val tnsCoinName = tnsCoinInfo.getString("name") ?: "LOL"
-
-                //update tns coin name
-                activity.setToolbarTitle(tnsCoinName)
+                //update initial  ui
+                updateHomeCoinInfoCard(activity,tnsCoinInfo)
 
                 val calColumn = activity.calColumns(160)
 
