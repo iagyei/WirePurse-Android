@@ -1,0 +1,133 @@
+<resources>
+    <string name="app_name">टीएनएसमनी</string>
+
+    <string name="facebook_app_id">548131418855435</string>
+    <string name="fb_login_protocol_scheme">fb548131418855435</string>
+
+    <string name="multi_coin_wallet">बहु मुद्रा वॉलेट</string>
+    <string name="multi_coin_wallet_desc">बहु क्रिप्टो मुद्राओं को सुरक्षित रूप से स्टोर करें</string>
+    <string name="cutting_edge_sucurity">उच्चतम सुरक्षा</string>
+    <string name="builtin_security_desc">
+        आधुनिक सुरक्षा सुविधा जो रक्षा करे
+         अनधिकृत पहुंच से आपके धन की
+    </string>
+    <string name="builtin_exchange">अंतर्निहित एक्सचेंज</string>
+    <string name="builtin_exchange_desc">अधिदिष्ट मुद्रा का समर्थन के साथ अति-आसान तरीका क्रिप्टो-मुद्रा एक्सचेंज उपयोग करने का</string>
+
+    <string name="extra_premium_service">अतिरिक्त अधिमूल्य सेवाएं</string>
+    <string name="extra_premium_service_desc">
+        आपकी सुविधा के लिए अतिरिक्त अधिमूल्य सेवाएं उपलब्ध हैं
+    </string>
+
+    <string name="email_address">ईमेल एड्रेस</string>
+    <string name="password">पासवर्ड</string>
+
+    <string name="login">लॉगिन</string>
+    <string name="login_with_google">गूगल के साथ लॉगिन करें</string>
+
+    <string name="login_with_facebook">फेसबुक के साथ लॉगिन करे</string>
+
+    <string name="login_with_email">ईमेल के साथ लॉगिन करे</string>
+
+    <string name="login_with_twitter">ट्विटर के साथ लॉगिन करे</string>
+
+    <string name="go_back">वापस जाएँ</string>
+
+    <string name="valid_email_required">एक मान्य ईमेल आईडी आवश्यक है</string>
+
+    <string name="password_required">पासवर्ड आवश्यक है</string>
+    <string name="app_logo">एप्प लोगो</string>
+
+    <string name="copyright_transcodium">&#169; Transcodium</string>
+    <string name="secure_url_required">A Secure API endpoint is required</string>
+    <string name="network_request_failed">Network Request failed, try again later</string>
+
+    <string name="unexpected_error">An unexpected error occured, try again later</string>
+    <string name="code">Code</string>
+    <string name="login_success">Login Successful</string>
+    <string name="loading">Loading</string>
+    <string name="login_progress_text">Stay calm, processing login</string>
+    <string name="google_login_failed">Google Login Failed, Try again Later</string>
+    <string name="ooops">Ooops!</string>
+    <string name="unknown_social_provider">Unknown Social Name %1$s</string>
+    <string name="social_account_verification">%1$s Social Account Verification</string>
+    <string name="social_login_verification_info">
+       Logging into an existing account with a new social provider requires a one time verification
+        Please check the inbox or spam box of the email associated with this account for the
+        code sent to you.
+    </string>
+    <string name="verification_code">Verification Code</string>
+    <string name="verify">Verify</string>
+    <string name="cancel">Cancel</string>
+    <string name="resend">Resend</string>
+
+    <string name="resend_after">Resend after</string>
+    <string name="resending_verification_code">Resending Verification Code</string>
+    <string name="code_sent_to_your_email">Code has been resent to your email</string>
+    <string name="invalid_code">Invalid code</string>
+    <string name="verifying_code">Verifying Code</string>
+
+    <string name="rsa_data_encryption_failed">Initial Data Encryption Failed</string>
+    <string name="rsa_data_decryption_failed">Initial Data Decryption Failed</string>
+
+    <string name="data_encryption_error">Data dncryption failed 2, reinstall app if error persists</string>
+    <string name="data_decryption_error">Data decryption failed 2, reinstall app if error persists</string>
+
+    <string name="security_logout_message">Secure data processing failed, as a security measure you have been logged out, please relogin</string>
+
+    <string name="encrypted_data_part_extract_error">Failed to extract encrypted data parts, reinstall app if error persists</string>
+    <string name="data_decryption_failed_error">Data decryption failed, please reinstall app if error persists</string>
+
+    <string name="facebook_login_failed">Facebook Login Failed</string>
+
+    <string name="facebook_login_cancelled">Facebook Login Request cancelled</string>
+
+    <string name="twitter_login_failed">Twitter Login Failed</string>
+
+    <string name="missing_app_key">Missing App Key</string>
+    <string name="initialization_error">Initialization Error</string>
+    <string name="initialization_error_message">Pre  startup initialization checkup failed, App will close</string>
+    <string name="ok">Okay !</string>
+
+    <string name="reset_password">Reset Password</string>
+
+    <string name="signup">Signup</string>
+
+    <string name="critical_error_message">A critical error occurred, please relogin. (Code: %1$s)</string>
+
+    <string name="failed_to_generate_security_keys">Failed to create security keys</string>
+
+    <string name="auth_required">Authentication required</string>
+
+    <string name="drawer_open">Drawer Open</string>
+
+    <string name="drawer_close">Drawer Close</string>
+
+    <string name="setting">Setting</string>
+
+    <string name="support">Support</string>
+
+    <string name="logout">Logout</string>
+
+    <string name="about">About</string>
+
+    <string name="wallet">Wallet</string>
+
+    <string name="exchange">Exchange</string>
+    <string name="w">w</string>
+    <string name="e">e</string>
+    <string name="current_balance">Current Balance</string>
+
+    <string name="auth_not_found">Authentication not found</string>
+
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+
+    <string name="history">History</string>
+    <string name="network_not_available">Network or internet connection cannot be detected,
+        Please fix the issue and try again</string>
+
+    <string name="updating">Updating..</string>
+
+    <string name="more">More</string>
+</resources>
