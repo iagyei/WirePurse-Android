@@ -38,34 +38,34 @@
     <string name="password_required">पासवर्ड आवश्यक है</string>
     <string name="app_logo">एप्प लोगो</string>
 
-    <string name="copyright_transcodium">&#169; Transcodium</string>
-    <string name="secure_url_required">A Secure API endpoint is required</string>
-    <string name="network_request_failed">Network Request failed, try again later</string>
+    <string name="copyright_transcodium">&#169; ट्रांस्कोडियम</string>
+    <string name="secure_url_required">एक सुरक्षित एपीआई एंडपॉइंट आवश्यक है</string>
+    <string name="network_request_failed">नेटवर्क अनुरोध विफल रहा, बाद में पुनः प्रयास करें</string>
 
-    <string name="unexpected_error">An unexpected error occured, try again later</string>
-    <string name="code">Code</string>
-    <string name="login_success">Login Successful</string>
-    <string name="loading">Loading</string>
-    <string name="login_progress_text">Stay calm, processing login</string>
-    <string name="google_login_failed">Google Login Failed, Try again Later</string>
-    <string name="ooops">Ooops!</string>
-    <string name="unknown_social_provider">Unknown Social Name %1$s</string>
-    <string name="social_account_verification">%1$s Social Account Verification</string>
+    <string name="unexpected_error">एक अनपेक्षित त्रुटि आई है, बाद में पुनः प्रयास करें</string>
+    <string name="code">कोड</string>
+    <string name="login_success">लॉग इन सफल रहा</string>
+    <string name="loading">लोड हो रहा है</string>
+    <string name="login_progress_text">शांत रहें, लॉगिन प्रसंस्करण करें</string>
+    <string name="google_login_failed">गूगल लॉगिन विफल रहा, बाद में पुनः प्रयास करें</string>
+    <string name="ooops">ओह!</string>
+    <string name="unknown_social_provider">अज्ञात सोशल नाम %1$s</string>
+    <string name="social_account_verification">%1$s सोशल खाता सत्यापन</string>
     <string name="social_login_verification_info">
-       Logging into an existing account with a new social provider requires a one time verification
-        Please check the inbox or spam box of the email associated with this account for the
-        code sent to you.
+        किसी नए सोशल प्रदाता के साथ किसी मौजूदा खाते में लॉग इन करने के लिए एक बार सत्यापन की आवश्यकता होती है
+        कृपया इस खाते से जुड़े ईमेल के इनबॉक्स या स्पैम बॉक्स को चेक करें
+         कोड आपको भेजा गया है।
     </string>
-    <string name="verification_code">Verification Code</string>
-    <string name="verify">Verify</string>
-    <string name="cancel">Cancel</string>
-    <string name="resend">Resend</string>
+    <string name="verification_code">पुष्टि संख्या</string>
+    <string name="verify">सत्यापित करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="resend">पुन: भेजें</string>
 
-    <string name="resend_after">Resend after</string>
-    <string name="resending_verification_code">Resending Verification Code</string>
-    <string name="code_sent_to_your_email">Code has been resent to your email</string>
-    <string name="invalid_code">Invalid code</string>
-    <string name="verifying_code">Verifying Code</string>
+    <string name="resend_after">के बाद पुनः भेजें</string>
+    <string name="resending_verification_code">सत्यापन कोड पुनः भेज रहा है</string>
+    <string name="code_sent_to_your_email">कोड आपके ईमेल पर पुनः भेज गया है</string>
+    <string name="invalid_code">अमान्य कोड</string>
+    <string name="verifying_code">कोड का सत्यापन हो रहा है</string>
 
     <string name="rsa_data_encryption_failed">Initial Data Encryption Failed</string>
     <string name="rsa_data_decryption_failed">Initial Data Decryption Failed</string>

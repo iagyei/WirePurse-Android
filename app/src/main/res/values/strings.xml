@@ -42,7 +42,7 @@
     <string name="secure_url_required">A Secure API endpoint is required</string>
     <string name="network_request_failed">Network Request failed, try again later</string>
 
-    <string name="unexpected_error">An unexpected error occured, try again later</string>
+    <string name="unexpected_error">An unexpected error occurred, try again later</string>
     <string name="code">Code</string>
     <string name="login_success">Login Successful</string>
     <string name="loading">Loading</string>
