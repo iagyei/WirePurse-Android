@@ -118,8 +118,39 @@ class CoinsCore {
             return dataStatus
         }//end
 
+
         /**
-         * updateHomeCoinCardColor
+         * assetsStats
+         */
+        suspend fun fetchAllAssetStats(
+                activity: Activity,
+                type: String? = null,
+                renderUI: Boolean = false
+        ): Status{
+
+            //lets get assets Stats
+
+            var uri = "/stats/assets"
+
+            if(type != null){
+                uri = "$uri?type=$type"
+            }
+
+            val dataStatus = TnsApi(activity)
+                                .get(uri)
+
+            if(dataStatus.isError()){
+                return dataStatus
+            }//end
+
+            //lets proccess the data
+            
+
+        }//end fun
+
+
+        /**
+        * updateHomeCoinCardColor
          */
         fun updateHomeCoinInfoCard(
                 activity: Activity,
