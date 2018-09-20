@@ -19,15 +19,20 @@ package com.transcodium.tnsmoney.classes.workers
 import android.app.Activity
 import android.util.Log
 import androidx.work.Worker
+import com.transcodium.tnsmoney.classes.CoinsCore
 import com.transcodium.tnsmoney.classes.TnsApi
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
-class WalletDataFetchWorker : Worker() {
+class UserAssetsWorker : Worker() {
 
-    val ACTIVITY: Activity? = null
-    val USER_INFO: JSONObject? = null
+
+    val ctx by lazy {
+        applicationContext
+    }
+
+    val mActivity = ctx as Activity
 
     /**
      * doWork
@@ -36,7 +41,18 @@ class WalletDataFetchWorker : Worker() {
 
         launch {
 
+            //lets get user balace
+            val assetsCoinsStatus = CoinsCore.fetchUserCoins(mActivity,false)
 
+            if(assetsCoinsStatus.isError()){
+                Log.e("USER_ASSETS_WORKER",assetsCoinsStatus.message())
+                return@launch
+            }
+
+            //lets get the data
+            val data = assetsCoinsStatus.getData<JSONObject>()
+
+            println(data)
         }//end launch
 
         return Result.SUCCESS

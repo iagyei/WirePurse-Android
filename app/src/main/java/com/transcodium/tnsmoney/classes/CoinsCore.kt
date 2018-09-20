@@ -18,11 +18,8 @@ package com.transcodium.tnsmoney.classes
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,15 +27,13 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 import kotlinx.android.synthetic.main.activity_home.*
-import android.view.ViewAnimationUtils
-import android.view.animation.AnimationUtils
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnStart
-import androidx.core.graphics.ColorUtils
+import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
-import java.util.*
+import org.jetbrains.anko.coroutines.experimental.bg
 
 
 class CoinsCore {
@@ -122,29 +117,49 @@ class CoinsCore {
         /**
          * assetsStats
          */
-        suspend fun fetchAllAssetStats(
+         fun fetchAllAssetStats(
                 activity: Activity,
-                type: String? = null,
-                renderUI: Boolean = false
+                type: String? = null
         ): Status{
 
-            //lets get assets Stats
 
-            var uri = "/stats/assets"
 
-            if(type != null){
-                uri = "$uri?type=$type"
-            }
+            return Status.success()
+        }//end fun
 
-            val dataStatus = TnsApi(activity)
-                                .get(uri)
 
-            if(dataStatus.isError()){
-                return dataStatus
-            }//end
+        /**
+         * fetch asset stats
+         * */
+        fun getRemoteAssetStats(
+                activity: Activity,
+                type: String? = null
+        ){
 
-            //lets proccess the data
-            
+            bg {
+
+                launch {
+
+                    var uri = "/stats/assets"
+
+                    if (type != null) {
+                        uri = "$uri?type=$type"
+                    }
+
+                    val dataStatus = TnsApi(activity)
+                            .get(uri)
+
+                    if (dataStatus.isError()) {
+                        return@launch
+                    }//end
+
+                    //lets proccess the data
+                    val data = dataStatus.getData<JsonObject>()!!
+
+                    println(data)
+                }
+
+            }//end in background
 
         }//end fun
 

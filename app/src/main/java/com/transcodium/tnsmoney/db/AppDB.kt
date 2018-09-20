@@ -16,5 +16,51 @@
 
 package com.transcodium.tnsmoney.db
 
-class AppDB {
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.transcodium.tnsmoney.APP_DB_NAME
+import com.transcodium.tnsmoney.db.daos.AssetStatsDao
+import com.transcodium.tnsmoney.db.entities.AssetStats
+
+@Database(
+        entities = [AssetStats::class],
+        version = 	3,
+        exportSchema = false
+)
+
+abstract class AppDB : RoomDatabase() {
+
+ abstract fun assetStatsDao(): AssetStatsDao
+
+
+    companion object {
+
+        private var instance: AppDB? = null
+
+
+        /**
+         * singleton class
+         * @return AppDB
+         */
+        @Synchronized
+        fun getInstance(context: Context): AppDB {
+
+            if(instance == null){
+                instance = Room.databaseBuilder(
+                                context.applicationContext,
+                                AppDB::class.java,
+                                APP_DB_NAME
+                )
+                 .fallbackToDestructiveMigration()
+                 .build()
+            }
+
+
+            return instance!!
+        }//end fun
+
+    }
+
 }
