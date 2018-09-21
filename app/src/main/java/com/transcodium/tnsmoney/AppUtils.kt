@@ -16,9 +16,6 @@
 
 package com.transcodium.tnsmoney
 
-import android.animation.Animator
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -30,17 +27,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
-import android.view.Gravity
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.widget.TextSwitcher
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.Account
+import com.transcodium.tnsmoney.classes.Handler
 import com.transcodium.tnsmoney.classes.SecureSharedPref
-import kotlinx.android.synthetic.main.app_bar.*
+import kotlinx.coroutines.experimental.CancellableContinuation
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import org.jetbrains.anko.find
 import org.json.JSONObject
 import java.util.*
@@ -326,3 +320,15 @@ fun Activity.setStatusBarColor(color: Int){
     window.statusBarColor = color
 }
 
+
+suspend fun <T> awaitEvent(block: (h: Handler<T>) -> Unit) : T {
+    return suspendCancellableCoroutine { cont: CancellableContinuation<T> ->
+        try {
+            block.invoke(Handler { t ->
+                cont.resume(t)
+            })
+        } catch(e: Exception) {
+            cont.resumeWithException(e)
+        }
+    }
+}

@@ -23,24 +23,24 @@ import androidx.room.Query
 import com.transcodium.tnsmoney.db.entities.AssetStats
 
 @Dao
-interface AssetStatsDao {
+abstract class AssetStatsDao {
 
     @get:Query("Select * FROM asset_stats")
-    val all: List<AssetStatsDao>
+   abstract val all: List<AssetStats>
 
     /**
      * fetch  by type
      */
     @Query("Select * From asset_stats WHERE type = :type")
-    fun findByType(type: String): List<AssetStatsDao>
+    abstract fun findByType(type: String): List<AssetStats>
 
     /**
      * insert
      */
     @Insert(onConflict = REPLACE)
-    fun addOne(data: AssetStats)
+    abstract fun addOne(data: AssetStats)
 
 
     @Insert(onConflict = REPLACE)
-    fun addAll(data: List<AssetStats>)
+    abstract fun addAll(data: List<AssetStats>)
 }

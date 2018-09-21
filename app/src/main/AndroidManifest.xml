@@ -67,6 +67,14 @@
         <activity android:name=".RootActivity" />
         <activity android:name=".DrawerActivity" />
         <activity android:name=".AboutActivity" />
+
+        <service
+            android:exported="false"
+            android:name=".classes.jobs.AssetsDataJob">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -87,7 +87,7 @@ class CoinsCore {
         suspend fun fetchUserCoins(activity: Activity,
                                    renderUI: Boolean = false): Status {
 
-            val uri = "/wallet/coins"
+            val uri = "/wallet/assets"
 
             val dataStatus = TnsApi(activity)
                         .get(uri)

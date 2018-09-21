@@ -14,18 +14,18 @@
 #  created_at 25/08/2018
  **/
 
-package com.transcodium.tnsmoney.classes.workers
+package com.transcodium.tnsmoney.classes.jobs
 
 import android.app.Activity
 import android.util.Log
-import androidx.work.Worker
+import com.firebase.jobdispatcher.JobParameters
+import com.firebase.jobdispatcher.JobService
 import com.transcodium.tnsmoney.classes.CoinsCore
-import com.transcodium.tnsmoney.classes.TnsApi
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
-class UserAssetsWorker : Worker() {
+class AssetsDataJob : JobService() {
 
 
     val ctx by lazy {
@@ -37,7 +37,7 @@ class UserAssetsWorker : Worker() {
     /**
      * doWork
      */
-    override fun doWork(): Result {
+    override fun onStartJob(job: JobParameters): Boolean {
 
         launch {
 
@@ -55,7 +55,14 @@ class UserAssetsWorker : Worker() {
             println(data)
         }//end launch
 
-        return Result.SUCCESS
+        return false
     }//end fun
+
+    /**
+     * onStopJob
+     */
+    override fun onStopJob(job: JobParameters?): Boolean {
+        return false
+    }
 
 }//end class

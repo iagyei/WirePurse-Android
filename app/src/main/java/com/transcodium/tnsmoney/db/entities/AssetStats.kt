@@ -16,6 +16,7 @@
 
 package com.transcodium.tnsmoney.db.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -24,8 +25,10 @@ import androidx.room.PrimaryKey
         tableName = "asset_stats",
         indices = [Index("type")]
 )
-class AssetStats(val type: String) {
-
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+data class AssetStats(
+        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = 0L,
+        @ColumnInfo(name = "type") var type: String? = "",
+        @ColumnInfo(name = "data") var data: String? = ""
+){
+    constructor() : this(0L,"","")
 }
