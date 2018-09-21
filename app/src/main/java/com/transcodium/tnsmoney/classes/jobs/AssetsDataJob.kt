@@ -27,32 +27,15 @@ import org.json.JSONObject
 
 class AssetsDataJob : JobService() {
 
-
-    val ctx by lazy {
-        applicationContext
-    }
-
-    val mActivity = ctx as Activity
-
     /**
      * doWork
      */
     override fun onStartJob(job: JobParameters): Boolean {
 
+        val ctx = applicationContext
+
         launch {
-
-            //lets get user balace
-            val assetsCoinsStatus = CoinsCore.fetchUserCoins(mActivity,false)
-
-            if(assetsCoinsStatus.isError()){
-                Log.e("USER_ASSETS_WORKER",assetsCoinsStatus.message())
-                return@launch
-            }
-
-            //lets get the data
-            val data = assetsCoinsStatus.getData<JSONObject>()
-
-            println(data)
+            Log.e("Hmmmm","10000")
         }//end launch
 
         return false

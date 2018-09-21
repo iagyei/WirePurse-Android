@@ -62,8 +62,9 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
-    implementation "com.github.kittinunf.fuel:fuel-android:$fuel_version"
-    implementation "com.github.kittinunf.fuel:fuel-coroutines:$fuel_version"
+
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+
     implementation 'com.tapadoo.android:alerter:3.0.0'
     implementation "com.google.android.gms:play-services-auth:16.0.0"
 

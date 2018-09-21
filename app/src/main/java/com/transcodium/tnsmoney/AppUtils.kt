@@ -44,12 +44,12 @@ import java.util.*
  * Activity.sharedPref
  * @return SharedPreference
  */
-fun Activity.sharedPref() = getDefaultSharedPreferences(this)
+fun Context.sharedPref() = getDefaultSharedPreferences(this)
 
 /**
  * secureSharedPre
  */
-fun Activity.secureSharedPref() = SecureSharedPref(this)
+fun Context.secureSharedPref() = SecureSharedPref(this)
 
 /**
  * minmizeApp

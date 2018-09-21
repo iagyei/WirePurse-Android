@@ -17,6 +17,7 @@
 package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.edit
@@ -25,13 +26,13 @@ import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
 
-class Account(val activity: Activity) {
+class Account(val context: Context) {
 
 
     //if user is logged in
     fun isLoggedIn(): Boolean {
 
-        val authInfo = activity.sharedPref()
+        val authInfo = context.sharedPref()
                 .getString("auth_info",null)
                 ?: return false
 
@@ -54,6 +55,7 @@ class Account(val activity: Activity) {
      * process Login
      */
     suspend fun processEmailLogin(
+                          activity: Activity,
                           email: String,
                           password: String
     ): Status {
@@ -110,15 +112,18 @@ class Account(val activity: Activity) {
            userInfo.put("user_email",userInfo.getString("email"))
        }
 
-       return activity.secureSharedPref().put("user_info",userInfo)
+       return context.secureSharedPref().put("user_info",userInfo)
     }//end fun
 
     /**
      * doLogout
      */
-    fun doLogout(status: Status? = null){
+    fun doLogout(
+            status: Status? = null,
+            activity: Activity ? = null
+    ){
 
-        activity.sharedPref().edit{
+        context.sharedPref().edit{
             remove("user_data")
         }
 
@@ -132,8 +137,7 @@ class Account(val activity: Activity) {
             bundle.putString("status",status.toJsonString())
         }
 
-
-       activity.startClassActivity(
+       activity?.startClassActivity(
                activityClass = LoginActivity::class.java,
                clearActivityStack = true,
                data = bundle

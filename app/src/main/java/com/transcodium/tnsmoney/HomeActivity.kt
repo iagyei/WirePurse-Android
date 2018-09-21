@@ -1,6 +1,7 @@
 package com.transcodium.tnsmoney
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import com.transcodium.tnsmoney.classes.Anim
 import com.transcodium.tnsmoney.classes.CoinsCore
@@ -10,6 +11,7 @@ import kotlinx.coroutines.experimental.launch
 import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
 import com.firebase.jobdispatcher.*
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
+import java.lang.Exception
 
 
 class HomeActivity : DrawerActivity() {
@@ -46,18 +48,25 @@ class HomeActivity : DrawerActivity() {
 
         CoinsCore.fetchUserCoins(mActivity, true)
 
-        val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+        try {
+            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(mActivity))
 
-        val job = dispatcher.newJobBuilder()
-                .setService(AssetsDataJob::class.java)
-                .setTag("assets_data")
-                .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
-                .setRecurring(true)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .build()
+            val job = dispatcher.newJobBuilder()
+                    .setService(AssetsDataJob::class.java)
+                    .setTag("assets_data")
+                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                    .setTrigger(Trigger.executionWindow(0, 30))
+                    .setRecurring(true)
+                    .setConstraints(Constraint.ON_ANY_NETWORK)
+                    .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                    .build()
 
-        dispatcher.mustSchedule(job)
+            dispatcher.mustSchedule(job)
+        }catch(e: Exception){
+            Log.e("JoB Error","${e.message}")
+            e.printStackTrace()
+        }
+
     }
 
 }//end class

@@ -130,4 +130,6 @@
     <string name="updating">Updating..</string>
 
     <string name="more">More</string>
+
+    <string name="server_request_failed">Server request failed, Try again later</string>
 </resources>

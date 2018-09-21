@@ -16,7 +16,6 @@
 
 package com.transcodium.tnsmoney.classes
 
-import android.app.Activity
 import android.content.Context
 import androidx.core.content.edit
 import com.transcodium.tnsmoney.sharedPref
@@ -25,13 +24,9 @@ import org.json.JSONObject
 import java.math.BigInteger
 
 
-class SecureSharedPref(val activity: Activity) {
+class SecureSharedPref(val context: Context) {
 
-
-
-    val mContext = activity as Context
-
-    val sharedPref = activity.sharedPref()
+    val sharedPref = context.sharedPref()
 
     /**
      * put
@@ -43,11 +38,11 @@ class SecureSharedPref(val activity: Activity) {
             else -> value
         }
 
-        val encryptDataStatus = Crypt.encrypt(mContext,rawData)
+        val encryptDataStatus = Crypt.encrypt(context,rawData)
 
         if(encryptDataStatus.isError()){
             //lets check reason
-            Account(activity).doLogout(encryptDataStatus)
+            Account(context).doLogout(encryptDataStatus)
             return Status.error()
         }
 
@@ -77,11 +72,9 @@ class SecureSharedPref(val activity: Activity) {
         }
 
         //lets decrypt data
-        val decryptDataStatus = Crypt.decrypt(activity,data!!)
+        val decryptDataStatus = Crypt.decrypt(context,data!!)
 
         if(decryptDataStatus.isError()){
-            //lets check reason
-            Account(activity).doLogout(decryptDataStatus)
             return null
         }
 
