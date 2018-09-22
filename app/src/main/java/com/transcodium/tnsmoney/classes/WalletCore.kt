@@ -19,7 +19,9 @@ package com.transcodium.tnsmoney.classes
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,18 +30,25 @@ import org.json.JSONObject
 import kotlinx.android.synthetic.main.activity_home.*
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnStart
+import androidx.lifecycle.ViewModelProviders
 import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
+import com.transcodium.tnsmoney.db.AppDB
+import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.coroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
+import java.lang.Exception
 
 
-class CoinsCore {
+class WalletCore {
 
     companion object {
+
 
         private val colors by lazy{
 
@@ -85,90 +94,48 @@ class CoinsCore {
         /**
          * fetch userCoins
          */
-        suspend fun fetchUserCoins(activity: Activity,
-                                   renderUI: Boolean = false): Status {
+        suspend fun networkFetchUserAssets(context: Context): Status {
 
-            val uri = "/wallet/assets"
-
-            val dataStatus = TnsApi(activity)
-                        .get(uri)
+            val dataStatus = TnsApi(context)
+                        .get(API_USER_ASSETS)
 
             if(dataStatus.isError()){
-
-                if(renderUI) {
-                    AppAlert(activity).showStatus(Status)
-                }
-
                 return dataStatus
             }//end
 
-            //lets get the data and insert into db
-            if(!renderUI){
+            //lets update db
+            val data = dataStatus.getData<JSONObject>()
+
+            if(data == null){
+                Log.e("USER_ASSETS","User Assets Data returned from server is null")
                 return dataStatus
             }
 
-            val data = dataStatus.getData<JSONObject>()!!
+            println("NETWORK DATA - data.toString()")
 
-            updateHomeUI(activity,data)
+            val userAssetDBData = UserAssets(
+                    data = data.toString()
+            )
+
+            launchIO{
+               try {
+                   AppDB.getInstance(context).userAssetsDao()
+                           .updateData(userAssetDBData)
+               }catch (e:Exception){
+                    Log.e("USER_ASSET_SAVE","Failed to save user assets")
+                   e.printStackTrace()
+               }
+
+            } //end launch
 
             return dataStatus
         }//end
 
 
         /**
-         * assetsStats
-         */
-         fun fetchAllAssetStats(
-                activity: Activity,
-                type: String? = null
-        ): Status{
-
-
-
-            return Status.success()
-        }//end fun
-
-
-        /**
-         * fetch asset stats
-         * */
-        fun getRemoteAssetStats(
-                activity: Activity,
-                type: String? = null
-        ){
-
-            bg {
-
-                launch {
-
-                    var uri = "/stats/assets"
-
-                    if (type != null) {
-                        uri = "$uri?type=$type"
-                    }
-
-                    val dataStatus = TnsApi(activity)
-                            .get(uri)
-
-                    if (dataStatus.isError()) {
-                        return@launch
-                    }//end
-
-                    //lets proccess the data
-                    val data = dataStatus.getData<JsonObject>()!!
-
-                    println(data)
-                }
-
-            }//end in background
-
-        }//end fun
-
-
-        /**
         * updateHomeCoinCardColor
          */
-        fun updateHomeCoinInfoCard(
+        fun homeUpdateCurrentAssetInfo(
                 activity: Activity,
                 coinInfo: JSONObject
         ){
@@ -186,7 +153,7 @@ class CoinsCore {
                //split userBalance
                val userBalanceSplit = userBalance.toString().split(".")
 
-               val coinColor = CoinsCore.getColor(this,symbol)
+               val coinColor = WalletCore.getColor(this,symbol)
 
                val coinColorDarken = coinColor.darken(0.1)
 
@@ -247,11 +214,15 @@ class CoinsCore {
 
         }//end fun
 
+
+
         /**
          * update home coins UI
          */
-        fun updateHomeUI(activity: Activity,
-                         coinsInfo: JSONObject) = launch(UI){
+        fun processUpdateHomeUI(
+                activity: Activity,
+                coinsInfo: JSONObject
+        ){
 
             //we need TNS first so we extract it and put
             val tnsCoinInfo = coinsInfo.getJSONObject("tns")
@@ -277,7 +248,7 @@ class CoinsCore {
             }else{
 
                 //update initial  ui
-                updateHomeCoinInfoCard(activity,tnsCoinInfo)
+                homeUpdateCurrentAssetInfo(activity,tnsCoinInfo)
 
                 val calColumn = activity.calColumns(160)
 

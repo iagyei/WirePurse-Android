@@ -32,12 +32,12 @@ import android.widget.TextView
 import androidx.core.content.edit
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.*
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
 import org.jetbrains.anko.find
 import org.json.JSONObject
 import java.util.*
+import kotlin.coroutines.experimental.CoroutineContext
 
 
 /**
@@ -337,16 +337,43 @@ suspend fun <T> awaitEvent(block: (h: Handler<T>) -> Unit) : T {
 /**
  * handleAppError
  **/
-fun Activity.AppErrorUI(status: Status,
-                            showAlert: Boolean? = true,
-                            killOnSevere: Boolean? = true
+fun AppErrorUI(
+        activity: Activity,
+        status: Status,
+        showAlert: Boolean? = true,
+        killOnSevere: Boolean? = true
 ){
 
     if(showAlert!!){
-        AppAlert(this).showStatus(status)
+        AppAlert(activity).showStatus(status)
     }
 
     if(killOnSevere!! && status.isSevere()){
-        Account(this).doLogout(status)
+        Account(activity).doLogout(status)
     }
 }//end fun
+
+
+/**
+ *launchIO
+ */
+fun launchIO(block : CoroutineScope.() -> Unit) : Job{
+
+    val scope = CoroutineScope(Dispatchers.IO)
+
+    return  scope.launch{
+            block.invoke(this)
+    }
+}
+
+/**
+ * launch io
+ */
+fun launchUI(block : CoroutineScope.() -> Unit) : Job{
+
+    val scope = CoroutineScope(Dispatchers.Main)
+
+    return  scope.launch{
+        block.invoke(this)
+    }
+}

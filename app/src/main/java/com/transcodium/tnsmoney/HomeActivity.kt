@@ -3,15 +3,18 @@ package com.transcodium.tnsmoney
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.transcodium.tnsmoney.classes.Anim
-import com.transcodium.tnsmoney.classes.CoinsCore
+import com.transcodium.tnsmoney.classes.WalletCore
 import com.firebase.jobdispatcher.*
+import com.transcodium.tnsmoney.classes.WalletCore.Companion.networkFetchUserAssets
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
+import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.android.UI
 import java.lang.Exception
-import kotlin.coroutines.experimental.CoroutineContext
 
 
 class HomeActivity : DrawerActivity() {
@@ -33,7 +36,7 @@ class HomeActivity : DrawerActivity() {
 
         super.onCreate(savedInstanceState)
 
-        launch(Dispatchers.IO) {
+        launch(Dispatchers.Main) {
 
             //lets start the job for r
             fetchStatsData()
@@ -41,6 +44,20 @@ class HomeActivity : DrawerActivity() {
 
     }//end onCreate
 
+    /**
+     * observe UserAssetUpdate
+     */
+    fun observeAndUpdateUserAsset() {
+
+       val vmprovider = ViewModelProviders.of(this)
+
+        vmprovider.get(HomeViewModel::class.java)
+                  .getUserAssets()
+                  .observe(this, Observer<List<UserAssets>>{
+
+              println("HEHEHEHE $it")
+        })//end observer
+    }
 
 
     /**
@@ -48,7 +65,10 @@ class HomeActivity : DrawerActivity() {
      */
     suspend fun fetchStatsData(){
 
-        CoinsCore.fetchUserCoins(mActivity, true)
+        //initial data assets fetch
+        networkFetchUserAssets(this)
+
+        observeAndUpdateUserAsset()
 
         try {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(mActivity))

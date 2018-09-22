@@ -16,16 +16,18 @@
 
 package com.transcodium.tnsmoney.classes.jobs
 
-import android.app.Activity
-import android.util.Log
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
-import com.transcodium.tnsmoney.classes.CoinsCore
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import org.json.JSONObject
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
 
-class AssetsDataJob : JobService() {
+import kotlin.coroutines.experimental.CoroutineContext
+
+class AssetsDataJob : JobService(), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+                    get() = Dispatchers.IO
 
     /**
      * doWork
@@ -34,9 +36,6 @@ class AssetsDataJob : JobService() {
 
         val ctx = applicationContext
 
-        launch {
-            Log.e("Hmmmm","10000")
-        }//end launch
 
         return false
     }//end fun

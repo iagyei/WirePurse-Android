@@ -96,6 +96,11 @@ dependencies {
 
     kapt "android.arch.persistence.room:compiler:$room_version"
 
+    //implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_ver"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_ver"
+
+    kapt "androidx.lifecycle:lifecycle-runtime:$lifecycle_ver"
+
     implementation('com.twitter.sdk.android:twitter:3.3.0@aar') {
         transitive = true
     }

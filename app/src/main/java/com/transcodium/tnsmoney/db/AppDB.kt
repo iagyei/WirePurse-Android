@@ -22,18 +22,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.transcodium.tnsmoney.APP_DB_NAME
 import com.transcodium.tnsmoney.db.daos.AssetStatsDao
+import com.transcodium.tnsmoney.db.daos.UserAssetsDao
 import com.transcodium.tnsmoney.db.entities.AssetStats
+import com.transcodium.tnsmoney.db.entities.UserAssets
 
 @Database(
-        entities = [AssetStats::class],
-        version = 	3,
-        exportSchema = false
+        entities = [AssetStats::class, UserAssets::class],
+        version = 	1
 )
 
 abstract class AppDB : RoomDatabase() {
 
- abstract fun assetStatsDao(): AssetStatsDao
-
+    abstract fun assetStatsDao(): AssetStatsDao
+    abstract fun userAssetsDao(): UserAssetsDao
 
     companion object {
 

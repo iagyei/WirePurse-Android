@@ -73,13 +73,13 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
         card.setOnClickListener{v-> handleCardClick(v,position)}
 
 
-        val coinColor = CoinsCore.getColor(activity!!,symbol)
+        val coinColor = WalletCore.getColor(activity!!,symbol)
 
         //val coinColorLight = coinColor.lighten(0.1)
 
         val coinColorAlpha = ColorUtils.setAlphaComponent(coinColor,200)
 
-        val coinIcon = CoinsCore.getIcon(symbol)
+        val coinIcon = WalletCore.getIcon(symbol)
 
         val resources = activity!!.resources
 
@@ -122,7 +122,7 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
        val coinInfo = dataSet[position]
 
-       CoinsCore.updateHomeCoinInfoCard(activity!!,coinInfo)
+       WalletCore.homeUpdateCurrentAssetInfo(activity!!,coinInfo)
     }//end fun
 
     override fun getItemCount() = dataSet.size
