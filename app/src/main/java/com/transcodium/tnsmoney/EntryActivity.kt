@@ -37,7 +37,7 @@ class AppEntry : AppCompatActivity() {
                 nextActivityClass = LoginActivity::class.java
             }
 
-            nextActivityClass = HomeActivity::class.java
+            //nextActivityClass = HomeActivity::class.java
 
             startClassActivity(nextActivityClass, true)
 
@@ -71,7 +71,7 @@ class AppEntry : AppCompatActivity() {
          * calling getDeviceID will create it when it doesnt exist,
          * this creates a unique uuid onetime for identifying user device
          */
-        getDeviceId()
+        getDeviceId(this)
 
         return true
     }//end fun

@@ -29,11 +29,11 @@ import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.edit
 import com.tapadoo.alerter.Alerter
-import com.transcodium.tnsmoney.classes.Account
-import com.transcodium.tnsmoney.classes.Handler
-import com.transcodium.tnsmoney.classes.SecureSharedPref
+import com.transcodium.tnsmoney.classes.*
 import kotlinx.coroutines.experimental.CancellableContinuation
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import org.jetbrains.anko.find
 import org.json.JSONObject
@@ -137,9 +137,9 @@ fun String.isValidEmail(): Boolean{
 /**
  * getOrCreateDeviceId
  **/
-fun Activity.getDeviceId(): String{
+fun getDeviceId(context: Context): String{
 
-    val id = secureSharedPref().getString(DEVICE_ID,"")
+    val id = context.secureSharedPref().getString(DEVICE_ID,"")
 
     if(!id.isNullOrEmpty()){
        return  id!!
@@ -149,10 +149,11 @@ fun Activity.getDeviceId(): String{
     val deviceId = UUID.randomUUID().toString()
 
     //lets save it
-    secureSharedPref().put(DEVICE_ID, deviceId)
+    context.secureSharedPref().put(DEVICE_ID, deviceId)
 
     return deviceId
 }//end
+
 
 /**
  *vibrate
@@ -212,7 +213,7 @@ fun hideAlert(activity: Activity) {
 /**
  * isNetworkAvailable
  **/
-fun Activity.isNetworkAvailable(): Boolean {
+fun Context.isNetworkAvailable(): Boolean {
 
     val conManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetInfo = conManager.activeNetworkInfo
@@ -332,3 +333,20 @@ suspend fun <T> awaitEvent(block: (h: Handler<T>) -> Unit) : T {
         }
     }
 }
+
+/**
+ * handleAppError
+ **/
+fun Activity.AppErrorUI(status: Status,
+                            showAlert: Boolean? = true,
+                            killOnSevere: Boolean? = true
+){
+
+    if(showAlert!!){
+        AppAlert(this).showStatus(status)
+    }
+
+    if(killOnSevere!! && status.isSevere()){
+        Account(this).doLogout(status)
+    }
+}//end fun

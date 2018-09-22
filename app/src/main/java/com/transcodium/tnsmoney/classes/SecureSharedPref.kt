@@ -17,6 +17,7 @@
 package com.transcodium.tnsmoney.classes
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.edit
 import com.transcodium.tnsmoney.sharedPref
 import org.json.JSONArray
@@ -41,9 +42,11 @@ class SecureSharedPref(val context: Context) {
         val encryptDataStatus = Crypt.encrypt(context,rawData)
 
         if(encryptDataStatus.isError()){
+
+            Log.e("DATA_ENCRYPT_ERR",encryptDataStatus.getMessage())
+
             //lets check reason
-            Account(context).doLogout(encryptDataStatus)
-            return Status.error()
+            return encryptDataStatus
         }
 
         val encryptedData = encryptDataStatus.getData<String>()
@@ -75,6 +78,7 @@ class SecureSharedPref(val context: Context) {
         val decryptDataStatus = Crypt.decrypt(context,data!!)
 
         if(decryptDataStatus.isError()){
+            Log.e("DATA_DECRYPT_ERR",decryptDataStatus.getMessage())
             return null
         }
 

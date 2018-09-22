@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/verificationCodeInputLayout"

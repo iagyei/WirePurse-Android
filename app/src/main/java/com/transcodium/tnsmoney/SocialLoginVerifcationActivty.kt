@@ -150,7 +150,7 @@ class SocialLoginVerification : AppCompatActivity() {
         val verifyStatus = TnsApi(mActivity)
                             .post(
                                     requestPath = uri,
-                                    requestParams = postParams,
+                                    params = postParams,
                                     hasAuth = false
                             )
 

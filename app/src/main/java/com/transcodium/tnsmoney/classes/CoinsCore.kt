@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 import kotlinx.android.synthetic.main.activity_home.*
 import androidx.cardview.widget.CardView
@@ -33,6 +32,8 @@ import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
 
 

@@ -18,10 +18,7 @@ package com.transcodium.tnsmoney.classes
 
 import android.util.Log
 import kotlinx.coroutines.experimental.Deferred
-import okhttp3.Headers
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 import org.jetbrains.anko.coroutines.experimental.bg
 
 class WebClient {
@@ -38,7 +35,7 @@ class WebClient {
          */
         suspend fun getRequest(
                 url : String,
-                params: MutableMap<String,Any>? = null,
+                params: List<Pair<String,Any>>? = null,
                 headers: MutableMap<String,String>? = null
         ): Status {
 
@@ -53,8 +50,8 @@ class WebClient {
 
             //add url parameters
             if(params != null && params.isNotEmpty()){
-                params.forEach{(key,value) ->
-                    urlBuilder.addQueryParameter(key,value.toString())
+                params.forEach{pair ->
+                    urlBuilder.addQueryParameter(pair.first,pair.second.toString())
                 }
             }
 
@@ -78,14 +75,34 @@ class WebClient {
         /**
          * postRequest
          */
-        fun postRequest(
+        suspend fun postRequest(
                 url : String,
-                params: MutableMap<String,Any>? = null,
+                params: List<Pair<String,Any>>? = null,
                 headers: MutableMap<String,String>? = null
         ): Status {
 
-                
+            val request =  Request.Builder()
 
+            if(headers != null && headers.isNotEmpty()){
+                request.headers(Headers.of(headers))
+            }
+
+            val formBody = MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+
+            if(params != null && params.isNotEmpty()){
+
+                params.forEach{pair ->
+                    formBody.addFormDataPart(pair.first,pair.second.toString())
+                }
+            }//end if params
+
+
+            val requestBuilder =  request.url(url)
+                                         .post(formBody.build())
+                                         .build()
+
+            return execRequest(requestBuilder)
         }//end fun
 
 
@@ -110,7 +127,7 @@ class WebClient {
                     } else {
 
                         //if success
-                        val body = response.body().toString()
+                        val body = response.body()?.string() ?: ""
 
                         Status.success(data = body)
                     }

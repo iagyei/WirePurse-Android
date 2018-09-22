@@ -5,16 +5,18 @@ import android.util.Log
 import android.view.Gravity
 import com.transcodium.tnsmoney.classes.Anim
 import com.transcodium.tnsmoney.classes.CoinsCore
-import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.android.synthetic.main.app_bar.view.*
-import kotlinx.coroutines.experimental.launch
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
 import com.firebase.jobdispatcher.*
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
 import java.lang.Exception
+import kotlin.coroutines.experimental.CoroutineContext
 
 
 class HomeActivity : DrawerActivity() {
+
+
 
     val homeActivity by lazy {
         this
@@ -31,7 +33,7 @@ class HomeActivity : DrawerActivity() {
 
         super.onCreate(savedInstanceState)
 
-        launch {
+        launch(Dispatchers.IO) {
 
             //lets start the job for r
             fetchStatsData()

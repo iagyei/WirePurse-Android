@@ -18,6 +18,8 @@ import com.transcodium.tnsmoney.classes.SocialLoginCore
 import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
@@ -129,7 +131,7 @@ class LoginActivity : RootActivity() {
                 //access token
                 val accessToken = result.accessToken
 
-                launch {
+                launch(Dispatchers.IO) {
                     SocialLoginCore(activity)
                             .processSocialLogin("facebook",accessToken)
                 }
@@ -184,7 +186,7 @@ class LoginActivity : RootActivity() {
                 val session = result.data
 
 
-                launch {
+                launch(Dispatchers.IO) {
                     SocialLoginCore(activity)
                             .processSocialLogin("twitter",session)
                 }
@@ -220,7 +222,7 @@ class LoginActivity : RootActivity() {
 
             val acct = task.getResult(ApiException::class.java)
 
-            launch {
+            launch(Dispatchers.IO) {
                 SocialLoginCore(activity).processSocialLogin("google",acct)
             }
 

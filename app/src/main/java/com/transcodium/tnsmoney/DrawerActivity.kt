@@ -23,11 +23,21 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.alpha
 import com.transcodium.tnsmoney.classes.Anim
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
 import org.jetbrains.anko.withAlpha
+import kotlin.coroutines.experimental.CoroutineContext
 
 
-open class DrawerActivity : AppCompatActivity() {
+open class DrawerActivity : AppCompatActivity(), CoroutineScope {
 
+
+     var  job: Job? = null
+
+    override val coroutineContext: CoroutineContext
+                    get() = Dispatchers.Main
 
     val mActivity by lazy{
         this
@@ -74,6 +84,8 @@ open class DrawerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
+        job = Job()
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -202,6 +214,16 @@ open class DrawerActivity : AppCompatActivity() {
         //lets create populate menu list
         drawerListView.adapter = DrawerListAdapter(this,listData)
     }//end oncreate
+
+
+    /**
+     * ondestry cancel jobs
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+
+        job?.cancel()
+    }
 
 
 

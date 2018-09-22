@@ -26,13 +26,15 @@ import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
 
-class Account(val context: Context) {
+class Account(val activity: Activity) {
 
+
+    val mContext by lazy { activity as Context }
 
     //if user is logged in
     fun isLoggedIn(): Boolean {
 
-        val authInfo = context.sharedPref()
+        val authInfo = mContext.sharedPref()
                 .getString("auth_info",null)
                 ?: return false
 
@@ -55,9 +57,8 @@ class Account(val context: Context) {
      * process Login
      */
     suspend fun processEmailLogin(
-                          activity: Activity,
-                          email: String,
-                          password: String
+         email: String,
+         password: String
     ): Status {
 
         val progress = Progress(activity)
@@ -69,12 +70,12 @@ class Account(val context: Context) {
         )
 
         val loginParam = listOf(
-                Pair("email",email),
-                Pair("password",password)
+                Pair("email",email as Any),
+                Pair("password",password as Any)
         )
 
         //process login
-        val loginStatus = TnsApi(activity).post(
+        val loginStatus = TnsApi(mContext).post(
                 "/auth/login",
                 loginParam
         )
@@ -112,18 +113,17 @@ class Account(val context: Context) {
            userInfo.put("user_email",userInfo.getString("email"))
        }
 
-       return context.secureSharedPref().put("user_info",userInfo)
+       return mContext.secureSharedPref().put("user_info",userInfo)
     }//end fun
 
     /**
      * doLogout
      */
     fun doLogout(
-            status: Status? = null,
-            activity: Activity ? = null
+        status: Status? = null
     ){
 
-        context.sharedPref().edit{
+        mContext.sharedPref().edit{
             remove("user_data")
         }
 
@@ -137,7 +137,7 @@ class Account(val context: Context) {
             bundle.putString("status",status.toJsonString())
         }
 
-       activity?.startClassActivity(
+       activity.startClassActivity(
                activityClass = LoginActivity::class.java,
                clearActivityStack = true,
                data = bundle

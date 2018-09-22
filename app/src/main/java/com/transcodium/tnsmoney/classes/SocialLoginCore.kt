@@ -96,7 +96,7 @@ class SocialLoginCore(val activity: AppCompatActivity) {
         val loginStatus = TnsApi(activity)
                 .post(
                         requestPath = "/auth/social/$socialName/login",
-                        requestParams = requestParam,
+                        params = requestParam,
                         hasAuth = false
                 )
 

@@ -25,8 +25,18 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.transcodium.tnsmoney.classes.Anim
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
+import kotlin.coroutines.experimental.CoroutineContext
 
-open class RootActivity : AppCompatActivity() {
+open class RootActivity : AppCompatActivity(), CoroutineScope {
+
+     var  job: Job? = null
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
 
@@ -43,11 +53,33 @@ open class RootActivity : AppCompatActivity() {
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
             )
+
+        }else{
+
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            )
+            setStatusBarColor(android.R.color.transparent)
         }
 
         super.onCreate(savedInstanceState, persistentState)
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-    }
+        job = Job()
+
+    }//end oncreate
+
+    /**
+     * onCancel
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if(job != null) {
+            job!!.cancel()
+        }
+
+    }//end
 }

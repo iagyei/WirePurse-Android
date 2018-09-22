@@ -67,7 +67,6 @@ class EmailLoginActivity : RootActivity() {
 
         appAlert.showStatus(loginStatus)
 
-
         /**
          * if success log user in
          */
