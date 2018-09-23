@@ -16,13 +16,11 @@
 
 package com.transcodium.tnsmoney.classes
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import com.transcodium.tnsmoney.classes.Status
 import java.math.BigInteger
 import javax.crypto.Cipher
 import javax.security.auth.x500.X500Principal
@@ -351,7 +349,7 @@ class Crypt {
         fun createAppKey(context: Context): Status{
 
             //check if app key exists, if not create on
-            val hasAppKey = (context as Activity).sharedPref().contains(APP_KEY_NAME)
+            val hasAppKey = context.sharedPref().contains(APP_KEY_NAME)
 
             if(hasAppKey){
                 return Status.success()
@@ -371,7 +369,7 @@ class Crypt {
 
             var encryptedKeyBytes: ByteArray
 
-            val sharedPref =  (context as Activity).sharedPref()
+            val sharedPref =  context.sharedPref()
 
             val encryptedKey = sharedPref.getString(APP_KEY_NAME,"")
 

@@ -32,11 +32,15 @@ import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
 
-class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
-    : RecyclerView.Adapter<HomeCoinListAdapter.RViewHolder>() {
+class HomeCoinListAdapter(
+        val activity: Activity,
+        val dataSet: MutableList<JSONObject>
+) : RecyclerView.Adapter<HomeCoinListAdapter.RViewHolder>() {
 
-    var context: Context? = null
-    var activity: Activity? = null
+    val context: Context by lazy{
+       activity as Context
+    }
+
     var selectedItemPos = 0
 
 
@@ -44,9 +48,9 @@ class HomeCoinListAdapter(val dataSet: MutableList<JSONObject>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RViewHolder {
 
-        context = parent.context
+        //context = parent.context
 
-        activity = (context as Activity)
+        //activity = (context as Activity)
 
         val card = LayoutInflater
                     .from(context)

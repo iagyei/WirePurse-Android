@@ -2,19 +2,23 @@ package com.transcodium.tnsmoney
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TimeUtils
 import android.view.Gravity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.transcodium.tnsmoney.classes.Anim
-import com.transcodium.tnsmoney.classes.WalletCore
 import com.firebase.jobdispatcher.*
+import com.firebase.jobdispatcher.Job
+import com.transcodium.tnsmoney.classes.WalletCore.Companion.homeUpdateUserAssetList
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.networkFetchUserAssets
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.android.UI
+import org.json.JSONObject
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 
 
 class HomeActivity : DrawerActivity() {
@@ -24,6 +28,8 @@ class HomeActivity : DrawerActivity() {
     val homeActivity by lazy {
         this
     }
+
+    var appJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,7 +61,17 @@ class HomeActivity : DrawerActivity() {
                   .getUserAssets()
                   .observe(this, Observer<List<UserAssets>>{
 
-              println("HEHEHEHE $it")
+                   if(it.isEmpty()){
+                       return@Observer
+                   }
+
+                   val dataStr = it.first().data
+
+                   val dataJson = JSONObject(dataStr)
+
+                   //update user asset list
+                   homeUpdateUserAssetList(homeActivity,dataJson)
+
         })//end observer
     }
 
@@ -70,25 +86,12 @@ class HomeActivity : DrawerActivity() {
 
         observeAndUpdateUserAsset()
 
-        try {
-            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(mActivity))
-
-            val job = dispatcher.newJobBuilder()
-                    .setService(AssetsDataJob::class.java)
-                    .setTag("assets_data")
-                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
-                    .setTrigger(Trigger.executionWindow(0, 30))
-                    .setRecurring(true)
-                    .setConstraints(Constraint.ON_ANY_NETWORK)
-                    .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                    .build()
-
-            dispatcher.mustSchedule(job)
-        }catch(e: Exception){
-            Log.e("JoB Error","${e.message}")
-            e.printStackTrace()
-        }
-
+        appJob ?: startPeriodicJob(
+                  activity =   homeActivity,
+                       tag = "statsData",
+                    clazz = AssetsDataJob::class,
+                   triggerInterval =  Pair(30,60)
+        )
     }
 
 }//end class

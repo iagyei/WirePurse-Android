@@ -107,7 +107,9 @@ dependencies {
 
     implementation "org.threeten:threetenbp:1.3.7"
 
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation "com.firebase:firebase-jobdispatcher:0.8.5"
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }
 
 

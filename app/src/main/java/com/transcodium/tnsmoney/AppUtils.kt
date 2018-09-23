@@ -25,19 +25,22 @@ import android.graphics.Matrix
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.edit
+import com.firebase.jobdispatcher.*
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.*
+import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
 import org.jetbrains.anko.find
 import org.json.JSONObject
 import java.util.*
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.reflect.KClass
 
 
 /**
@@ -377,3 +380,35 @@ fun launchUI(block : CoroutineScope.() -> Unit) : Job{
         block.invoke(this)
     }
 }
+
+
+/**
+ * startTask
+ **/
+fun <T : JobService> startPeriodicJob(
+        activity: Activity,
+        tag: String,
+        clazz: KClass<T>,
+        triggerInterval: Pair<Int,Int>
+): com.firebase.jobdispatcher.Job {
+
+    val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(activity))
+
+    val job = dispatcher.newJobBuilder()
+            .setService(clazz.java)
+            .setTag(tag)
+            .setLifetime(Lifetime.FOREVER)
+            .setTrigger(Trigger.executionWindow(
+                    triggerInterval.first,
+                    triggerInterval.second)
+            )
+            .setRecurring(true)
+            .setReplaceCurrent(true)
+            .setConstraints(Constraint.ON_ANY_NETWORK)
+            .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+            .build()
+
+    dispatcher.mustSchedule(job)
+
+    return job
+}//end fun

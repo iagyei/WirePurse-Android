@@ -172,7 +172,7 @@ class TnsApi(val context: Context){
             }
         }//end if request has auth
 
-        Log.e("LOL",JSONObject(requestHeaders).toString())
+        //Log.e("LOL",JSONObject(requestHeaders).toString())
 
 
         val url = "$API_ENDPOINT/$requestPath"

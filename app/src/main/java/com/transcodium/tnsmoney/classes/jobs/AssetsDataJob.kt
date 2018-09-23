@@ -16,11 +16,16 @@
 
 package com.transcodium.tnsmoney.classes.jobs
 
+import android.app.Service
+import android.util.Log
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
+import com.transcodium.tnsmoney.classes.WalletCore
+import com.transcodium.tnsmoney.launchIO
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.launch
 
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -34,8 +39,15 @@ class AssetsDataJob : JobService(), CoroutineScope {
      */
     override fun onStartJob(job: JobParameters): Boolean {
 
-        val ctx = applicationContext
+        val ctx = this
 
+        val job = launch {
+                WalletCore.networkFetchUserAssets(ctx)
+            Log.i("UPDATING USER STATS","True -----")
+        }
+
+        //wait for job to finish
+        job.onJoin
 
         return false
     }//end fun

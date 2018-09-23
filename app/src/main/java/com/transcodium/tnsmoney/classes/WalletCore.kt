@@ -33,6 +33,7 @@ import androidx.core.animation.doOnStart
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
+import com.transcodium.tnsmoney.R.id.coinInfoCard
 import com.transcodium.tnsmoney.db.AppDB
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
@@ -42,6 +43,7 @@ import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.coroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
+import org.jetbrains.anko.find
 import java.lang.Exception
 
 
@@ -111,7 +113,7 @@ class WalletCore {
                 return dataStatus
             }
 
-            println("NETWORK DATA - data.toString()")
+            //println("NETWORK DATA - data.toString()")
 
             val userAssetDBData = UserAssets(
                     data = data.toString()
@@ -121,7 +123,7 @@ class WalletCore {
                try {
                    AppDB.getInstance(context).userAssetsDao()
                            .updateData(userAssetDBData)
-               }catch (e:Exception){
+               }catch (e: Exception){
                     Log.e("USER_ASSET_SAVE","Failed to save user assets")
                    e.printStackTrace()
                }
@@ -130,6 +132,16 @@ class WalletCore {
 
             return dataStatus
         }//end
+
+
+        /**
+         * networkFetchAssetStats
+         */
+        suspend fun networkFetchAssetStats(context: Context): Status {
+
+
+        }
+
 
 
         /**
@@ -148,7 +160,7 @@ class WalletCore {
                val symbol   = coinInfo.getString("symbol").toLowerCase()
 
                //user balance
-               val userBalance = coinInfo.optDouble("balance",0.0)
+               val userBalance = coinInfo.optDouble("balance",0.0000)
 
                //split userBalance
                val userBalanceSplit = userBalance.toString().split(".")
@@ -158,6 +170,9 @@ class WalletCore {
                val coinColorDarken = coinColor.darken(0.1)
 
                val view = coinInfoCard as CardView
+
+               //set tag as symbol
+               view.tag = symbol
 
                val oldColor = view.cardBackgroundColor.defaultColor
 
@@ -219,31 +234,62 @@ class WalletCore {
         /**
          * update home coins UI
          */
-        fun processUpdateHomeUI(
+        fun homeUpdateUserAssetList(
                 activity: Activity,
                 coinsInfo: JSONObject
-        ){
+        ): RecyclerView{
 
             //we need TNS first so we extract it and put
             val tnsCoinInfo = coinsInfo.getJSONObject("tns")
-
-            coinsInfo.remove("tns")
 
             val sortedData = mutableListOf<JSONObject>()
 
             sortedData.add(tnsCoinInfo)
 
             for(coinKey in coinsInfo.keys()){
+
+                //skip tns as we have added to the tp already
+                if(coinKey == "tns"){ continue }
+
                 sortedData.add(coinsInfo.getJSONObject(coinKey))
             }
 
-            val adapter = HomeCoinListAdapter(sortedData)
+            val adapter = HomeCoinListAdapter(activity,sortedData)
 
             val recyclerView = activity.findViewById<RecyclerView>(R.id.coinsListRecycler)
 
             if(recyclerView.adapter != null) {
 
                 recyclerView.swapAdapter(adapter,true)
+
+                //apply activity obj
+                activity.apply {
+
+                    //if recycler exists, lets get active
+                    //recyclerView
+                    val currentCoinSymbol = coinInfoCard.tag.toString()
+
+                    val selectedCoinInfo = coinsInfo.optJSONObject(currentCoinSymbol)
+
+                    //println(selectedCoinInfo)
+
+                    if (selectedCoinInfo != null) {
+
+                        //lets set balance only
+                        val userBalanceSplit = selectedCoinInfo
+                                .optDouble("balance", 0.0000)
+                                .toString().split(".")
+
+                        //set user balance
+                        balanceFirstDigit.text = userBalanceSplit[0]
+
+                        val balanceDecimal = ".${userBalanceSplit[1]}"
+
+                        userBalanceDecimal.text = balanceDecimal
+
+                    }//end if
+
+                }//end activity apply
 
             }else{
 
@@ -260,6 +306,7 @@ class WalletCore {
                 recyclerView.adapter = adapter
             }
 
+            return recyclerView
         }//end fun
 
     }
