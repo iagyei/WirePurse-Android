@@ -1,13 +1,10 @@
 package com.transcodium.tnsmoney
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.transcodium.tnsmoney.classes.Crypt
 import org.jetbrains.anko.alert
 import com.facebook.stetho.Stetho
-import com.transcodium.tnsmoney.classes.SecureSharedPref
 
 class AppEntry : AppCompatActivity() {
 
@@ -24,7 +21,7 @@ class AppEntry : AppCompatActivity() {
         //if initialization is okay, proceed with app
         if(isOk) {
 
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Stetho.initializeWithDefaults(this)
             }
 
@@ -33,7 +30,13 @@ class AppEntry : AppCompatActivity() {
             //if if intro is not completed, then next activity class is intro
             if (!introCompleted) {
                 nextActivityClass = AppIntroActivity::class.java
-            } else {
+            }
+
+            else if(isLoggedIn()){
+                nextActivityClass = HomeActivity::class.java
+            }
+
+            else {
                 nextActivityClass = LoginActivity::class.java
             }
 

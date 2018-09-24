@@ -14,14 +14,16 @@
 #  created_at 22/09/2018
  **/
 
-package com.transcodium.tnsmoney
+package com.transcodium.tnsmoney.view_models
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.transcodium.tnsmoney.db.AppDB
+import com.transcodium.tnsmoney.db.entities.AssetStats
 import com.transcodium.tnsmoney.db.entities.UserAssets
+import com.transcodium.tnsmoney.launchIO
 import java.lang.Exception
 
 class HomeViewModel(application: Application) : AndroidViewModel(application){
@@ -32,24 +34,30 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
 
     private val userAssets: LiveData<List<UserAssets>> = appDB.userAssetsDao().all
 
+    private val assetStats: LiveData<List<AssetStats>> = appDB.assetStatsDao().all
+
+    private val cryptoAssetStats = appDB.assetStatsDao().findByType("crypto")
 
     /**
      * getAllUserAssets
      */
     fun getUserAssets() = userAssets
 
+    fun getAllAssetStats() = assetStats
+
+    fun getCryptoAssetStats() = cryptoAssetStats
 
     /**
      * updateUserAssets
      */
-    fun updateUserAssets(data: UserAssets) = launchIO{
+    fun updateUserAssets(data: UserAssets) = launchIO {
 
-       try{
-           appDB.userAssetsDao().updateData(data)
-       }catch(e: Exception){
-           Log.e("USER_ASSETS","Failed to update user stats")
-           e.printStackTrace()
-       }
+        try {
+            appDB.userAssetsDao().updateData(data)
+        } catch (e: Exception) {
+            Log.e("USER_ASSETS", "Failed to update user stats")
+            e.printStackTrace()
+        }
     }//end
 
 

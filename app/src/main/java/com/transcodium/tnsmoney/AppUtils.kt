@@ -124,7 +124,7 @@ fun UTCDate() = Calendar.getInstance(TimeZone.getTimeZone("GMT"))
  * isLoggedIn
  * @return Boolean
  **/
-fun Activity.isLoggedIn() = Account(this).isLoggedIn()
+fun Activity.isLoggedIn(): Boolean = Account(this).isLoggedIn()
 
 /**
  *isValidEmail
@@ -412,3 +412,23 @@ fun <T : JobService> startPeriodicJob(
 
     return job
 }//end fun
+
+/**
+ * setPeriodic
+ **/
+fun setPeriodic(interval: Long, block: TimerTask.()->Unit): Timer{
+
+    val timer = Timer()
+
+    timer.scheduleAtFixedRate(object : TimerTask(){
+        override fun run() {
+            block.invoke(this)
+        }
+    },0L,interval)
+
+    return timer
+}//end fun
+
+/**
+ * convertTimezone
+ **/

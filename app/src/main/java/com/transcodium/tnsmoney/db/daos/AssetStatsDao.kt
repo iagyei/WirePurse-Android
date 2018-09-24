@@ -16,6 +16,7 @@
 
 package com.transcodium.tnsmoney.db.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
@@ -26,21 +27,15 @@ import com.transcodium.tnsmoney.db.entities.AssetStats
 abstract class AssetStatsDao {
 
     @get:Query("Select * FROM asset_stats")
-   abstract val all: List<AssetStats>
+    abstract val all: LiveData<List<AssetStats>>
 
     /**
      * fetch  by type
      */
     @Query("Select * From asset_stats WHERE type = :type")
-    abstract fun findByType(type: String): List<AssetStats>
-
-    /**
-     * insert
-     */
-    @Insert(onConflict = REPLACE)
-    abstract fun addOne(data: AssetStats)
+    abstract fun findByType(type: String): LiveData<AssetStats>
 
 
     @Insert(onConflict = REPLACE)
-    abstract fun addAll(data: List<AssetStats>)
+    abstract fun updateData(data: AssetStats)
 }

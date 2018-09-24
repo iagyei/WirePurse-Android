@@ -29,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.transcodium.tnsmoney.*
+import com.transcodium.tnsmoney.db.AppDB
 import org.json.JSONObject
 
 
@@ -126,7 +127,7 @@ class HomeCoinListAdapter(
 
        val coinInfo = dataSet[position]
 
-       WalletCore.homeUpdateCurrentAssetInfo(activity!!,coinInfo)
+       WalletCore.homeUpdateCurrentAssetInfo(activity,coinInfo)
     }//end fun
 
     override fun getItemCount() = dataSet.size

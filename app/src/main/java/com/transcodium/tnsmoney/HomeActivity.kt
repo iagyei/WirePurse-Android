@@ -1,24 +1,24 @@
 package com.transcodium.tnsmoney
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.util.TimeUtils
 import android.view.Gravity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.transcodium.tnsmoney.classes.Anim
-import com.firebase.jobdispatcher.*
 import com.firebase.jobdispatcher.Job
+import com.transcodium.tnsmoney.classes.TNSChart
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.homeUpdateUserAssetList
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.networkFetchUserAssets
+import com.transcodium.tnsmoney.classes.WalletCore.Companion.pollNetworkAssetStats
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
 import com.transcodium.tnsmoney.db.entities.UserAssets
+import com.transcodium.tnsmoney.view_models.HomeViewModel
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
 import org.json.JSONObject
-import java.lang.Exception
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
 
 
 class HomeActivity : DrawerActivity() {
@@ -45,21 +45,22 @@ class HomeActivity : DrawerActivity() {
         launch(Dispatchers.Main) {
 
             //lets start the job for r
-            fetchStatsData()
+            initHome()
         }
 
     }//end onCreate
 
     /**
-     * observe UserAssetUpdate
+     * observe Live Data
      */
-    fun observeAndUpdateUserAsset() {
+    fun observeLiveData() {
 
-       val vmprovider = ViewModelProviders.of(this)
+       val viewProvider = ViewModelProviders.of(this)
+                        .get(HomeViewModel::class.java)
 
-        vmprovider.get(HomeViewModel::class.java)
-                  .getUserAssets()
-                  .observe(this, Observer<List<UserAssets>>{
+
+        viewProvider.getUserAssets()
+                  .observe(this, Observer{
 
                    if(it.isEmpty()){
                        return@Observer
@@ -73,18 +74,47 @@ class HomeActivity : DrawerActivity() {
                    homeUpdateUserAssetList(homeActivity,dataJson)
 
         })//end observer
-    }
+
+        val tnsChartObj = TNSChart()
+
+       viewProvider.getCryptoAssetStats()
+               .observe(this, Observer {
+
+                   val data = JSONObject(it.data)
+
+                   //lets get selected or active coin in the info card
+                  val activeCoinSymbol = homeActivity.coinInfoCard.tag?.toString() ?: "tns"
+
+                  val activeCoinPair = "$activeCoinSymbol.usd"
+
+                  val dataArray = data.optJSONArray(activeCoinPair)
+
+                    if(dataArray == null){
+                        Log.e("HOME_ASSET_STATS","$activeCoinPair key not found")
+                        return@Observer
+                    }
+
+                  tnsChartObj.processHomeCoinInfoGraph(homeActivity,dataArray)
+       })
+    }//end fun
 
 
     /**
      * doPeriodicTask
      */
-    suspend fun fetchStatsData(){
+    suspend fun initHome(){
 
-        //initial data assets fetch
-        networkFetchUserAssets(this)
 
-        observeAndUpdateUserAsset()
+        launch {
+
+            //initial data assets fetch
+            networkFetchUserAssets(homeActivity)
+
+            //fetch asset stats
+            pollNetworkAssetStats(homeActivity as Context)
+        }
+
+        observeLiveData()
 
         appJob ?: startPeriodicJob(
                   activity =   homeActivity,

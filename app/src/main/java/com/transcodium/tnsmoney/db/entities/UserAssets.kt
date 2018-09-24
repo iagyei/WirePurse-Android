@@ -18,9 +18,13 @@ package com.transcodium.tnsmoney.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "user_assets")
+@Entity(
+        tableName = "user_assets",
+        indices = [Index("data")]
+)
 data class UserAssets(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = 0L,
         @ColumnInfo(name = "data") var data: String

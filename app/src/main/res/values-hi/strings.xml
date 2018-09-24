@@ -131,4 +131,6 @@
 
     <string name="more">More</string>
     <string name="server_request_failed">Server request failed, Try again later</string>
+    <string name="date_colon">Date:</string>
+    <string name="price_colon">Price:</string>
 </resources>

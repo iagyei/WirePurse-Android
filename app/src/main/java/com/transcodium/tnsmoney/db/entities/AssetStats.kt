@@ -29,6 +29,4 @@ data class AssetStats(
         @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = 0L,
         @ColumnInfo(name = "type") var type: String? = "",
         @ColumnInfo(name = "data") var data: String? = ""
-){
-    constructor() : this(0L,"","")
-}
+)

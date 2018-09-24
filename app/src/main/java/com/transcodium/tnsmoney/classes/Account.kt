@@ -29,25 +29,23 @@ import org.json.JSONObject
 class Account(val activity: Activity) {
 
 
-    val mContext by lazy { activity as Context }
+    private val mContext by lazy { activity as Context }
 
     //if user is logged in
     fun isLoggedIn(): Boolean {
 
-        val authInfo = mContext.sharedPref()
-                .getString("auth_info",null)
-                ?: return false
+
+        val authInfoJson = mContext.secureSharedPref()
+                                .getJsonObject(USER_AUTH_INFO,null)
+        ?: return false
 
 
-        val authInfoJson = JSONObject(authInfo)
-
-        val expiryMillis = authInfoJson.getLong("expiry")
-
-        val now = UTCDate().timeInMillis
-
-        if(expiryMillis < now){
+        if(!(authInfoJson.has("user_id") ||
+           authInfoJson.has("email") ||
+           authInfoJson.has("token_data")
+        )){
             return false
-        }
+        }//end if
 
         return true
     }//end
@@ -113,7 +111,7 @@ class Account(val activity: Activity) {
            userInfo.put("user_email",userInfo.getString("email"))
        }
 
-       return mContext.secureSharedPref().put("user_info",userInfo)
+       return mContext.secureSharedPref().put(USER_AUTH_INFO,userInfo)
     }//end fun
 
     /**
@@ -124,7 +122,7 @@ class Account(val activity: Activity) {
     ){
 
         mContext.sharedPref().edit{
-            remove("user_data")
+            remove(USER_AUTH_INFO)
         }
 
         var bundle: Bundle? = null

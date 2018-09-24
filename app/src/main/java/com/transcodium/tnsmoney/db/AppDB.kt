@@ -28,7 +28,7 @@ import com.transcodium.tnsmoney.db.entities.UserAssets
 
 @Database(
         entities = [AssetStats::class, UserAssets::class],
-        version = 	1
+        version = 	3
 )
 
 abstract class AppDB : RoomDatabase() {

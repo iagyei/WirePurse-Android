@@ -68,7 +68,7 @@ class TnsApi(val context: Context){
 
             //lets get user auth info
             val authInfo = SecureSharedPref(context)
-                                 .getJsonObject("user_info",null)
+                                 .getJsonObject(USER_AUTH_INFO,null)
 
 
             if(authInfo == null){

@@ -46,7 +46,7 @@ class AppIntroActivity : AppIntro() {
                 AppIntroData(
                     title = R.string.builtin_exchange,
                     desc  = R.string.builtin_exchange_desc,
-                    image = R.drawable.ic_exchange,
+                    image = R.drawable.ic_builtin_exchange,
                     bgColor =  R.color.amber700
                 ),
 

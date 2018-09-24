@@ -35,16 +35,16 @@ import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
 import com.transcodium.tnsmoney.R.id.coinInfoCard
 import com.transcodium.tnsmoney.db.AppDB
+import com.transcodium.tnsmoney.db.entities.AssetStats
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.coroutineScope
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.find
+import org.json.JSONArray
 import java.lang.Exception
+import java.util.*
 
 
 class WalletCore {
@@ -139,10 +139,79 @@ class WalletCore {
          */
         suspend fun networkFetchAssetStats(context: Context): Status {
 
+            val dataStatus = TnsApi(context)
+                    .get("/stats/assets/")
 
-        }
+
+            if (dataStatus.isError()) {
+                return dataStatus
+            }//end
+
+            //lets update db
+            val dataArray = dataStatus.getData<JSONArray>()
+
+            if (dataArray == null) {
+                Log.e("HTTP_ASSETS_STATS", "Asset STats returned from server is null")
+                return dataStatus
+            }
 
 
+            launchIO {
+                try {
+
+                    val dao = AppDB.getInstance(context).assetStatsDao()
+
+                    val dataSize = dataArray.length() - 1
+
+                    for(i in 0..dataSize){
+
+                        val dataObj = dataArray[i] as JSONObject
+
+                        val type = dataObj.optString("type")
+                        val data = dataObj.optJSONObject("data")
+
+                        if(type == null || data == null){
+                            return@launchIO
+                        }
+
+                        val assetStatsData = AssetStats(
+                                type = type,
+                                data = data.toString()
+                        )
+
+                        //update db
+                        dao.updateData(
+                            data = assetStatsData
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("USER_ASSET_SAVE", "Failed to save user assets")
+                    e.printStackTrace()
+                }
+
+            }
+
+            return Status.success()
+        }//end fun
+
+        /**
+         * pollNetworkAssetStats
+         */
+        suspend fun pollNetworkAssetStats(context: Context): Timer{
+
+            val cs = CoroutineScope(Dispatchers.IO)
+
+            //lets get inital data
+            networkFetchAssetStats(context)
+
+            val timer = setPeriodic(60_000L){
+               cs.launch { networkFetchAssetStats(context) }
+            }//end set periodic task
+
+
+            return timer
+        }//end fun
 
         /**
         * updateHomeCoinCardColor
