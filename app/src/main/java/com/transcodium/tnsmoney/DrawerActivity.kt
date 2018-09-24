@@ -74,11 +74,7 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
      */
     override  fun onStart() {
         super.onStart()
-
-        //go to login
-        //if(currentUser == null){
-        //  startClassActivity(this,LoginActivity::class.java,true)
-        //}
+        
     }//end on start
 
     override fun onCreate(savedInstanceState: Bundle?) {

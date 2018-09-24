@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnStart
 import androidx.lifecycle.ViewModelProviders
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
 import com.transcodium.tnsmoney.R.id.coinInfoCard
@@ -213,12 +214,66 @@ class WalletCore {
             return timer
         }//end fun
 
+
+        /**
+         * homeUpdateAssetPriceAndGraph
+         */
+         fun homeUpdateAssetLatestPriceAndGraph(
+                activity: Activity,
+                assetSymbol: String,
+                animateGraph: Boolean = false,
+                allStatsJsonStr: String? = null
+        ) = launchIO{
+
+           val assetsStatsJsonStr = if(allStatsJsonStr != null){
+
+               allStatsJsonStr
+
+            }else{
+
+               val db = AppDB.getInstance(activity)
+
+               db.assetStatsDao().findByType("crypto").data
+               ?: return@launchIO
+
+           }//end fetch data
+
+            //lets create our json object
+            val assetsJsonObj = try{
+
+                JSONObject(assetsStatsJsonStr)
+
+            }catch (e: Exception){
+
+                e.printStackTrace()
+
+                return@launchIO
+            }//end
+
+            val assetPair = "$assetSymbol.usd"
+
+            if(!assetsJsonObj.has(assetPair)){
+                Log.e("HOME_ASSET_STATS","$assetPair key not found")
+                return@launchIO
+            }
+
+            val dataArray = assetsJsonObj.optJSONArray(assetPair)
+
+            //println(dataArray)
+
+            launchUI {
+                TNSChart(activity).processHomeCoinInfoGraph(dataArray,animateGraph)
+            }
+
+        }//end fun
+
         /**
         * updateHomeCoinCardColor
          */
         fun homeUpdateCurrentAssetInfo(
                 activity: Activity,
-                coinInfo: JSONObject
+                coinInfo: JSONObject,
+                draweGraph: Boolean? = true
         ){
            activity.apply{
 
@@ -239,6 +294,18 @@ class WalletCore {
                val coinColorDarken = coinColor.darken(0.1)
 
                val view = coinInfoCard as CardView
+
+
+               if(draweGraph!!) {
+                   //update graph
+                   launchUI {
+                       homeUpdateAssetLatestPriceAndGraph(
+                               activity = activity,
+                               assetSymbol = symbol,
+                               animateGraph = true
+                       )
+                   }//end
+               }
 
                //set tag as symbol
                view.tag = symbol
@@ -363,7 +430,7 @@ class WalletCore {
             }else{
 
                 //update initial  ui
-                homeUpdateCurrentAssetInfo(activity,tnsCoinInfo)
+                homeUpdateCurrentAssetInfo(activity,tnsCoinInfo,false)
 
                 val calColumn = activity.calColumns(160)
 

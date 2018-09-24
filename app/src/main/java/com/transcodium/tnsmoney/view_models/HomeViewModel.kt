@@ -34,9 +34,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
 
     private val userAssets: LiveData<List<UserAssets>> = appDB.userAssetsDao().all
 
-    private val assetStats: LiveData<List<AssetStats>> = appDB.assetStatsDao().all
+    private val assetStats: LiveData<List<AssetStats>> = appDB.assetStatsDao().allLive
 
-    private val cryptoAssetStats = appDB.assetStatsDao().findByType("crypto")
+    private val cryptoAssetStats = appDB.assetStatsDao().findByTypeLive("crypto")
 
     /**
      * getAllUserAssets

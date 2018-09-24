@@ -26,14 +26,25 @@ import com.transcodium.tnsmoney.db.entities.AssetStats
 @Dao
 abstract class AssetStatsDao {
 
+    //livedata
+    @get:Query("Select * FROM asset_stats")
+    abstract val allLive: LiveData<List<AssetStats>>
+
+    //non live data
     @get:Query("Select * FROM asset_stats")
     abstract val all: LiveData<List<AssetStats>>
 
     /**
      * fetch  by type
+     * for LiveData
      */
     @Query("Select * From asset_stats WHERE type = :type")
-    abstract fun findByType(type: String): LiveData<AssetStats>
+    abstract fun findByTypeLive(type: String): LiveData<AssetStats>
+
+    //none live data direct access
+    @Query("Select * From asset_stats WHERE type = :type")
+    abstract fun findByType(type: String): AssetStats
+
 
 
     @Insert(onConflict = REPLACE)

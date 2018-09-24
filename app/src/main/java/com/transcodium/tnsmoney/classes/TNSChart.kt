@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.firebase.jobdispatcher.Constraint
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -39,26 +40,46 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TNSChart {
+class TNSChart(val activity: Activity) {
 
 
-   // var mChart: LineChart? = null
+   private val homeChartView: LineChart by lazy{
 
-    val timezone by lazy {
-        TimeZone.getDefault()
-    }
+       val c = activity.coinInfoChart
 
-    val serverDateTimePattern by lazy {
-        
-    }
+       c.setDragEnabled(true)
+       c.setScaleEnabled(true)
 
-    val userDateTimePattern  by lazy {
-         SimpleDateFormat.getInstance()
-    }
+       c.setPinchZoom(false)
+       c.axisRight.isEnabled = false
+
+       c.description.isEnabled = false
+       c.setDrawMarkers(true)
+
+       c.setNoDataText("")
+       c.setDrawBorders(false)
+
+       //disable legend
+       c.legend.isEnabled = false
+
+       return@lazy  c
+   }//end
+
+  private val timePattern by lazy {
+        val p = SimpleDateFormat("HH:mm")
+                p.timeZone = TimeZone.getTimeZone("UTC")
+      return@lazy p
+  }
+
+  private val cal by lazy {
+      val c = Calendar.getInstance()
+        c.timeZone = TimeZone.getDefault()
+      return@lazy c
+  }
 
     fun processHomeCoinInfoGraph(
-            activity: Activity,
-            data: JSONArray
+            data: JSONArray,
+            animate: Boolean? = false
     ){
 
 
@@ -68,26 +89,52 @@ class TNSChart {
 
             val entries = mutableListOf<Entry>()
 
-            val circleColors = mutableListOf<Int>()
 
-            val timeList = mutableListOf<String>()
+            val markerData = mutableListOf<JSONObject>()
 
             val whiteAlpha70 = ContextCompat.getColor(activity,R.color.whiteAlpha70)
+            val whiteAlpha50 = ContextCompat.getColor(activity,R.color.whiteAlpha50P)
 
-            for(i in 0..dataSize){
+
+            //using custom x value, since it needs from 0 .. dataseize
+            //changing this will lead to array index error
+            //so dont use the loops variable i for entry x
+            var entryXvalue = 0
+
+            for(i in dataSize downTo 0){
+
+               // println(i)
 
                 val dataObj = data[i] as JSONObject
 
+                println(dataObj)
+
                 val price = dataObj.optDouble("price",0.0)
 
-                entries.add(Entry(i.toFloat(),price.toFloat()))
+                val graphDateObj = dataObj.getJSONObject("date")
 
-                circleColors.add(whiteAlpha70)
-            }
+                val market = dataObj.optString("market","").capitalize()
 
-            //entries.reverse()
+                val hourMinute = "${graphDateObj.getInt("hour")}:${graphDateObj.getInt("minute")}"
 
-            //println(entries)
+                val timeObj = timePattern.parse(hourMinute)
+
+                cal.time = timeObj
+
+                val localTime = "${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}"
+
+                markerData.add(
+                        JSONObject()
+                                .put("time",localTime)
+                                .put("market",market)
+                )
+
+                entries.add(Entry(entryXvalue.toFloat(),price.toFloat()))
+
+                //increment
+                entryXvalue++
+
+            }//end loop
 
             val dataSet = LineDataSet(entries,null)
 
@@ -95,19 +142,18 @@ class TNSChart {
 
             dataSet.setDrawFilled(true)
             dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
-            dataSet.circleColors = circleColors
-            dataSet.fillColor = ContextCompat.getColor(activity,R.color.whiteAlpha50P)
+            dataSet.setCircleColor(whiteAlpha50)
+            dataSet.fillColor = whiteAlpha50
             dataSet.setDrawValues(false)
             dataSet.isHighlightEnabled = true
+            dataSet.color = whiteAlpha70
 
 
             val lineData = LineData(dataSet)
 
-            val mChart = coinInfoChart
+            val mChart = homeChartView
 
-            mChart.setDragEnabled(true)
-            mChart.setScaleEnabled(true)
-            mChart.setPinchZoom(false)
+            mChart.data = lineData
 
             val xAxis = mChart.xAxis
 
@@ -119,33 +165,21 @@ class TNSChart {
 
             xAxis.setAvoidFirstLastClipping(true)
 
-            //disable legend
-            mChart.legend.isEnabled = false
-
-            val axisLeft = mChart.axisLeft
-            axisLeft.setDrawGridLines(false)
-            axisLeft.textColor = ContextCompat.getColor(activity,R.color.whiteAlpha70)
-
-            mChart.axisRight.isEnabled = false
-
-            mChart.description.isEnabled = false
-
-            val marker = graphMarkerView(activity,data)
+            val marker = graphMarkerView(activity,markerData)
 
             marker.chartView = mChart
 
             mChart.marker = marker
 
-            mChart.setDrawMarkers(true)
+            val axisLeft = mChart.axisLeft
+            axisLeft.setDrawGridLines(false)
+            axisLeft.textColor = ContextCompat.getColor(activity,R.color.whiteAlpha70)
 
-            mChart.data = lineData
-
-            mChart.setNoDataText("")
-
-            mChart.setDrawBorders(false)
-
-            mChart.invalidate()
-
+            if(animate!!) {
+                mChart.animateX(1000)
+            }else {
+               mChart.invalidate()
+            }
         }//ane apply activity
 
     }//end fun
@@ -156,12 +190,14 @@ class TNSChart {
      */
     open class graphMarkerView(
             mContext: Context,
-            private val dataArray: JSONArray,
+            private val extraData: MutableList<JSONObject>,
             layoutId: Int? = R.layout.chart_marker_view
     ): MarkerView(mContext,layoutId!!){
 
         private val priceTextView by lazy { findViewById<TextView>(R.id.priceTextView) }
         private val timeTextView by lazy { findViewById<TextView>(R.id.timeTextView) }
+        private val marketTextView by lazy { findViewById<TextView>(R.id.marketTextView) }
+
         /**
          * refreshContent
          */
@@ -169,15 +205,13 @@ class TNSChart {
 
             val price = "\$${e.y}"
 
-            val rowData = dataArray[e.x.toInt()] as JSONObject
-
-           val date = rowData.getJSONObject("date")
-
-            val time = "${date.getInt("hour")}:${date.getInt("minute")}"
+            val extraDataObj = extraData[e.x.toInt()]
 
             priceTextView.text = price
 
-            timeTextView.text = time
+            timeTextView.text = extraDataObj.optString("time","")
+
+            marketTextView.text = extraDataObj.optString("market","")
 
              super.refreshContent(e, highlight)
         }//end fun

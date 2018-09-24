@@ -77,6 +77,7 @@ class HomeCoinListAdapter(
 
         card.setOnClickListener{v-> handleCardClick(v,position)}
 
+         activity.vibrate()
 
         val coinColor = WalletCore.getColor(activity!!,symbol)
 

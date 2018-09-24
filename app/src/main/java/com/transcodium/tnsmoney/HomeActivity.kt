@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.transcodium.tnsmoney.classes.Anim
 import com.firebase.jobdispatcher.Job
 import com.transcodium.tnsmoney.classes.TNSChart
+import com.transcodium.tnsmoney.classes.WalletCore
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.homeUpdateUserAssetList
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.networkFetchUserAssets
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.pollNetworkAssetStats
@@ -60,13 +61,13 @@ class HomeActivity : DrawerActivity() {
 
 
         viewProvider.getUserAssets()
-                  .observe(this, Observer{
+                  .observe(this, Observer{ userAsset->
 
-                   if(it.isEmpty()){
+                   if(userAsset == null || userAsset.isEmpty()){
                        return@Observer
                    }
 
-                   val dataStr = it.first().data
+                   val dataStr = userAsset.first().data
 
                    val dataJson = JSONObject(dataStr)
 
@@ -75,27 +76,25 @@ class HomeActivity : DrawerActivity() {
 
         })//end observer
 
-        val tnsChartObj = TNSChart()
+        val tnsChartObj = TNSChart(homeActivity)
 
        viewProvider.getCryptoAssetStats()
-               .observe(this, Observer {
+               .observe(this, Observer {assetStats->
 
-                   val data = JSONObject(it.data)
+                   if(assetStats == null){
+                       return@Observer
+                   }
 
                    //lets get selected or active coin in the info card
-                  val activeCoinSymbol = homeActivity.coinInfoCard.tag?.toString() ?: "tns"
+                   val activeCoinSymbol = homeActivity.coinInfoCard.tag?.toString() ?: "tns"
 
-                  val activeCoinPair = "$activeCoinSymbol.usd"
+                   WalletCore.homeUpdateAssetLatestPriceAndGraph(
+                           activity = homeActivity,
+                           assetSymbol = activeCoinSymbol,
+                           allStatsJsonStr = assetStats.data
+                   )//end
 
-                  val dataArray = data.optJSONArray(activeCoinPair)
-
-                    if(dataArray == null){
-                        Log.e("HOME_ASSET_STATS","$activeCoinPair key not found")
-                        return@Observer
-                    }
-
-                  tnsChartObj.processHomeCoinInfoGraph(homeActivity,dataArray)
-       })
+               })
     }//end fun
 
 
