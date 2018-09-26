@@ -135,4 +135,6 @@
 
     <string name="date_colon">Date:</string>
     <string name="price_colon">Price:</string>
+
+    <string name="hello_greeting">Hello !, %1$s</string>
 </resources>

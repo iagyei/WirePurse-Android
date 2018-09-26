@@ -133,4 +133,5 @@
     <string name="server_request_failed">Server request failed, Try again later</string>
     <string name="date_colon">Date:</string>
     <string name="price_colon">Price:</string>
+    <string name="hello_greeting">Hello, %1$s</string>
 </resources>

@@ -21,7 +21,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.edit
-import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
@@ -136,7 +135,7 @@ class Account(val activity: Activity) {
         }
 
        activity.startClassActivity(
-               activityClass = LoginActivity::class.java,
+               activityClass = SocialLoginActivity::class.java,
                clearActivityStack = true,
                data = bundle
         )

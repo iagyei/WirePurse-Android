@@ -64,8 +64,10 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userBalanceView"
             app:layout_constraintBottom_toTopOf="@id/coinMenuTabLayout"
-            android:translationX="8dp"
+            android:paddingTop="2dp"
+            android:translationX="6dp"
             android:translationY="15dp"
+            android:visibility="gone"
             />
 
         <com.google.android.material.tabs.TabLayout

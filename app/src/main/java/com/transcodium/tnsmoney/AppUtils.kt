@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.firebase.jobdispatcher.*
@@ -39,6 +40,8 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
 import org.jetbrains.anko.find
 import org.json.JSONObject
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -430,5 +433,38 @@ fun setPeriodic(interval: Long, block: TimerTask.()->Unit): Timer{
 }//end fun
 
 /**
- * convertTimezone
+ * toMD5
+ */
+fun String.toMD5(): String? {
+
+    return try{
+
+        val md = MessageDigest.getInstance("MD5")
+
+        val digest = md.digest(this.toByteArray())
+
+        val result = StringBuilder()
+
+        for (byte in digest){
+            result.append(String.format("%02x", byte))
+        }
+
+         result.toString()
+
+    }catch (e: NoSuchAlgorithmException){
+        Log.e("toMD5","MD5 Algorithm not found")
+        e.printStackTrace()
+
+        null
+    }
+}
+
+/**
+ * getGravatarUrl
  **/
+fun getGravatar(userEmail: String): String {
+
+    val emailMd5 = userEmail.toMD5()
+
+    return "$GRAVATAR_URL/$emailMd5?s=160&r=g&d=$GRAVATAR_FALLBACK"
+}

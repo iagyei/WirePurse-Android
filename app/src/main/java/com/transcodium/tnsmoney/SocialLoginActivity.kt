@@ -23,7 +23,7 @@ import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
-class LoginActivity : RootActivity() {
+class SocialLoginActivity : RootActivity() {
 
 
     //we will use intent key to detect google signin result
@@ -171,7 +171,7 @@ class LoginActivity : RootActivity() {
                         TWITTER_CONSUMER_KEY,
                         TWITTER_CONSUMER_SECRET
                 ))
-                .debug(true)
+                .debug(BuildConfig.DEBUG)
                 .build()
         Twitter.initialize(config)
 
@@ -184,7 +184,6 @@ class LoginActivity : RootActivity() {
 
                 //session
                 val session = result.data
-
 
                 launch(Dispatchers.IO) {
                     SocialLoginCore(activity)

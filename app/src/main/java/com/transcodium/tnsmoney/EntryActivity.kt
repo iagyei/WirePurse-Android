@@ -37,7 +37,7 @@ class AppEntry : AppCompatActivity() {
             }
 
             else {
-                nextActivityClass = LoginActivity::class.java
+                nextActivityClass = SocialLoginActivity::class.java
             }
 
             //nextActivityClass = HomeActivity::class.java

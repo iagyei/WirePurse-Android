@@ -156,7 +156,7 @@ class AppIntroActivity : AppIntro() {
         }
 
         //open activity AuthActivity
-        startClassActivity(LoginActivity::class.java)
+        startClassActivity(SocialLoginActivity::class.java)
 
         //finish the activity
         this.finish()

@@ -18,6 +18,7 @@ package com.transcodium.tnsmoney.classes
 
 import android.app.Activity
 import android.content.Context
+import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -48,6 +49,7 @@ class TNSChart(val activity: Activity) {
        val c = activity.coinInfoChart
 
        c.setDragEnabled(true)
+
        c.setScaleEnabled(true)
 
        c.setPinchZoom(false)
@@ -82,6 +84,9 @@ class TNSChart(val activity: Activity) {
             animate: Boolean? = false
     ){
 
+        val mChart = homeChartView
+
+        mChart.visibility = View.GONE
 
         val dataSize = data.length() - 1
 
@@ -107,7 +112,7 @@ class TNSChart(val activity: Activity) {
 
                 val dataObj = data[i] as JSONObject
 
-                println(dataObj)
+               // println(dataObj)
 
                 val price = dataObj.optDouble("price",0.0)
 
@@ -151,7 +156,6 @@ class TNSChart(val activity: Activity) {
 
             val lineData = LineData(dataSet)
 
-            val mChart = homeChartView
 
             mChart.data = lineData
 
@@ -174,6 +178,10 @@ class TNSChart(val activity: Activity) {
             val axisLeft = mChart.axisLeft
             axisLeft.setDrawGridLines(false)
             axisLeft.textColor = ContextCompat.getColor(activity,R.color.whiteAlpha70)
+
+            //if(mChart.visibility == View.GONE){
+                mChart.visibility = View.VISIBLE
+            //}
 
             if(animate!!) {
                 mChart.animateX(1000)

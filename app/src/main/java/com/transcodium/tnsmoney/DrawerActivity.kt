@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
@@ -19,15 +19,19 @@ import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.alpha
-import com.transcodium.tnsmoney.classes.Anim
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.graphics.drawable.toBitmap
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
 import org.jetbrains.anko.withAlpha
+import org.json.JSONObject
 import kotlin.coroutines.experimental.CoroutineContext
 
 
@@ -61,8 +65,34 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
         findViewById<CoordinatorLayout>(R.id.contentView)
     }
 
-    val context: Context by lazy {
+    private val context: Context by lazy {
         this
+    }
+
+    //user info
+    fun getUserInfoData(): JSONObject? {
+
+        if(!isLoggedIn()){
+            startClassActivity(SocialLoginActivity::class.java,true)
+            return  null
+        }
+
+        val userInfo = secureSharedPref()
+                .getJsonObject(USER_AUTH_INFO)
+
+        if(userInfo == null){
+            startClassActivity(SocialLoginActivity::class.java,true)
+            return null
+        }
+
+        return userInfo
+    }//end user Info
+
+    /**
+     * userInfo
+     */
+    val userInfo by lazy {
+        getUserInfoData()
     }
 
 
@@ -74,7 +104,9 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
      */
     override  fun onStart() {
         super.onStart()
-        
+
+       //lets get user info
+        userInfo
     }//end on start
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -309,67 +341,51 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
     //set Header info
     private fun setDrawerHeaderInfo(){
 
-        /*/lets get profile phot
-        val photoUrl = currentUser?.photoUrl
+        val userEmail = userInfo!!.optString("user_email","")
 
-        //if not empty lets update it
-        if(photoUrl != null){
+        val userFullName = userInfo!!.optString("user_full_name","")
 
-            //using glide insert pic
-            Picasso.with(this)
-                    .load(photoUrl)
-                    .placeholder(R.drawable.ic_user)
-                    .error(R.drawable.ic_user)
-                    .resize(
-                            photoViewParent.layoutParams.width,
-                            photoViewParent.layoutParams.height
-                    )
-                    .into(photoView)
-        }//end if photo
+        //set name
+        nameView.text = getString(R.string.hello_greeting,userFullName)
 
-        //get user Phone
-        val userPhoneNo = currentUser?.phoneNumber
+        emailOrPhoneView.text = "($userEmail)"
 
-        //user email
-        val userEmail = currentUser?.email
+        //lets get profile phot
+        var photoUrl = userInfo!!.optString("photo_url",null)
 
-        //provider
-        val provider = currentUser?.providers
-
-        var emailOrPhone = ""
-
-        var displayName = currentUser?.displayName
-
-        //set display name
-        if(displayName != null){
-            nameView.text = displayName
+        if(photoUrl == null || photoUrl.isEmpty()){
+            photoUrl = getGravatar(userEmail)
         }
 
-        if(userEmail != null){
-            emailOrPhone = userEmail
-        }else if(userPhoneNo != null){
-            emailOrPhone = userPhoneNo
-        }
+        //using glide insert pic
+        Picasso
+            .with(this)
+            .load(photoUrl)
+            .centerInside()
+            .placeholder(R.drawable.ic_user_default)
+            .error(R.drawable.ic_user_default)
+            .resize(
+                   photoViewParent.layoutParams.width,
+                    photoViewParent.layoutParams.height
+            )
+            .into(photoView,object: Callback{
 
-        //set the textView
-        emailOrPhoneView.text = emailOrPhone
+                        //cnvert to circular view
+                  override fun onSuccess() {
+                        val imageBitmap = photoView.drawable.toBitmap()
+                        val imageDrawable = RoundedBitmapDrawableFactory.create(resources,imageBitmap)
+                            imageDrawable.isCircular = true
+                            imageDrawable.cornerRadius = (Math.max(imageBitmap.width,imageBitmap.height) / 2.0f)
+                            photoView.setImageDrawable(imageDrawable)
+                  }
 
-        //if the provider isnt empty
-        if(provider != null){
 
-            var providerName = provider[0].capitalize()
+                 override fun onError() {}
+             })
 
-            //sometimes the provider name is provided by a domain
-            //just remove the domain ext
-            providerName = providerName.split(".")[0]
 
-            //auth by
-            val authBy = getString(R.string.auth_by)
 
-            authByView.text = "$authBy $providerName"
-        }//end
 
-        */
     }//end set header info
 
 
