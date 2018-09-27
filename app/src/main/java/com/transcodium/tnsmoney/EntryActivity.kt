@@ -33,7 +33,7 @@ class AppEntry : AppCompatActivity() {
             }
 
             else if(isLoggedIn()){
-                nextActivityClass = HomeActivity::class.java
+              nextActivityClass = HomeActivity::class.java
             }
 
             else {

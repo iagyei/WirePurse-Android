@@ -17,6 +17,7 @@
 package com.transcodium.tnsmoney.classes
 
 import android.util.Log
+import com.transcodium.tnsmoney.R
 import kotlinx.coroutines.experimental.Deferred
 import okhttp3.*
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -43,7 +44,7 @@ class WebClient {
 
             if(urlParser == null){
                 Log.e("MALFORMED_URL","Failed to parse url $url")
-                return Status.error("http_error")
+                return Status.error(R.string.http_error)
             }
 
             val urlBuilder = urlParser.newBuilder()
@@ -122,7 +123,7 @@ class WebClient {
                     if (!response.isSuccessful) {
                         Log.e("HTTP_ERROR", "code: ${response.code()} Message: ${response.message()} ${response.code()}")
 
-                        Status.error("server_request_failed")
+                        Status.error(R.string.server_connection_failed)
 
                     } else {
 
@@ -138,7 +139,7 @@ class WebClient {
 
                     e.printStackTrace()
 
-                    Status.error("server_request_failed")
+                    Status.error(R.string.server_connection_failed)
                 }//end exception catching
 
             }//end background

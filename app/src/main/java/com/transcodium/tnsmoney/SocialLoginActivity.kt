@@ -8,10 +8,14 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.Auth
 //import com.facebook.stetho.Stetho
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.GoogleApi
+import com.google.android.gms.common.api.GoogleApiClient
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.SocialLoginCore
@@ -87,8 +91,7 @@ class SocialLoginActivity : RootActivity() {
      * signInGoogle
      */
 
-    private fun signInGoogle(){
-
+    private fun signInGoogle() = launchIO{
 
         //init google sigin
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -96,11 +99,22 @@ class SocialLoginActivity : RootActivity() {
                     .requestEmail()
                     .build()
 
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+
+        val gApiClient = GoogleApiClient.Builder(activity)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build()
+
+        val c = gApiClient.blockingConnect()
+
+         if(c.isSuccess && gApiClient.isConnected){
+             gApiClient.clearDefaultAccountAndReconnect().await()
+         }
+
+        val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
         val signInIntent = mGoogleSignInClient.signInIntent
 
-
-        //start activity
+        //start activit
         startActivityForResult(signInIntent, GOOGLE_SIGNIN)
 
     }//end request google login
@@ -215,6 +229,7 @@ class SocialLoginActivity : RootActivity() {
     * handle GoogleSingin Result
     */
     private fun handleGoogleSignInResult(data: Intent?){
+
 
         try{
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)

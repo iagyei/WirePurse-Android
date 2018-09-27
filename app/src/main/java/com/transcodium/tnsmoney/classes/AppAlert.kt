@@ -42,25 +42,28 @@ class AppAlert(val activity: Activity) {
      */
     fun error(message: Any,autoClose : Boolean = false){
 
-        val alertObj = alertObj()
+        activity.runOnUiThread {
 
-        val messageStr = if(message is Int){
-            activity.getString(message)
-        }else{
-            message.toString()
+            val alertObj = alertObj()
+
+            val messageStr = if (message is Int) {
+                activity.getString(message)
+            } else {
+                message.toString()
+            }
+
+            alertObj.setBackgroundColorRes(R.color.colorAccent)
+                    .setText(messageStr)
+                    .setIcon(R.drawable.ic_error_outline_pink_24dp)
+
+            if (autoClose) {
+                alertObj.enableInfiniteDuration(false)
+                        .setDuration(duration)
+            }
+
+            activity.vibrate()
+            alertObj.show()
         }
-
-        alertObj.setBackgroundColorRes(R.color.colorAccent)
-                .setText(messageStr)
-                .setIcon(R.drawable.ic_error_outline_pink_24dp)
-
-        if(autoClose){
-            alertObj.enableInfiniteDuration(false)
-                    .setDuration(duration)
-        }
-
-        activity.vibrate()
-        alertObj.show()
     }
 
 
@@ -69,24 +72,27 @@ class AppAlert(val activity: Activity) {
      */
     fun success(message: Any,autoClose : Boolean = true) {
 
-        val alertObj = alertObj()
+        activity.runOnUiThread {
 
-        val messageStr = if(message is Int){
-            activity.getString(message)
-        }else{
-            message.toString()
+            val alertObj = alertObj()
+
+            val messageStr = if (message is Int) {
+                activity.getString(message)
+            } else {
+                message.toString()
+            }
+
+            alertObj.setBackgroundColorRes(R.color.green)
+                    .setText(messageStr)
+                    .setIcon(R.drawable.ic_done_all_black_24dp)
+
+            if (autoClose) {
+                alertObj.enableInfiniteDuration(false)
+                        .setDuration(duration)
+            }
+
+            alertObj.show()
         }
-
-        alertObj.setBackgroundColorRes(R.color.green)
-                .setText(messageStr)
-                .setIcon(R.drawable.ic_done_all_black_24dp)
-
-        if (autoClose) {
-            alertObj.enableInfiniteDuration(false)
-                    .setDuration(duration)
-        }
-
-        alertObj.show()
     }//end if
 
 
@@ -95,13 +101,17 @@ class AppAlert(val activity: Activity) {
      */
     fun showStatus(status: Status){
 
+        activity.runOnUiThread {
 
-        if(Alerter.isShowing){ Alerter.hide() }
+            if (Alerter.isShowing) {
+                Alerter.hide()
+            }
 
-        if(status.isError()){
-            error(status.message(activity))
-        } else if(status.isSuccess()){
-            success(status.getMessage(activity))
+            if (status.isError()) {
+                error(status.message(activity))
+            } else if (status.isSuccess()) {
+                success(status.getMessage(activity))
+            }
         }
 
     }//end fun

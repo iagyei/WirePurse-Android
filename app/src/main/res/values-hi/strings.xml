@@ -134,4 +134,11 @@
     <string name="date_colon">Date:</string>
     <string name="price_colon">Price:</string>
     <string name="hello_greeting">Hello, %1$s</string>
+    <string name="confirm_logout_message">You will be logged out, do you wish to continue ?</string>
+    <string name="yes">Yes</string>
+    <string name="no_comma_cancel">No, Cancel</string>
+    <string name="logout_cancelled">Logout cancelled</string>
+    <string name="no">No</string>
+    <string name="http_error">HTTP Request Error</string>
+    <string name="server_connection_failed">Server Connection Failed</string>
 </resources>

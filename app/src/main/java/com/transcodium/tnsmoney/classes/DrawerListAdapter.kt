@@ -54,9 +54,12 @@ class DrawerListAdapter(
          rowView!!.findViewById<ImageView>(R.id.menuIcon)
                  .setImageDrawable(ContextCompat.getDrawable(ctx,rowData.menuIcon))
 
+        rowView.tag = rowData.tagName
+
         //lets set title
         rowView.findViewById<TextView>(R.id.menuTitle)
                 .text = rowData.menuTitle
+
 
         return rowView
       }//end get view

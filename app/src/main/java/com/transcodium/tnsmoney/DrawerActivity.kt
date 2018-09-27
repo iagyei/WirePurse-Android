@@ -24,13 +24,14 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.graphics.drawable.toBitmap
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import com.transcodium.tnsmoney.classes.Account
 import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
-import org.jetbrains.anko.withAlpha
+import org.jetbrains.anko.*
 import org.json.JSONObject
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -207,32 +208,29 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
         drawerLayout.addDrawerListener(drawerToggle)
 
 
-
-        //lets set drawer item click listener
-        navView.setNavigationItemSelectedListener{
-            item: MenuItem ->
-            onNavItemSelected(item)
-        }
-
         //menu data
         val listData = mutableListOf(
 
                 DrawerListModel(
+                        "setting",
                         R.drawable.ic_settings_white_24dp,
                         getString(R.string.setting),
                         AboutActivity::class.java),
 
                 DrawerListModel(
+                        "support",
                         R.drawable.ic_email_24dp,
                         getString(R.string.support),
                         AboutActivity::class.java),
 
                 DrawerListModel(
+                        "about",
                         R.drawable.ic_info_black_24dp,
                         getString(R.string.about),
                         AboutActivity::class.java),
 
                 DrawerListModel(
+                        "logout",
                         R.drawable.ic_toys_black_24dp,
                         getString(R.string.logout),
                         AboutActivity::class.java)
@@ -241,6 +239,38 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
 
         //lets create populate menu list
         drawerListView.adapter = DrawerListAdapter(this,listData)
+
+
+        /**
+         * onItem Click
+         */
+        drawerListView.setOnItemClickListener { parent, view, position, id ->
+
+            val tag = view.tag
+
+            when(tag){
+
+                "logout" -> {
+
+                    alert(R.string.confirm_logout_message){
+                        positiveButton(R.string.yes){
+                            Account(mActivity).doLogout()
+                        }
+
+                       negativeButton(R.string.no){
+                           toast(R.string.logout_cancelled)
+                           it.dismiss()
+                       }
+
+
+                        isCancelable = false
+                    }.show()
+
+                }//end if logout
+
+            }//end when
+        }//end listener
+
     }//end oncreate
 
 
@@ -253,40 +283,6 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
         job?.cancel()
     }
 
-
-
-    //on NavItemSelected
-    fun onNavItemSelected(item: MenuItem): Boolean{
-
-        /**
-        val itemId = item.itemId
-
-        val itemActivity = when(itemId){
-        R.id.about ->  AboutActivity::class.java
-        R.id.contact_us -> ContactActivity::class.java
-        else -> null
-        }
-
-        val  curActivityName = this.javaClass.name
-
-        //is Same activity
-        val isSameActivity = curActivityName == itemActivity?.name
-
-        //if itemActivity is not null or
-        //not the same activity, then open activity
-        if(!(itemActivity == null || isSameActivity )){
-
-        //Open activity
-        startActivity(Intent(applicationContext,itemActivity))
-        }
-
-
-        //close drawer
-        drawerLayout.closeDrawer(GravityCompat.START)
-         */
-
-        return true
-    }//end
 
     //onOptionItemSelected
     override fun onOptionsItemSelected(item: MenuItem):Boolean{

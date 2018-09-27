@@ -440,6 +440,7 @@ class WalletCore {
 
 
                 recyclerView.adapter = adapter
+
             }
 
             return recyclerView

@@ -468,3 +468,10 @@ fun getGravatar(userEmail: String): String {
 
     return "$GRAVATAR_URL/$emailMd5?s=160&r=g&d=$GRAVATAR_FALLBACK"
 }
+
+/**
+ * confirm Logout
+ **/
+fun Activity.confirmLogout(){
+
+}//end
