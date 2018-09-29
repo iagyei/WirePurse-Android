@@ -2,21 +2,19 @@ package com.transcodium.tnsmoney
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.transcodium.tnsmoney.classes.Anim
 import com.firebase.jobdispatcher.Job
-import com.transcodium.tnsmoney.classes.TNSChart
 import com.transcodium.tnsmoney.classes.WalletCore
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.homeUpdateUserAssetList
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.networkFetchUserAssets
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.pollNetworkAssetStats
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
-import com.transcodium.tnsmoney.db.entities.UserAssets
 import com.transcodium.tnsmoney.view_models.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.home_coin_info.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
 import org.json.JSONObject
@@ -26,11 +24,12 @@ class HomeActivity : DrawerActivity() {
 
 
 
-    val homeActivity by lazy {
+    private val homeActivity by lazy {
         this
     }
 
-    var appJob: Job? = null
+
+    private var appJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -49,12 +48,24 @@ class HomeActivity : DrawerActivity() {
             initHome()
         }
 
+
+        /**
+         * receive
+         */
+        receiveAsset.setOnClickListener {
+
+            //lets get the current asset
+            val assetSymbol = coinInfoCard.tag.toString()
+            val frag = DepositCryptoAsset.newInstance(assetSymbol)
+            frag.show(supportFragmentManager.beginTransaction(),"receive_crypto_asset")
+        }//end on click
+
     }//end onCreate
 
     /**
      * observe Live Data
      */
-    fun observeLiveData() {
+    private fun observeLiveData() {
 
        val viewProvider = ViewModelProviders.of(this)
                         .get(HomeViewModel::class.java)
@@ -76,7 +87,6 @@ class HomeActivity : DrawerActivity() {
 
         })//end observer
 
-        val tnsChartObj = TNSChart(homeActivity)
 
        viewProvider.getCryptoAssetStats()
                .observe(this, Observer {assetStats->
@@ -101,7 +111,7 @@ class HomeActivity : DrawerActivity() {
     /**
      * doPeriodicTask
      */
-    suspend fun initHome(){
+    private suspend fun initHome(){
 
 
         launch {

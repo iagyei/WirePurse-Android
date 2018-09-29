@@ -116,6 +116,10 @@ class TNSChart(val activity: Activity) {
 
                 val price = dataObj.optDouble("price",0.0)
 
+                if(price <= 0.0){
+                    continue
+                }
+
                 val graphDateObj = dataObj.getJSONObject("date")
 
                 val market = dataObj.optString("market","").capitalize()

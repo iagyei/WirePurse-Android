@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.GravityCompat
@@ -19,7 +18,6 @@ import com.google.android.material.navigation.NavigationView
 import com.transcodium.app.DrawerListAdapter
 import com.transcodium.app.DrawerListModel
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.graphics.drawable.toBitmap
 import com.squareup.picasso.Callback
@@ -125,6 +123,7 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
             )
         }
+
 
         //set toolbar as actionbar
         setSupportActionBar(toolbar)
@@ -252,20 +251,17 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
 
                 "logout" -> {
 
-                    alert(R.string.confirm_logout_message){
-                        positiveButton(R.string.yes){
-                            Account(mActivity).doLogout()
-                        }
-
-                       negativeButton(R.string.no){
-                           toast(R.string.logout_cancelled)
-                           it.dismiss()
-                       }
-
-
-                        isCancelable = false
-                    }.show()
-
+                    AlertDialog.Builder(this)
+                            .setCancelable(false)
+                            .setMessage(R.string.confirm_logout_message)
+                            .setNegativeButton(R.string.no){ d,v ->
+                                toast(R.string.logout_cancelled)
+                                d.dismiss()
+                            }
+                            .setPositiveButton(R.string.yes){ d, v ->
+                                Account(mActivity).doLogout()
+                            }
+                            .show()
                 }//end if logout
 
             }//end when
@@ -344,7 +340,7 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
         //set name
         nameView.text = getString(R.string.hello_greeting,userFullName)
 
-        emailOrPhoneView.text = "($userEmail)"
+        emailOrPhoneView.text = "($userEmail)".toLowerCase()
 
         //lets get profile phot
         var photoUrl = userInfo!!.optString("photo_url",null)

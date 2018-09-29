@@ -22,6 +22,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ import kotlinx.coroutines.experimental.android.UI
 import org.json.JSONObject
 import kotlinx.android.synthetic.main.activity_home.*
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.JsonArray
@@ -36,6 +38,7 @@ import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
 import com.transcodium.tnsmoney.R.id.coinInfoCard
 import com.transcodium.tnsmoney.db.AppDB
+import com.transcodium.tnsmoney.db.daos.UserAssetsDao
 import com.transcodium.tnsmoney.db.entities.AssetStats
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
@@ -133,6 +136,50 @@ class WalletCore {
 
             return dataStatus
         }//end
+
+        /**
+         * dbFetchUser Assets
+         */
+         suspend fun dbFetchUserAssets(
+                context: Context,returnList: Boolean = false
+        ): Status{
+
+            //userAssetDao
+            val db = AppDB.getInstance(context)
+
+            val userAssetsDataList = db.userAssetsDao().all
+
+            if(userAssetsDataList.isEmpty()){
+                return Status.error(R.string.no_assets_available)
+            }
+
+
+            val dataObjStr = userAssetsDataList.first().data
+
+            if(dataObjStr == null){
+                return Status.error(R.string.no_assets_available)
+            }
+
+            val  dataJsonObj = JSONObject(dataObjStr)
+
+            if(!returnList) {
+                return Status.success(data = dataJsonObj)
+            }
+
+            val tnsData = dataJsonObj.optJSONObject("tns")
+
+            //les convert into list
+            val proccessedDataList = mutableListOf<JSONObject>()
+
+            if(tnsData != null){ proccessedDataList.add(tnsData) }
+
+            for(key in dataJsonObj.keys()){
+
+                if(key == "tns"){ continue }
+
+
+            }
+        }//end fun
 
 
         /**
@@ -318,6 +365,10 @@ class WalletCore {
                        coinColorDarken
                )
 
+               cardBgAnim.doOnStart { view.setLayerType(View.LAYER_TYPE_HARDWARE, null)  }
+
+               cardBgAnim.doOnEnd { view.setLayerType(View.LAYER_TYPE_NONE, null) }
+
                cardBgAnim.addUpdateListener{ ls->
 
                    val animColor = ls.animatedValue as Int
@@ -333,12 +384,15 @@ class WalletCore {
 
                cardBgAnim.doOnStart {
 
+                   //use hardware to run anim
+
                    activity.setToolbarTitle(coinName)
 
                    //update userBalance the same when
                    //the bg anim starts
                    userBalanceView.animate()
                            .alpha(0f)
+                           .withLayer()
                            .setDuration(animDuration/2)
                            .withEndAction{
 
@@ -355,6 +409,7 @@ class WalletCore {
                                        .animate()
                                        .alpha(1f)
                                        .setDuration(animDuration/2)
+                                       .withLayer()
                                        .start()
 
                            }.start()

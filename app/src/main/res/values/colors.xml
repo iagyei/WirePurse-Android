@@ -34,6 +34,7 @@
         <color name="colorLinkedin">#4376B1</color>
         <color name="white">#ffffff</color>
         <color name="whiteAlpha50P">#80ffffff</color>
+        <color name="whiteAlpha95">#F2ffffff</color>
         <color name="colorTNS">#0288D1</color>
         <color name="colorBTC">#ffa726</color>
         <color name="colorETH">#323433</color>

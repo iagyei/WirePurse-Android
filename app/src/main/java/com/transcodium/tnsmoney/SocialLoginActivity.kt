@@ -122,7 +122,7 @@ class SocialLoginActivity : RootActivity() {
     /**
      * signInFacebook
      */
-    private fun signInFacebook(){
+    private fun signInFacebook() {
 
 
         //set IS_FACEBOOK_SIGNIN to true

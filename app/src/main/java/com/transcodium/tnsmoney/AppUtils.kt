@@ -25,20 +25,17 @@ import android.graphics.Matrix
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import com.firebase.jobdispatcher.*
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.*
-import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
+import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.Main
-import org.jetbrains.anko.find
 import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -296,7 +293,7 @@ fun Activity.setToolbarTitle(
         titleText: String
 ){
 
-    val txtView = find<TextView>(R.id.topToolbarTitle)
+    val txtView = topToolbarTitle
         txtView.animate()
                 .translationY(txtView.height.toFloat())
                 .alpha(0f)
@@ -469,9 +466,8 @@ fun getGravatar(userEmail: String): String {
     return "$GRAVATAR_URL/$emailMd5?s=160&r=g&d=$GRAVATAR_FALLBACK"
 }
 
-/**
- * confirm Logout
- **/
-fun Activity.confirmLogout(){
 
-}//end
+fun toDip(c: Context, pixel: Float): Float {
+    val density = c.resources.displayMetrics.density
+    return pixel / density
+}

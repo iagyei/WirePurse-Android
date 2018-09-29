@@ -36,4 +36,11 @@
        <item name="colorControlActivated">@color/blueGreyD2</item>
 
     </style>
+
+    <style name="AppDialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+        <item name="android:fadeEnabled">false</item>
+    </style>
 </resources>

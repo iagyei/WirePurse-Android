@@ -27,13 +27,19 @@ import com.transcodium.tnsmoney.db.entities.UserAssets
 abstract class UserAssetsDao {
 
     @get:Query("Select * FROM user_assets")
-    abstract val all: LiveData<List<UserAssets>>
+    abstract val all: List<UserAssets>
+
+    @get:Query("Select * FROM user_assets")
+    abstract val allLive: LiveData<List<UserAssets>>
 
     /**
      * fetch  by type
      */
     @Query("Select * From user_assets Limit 1")
     abstract fun getData(): LiveData<List<UserAssets>>
+
+    @Query("Select * From user_assets Limit 1")
+    abstract fun getDataLive(): List<UserAssets>
 
     /**
      * update asset data

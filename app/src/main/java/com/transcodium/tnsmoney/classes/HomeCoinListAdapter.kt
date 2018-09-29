@@ -21,6 +21,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -45,7 +46,7 @@ class HomeCoinListAdapter(
     var selectedItemPos = 0
 
 
-    class RViewHolder(card: CardView): RecyclerView.ViewHolder(card)
+    class RViewHolder(itemView: FrameLayout): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RViewHolder {
 
@@ -53,15 +54,14 @@ class HomeCoinListAdapter(
 
         //activity = (context as Activity)
 
-        val card = LayoutInflater
+        val itemView = LayoutInflater
                     .from(context)
                     .inflate(
                             R.layout.home_coins_list_layout,
                             parent,
-                            false) as CardView
+                            false) as FrameLayout
 
-
-        return RViewHolder(card)
+        return RViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: RViewHolder, position: Int) {
@@ -73,9 +73,11 @@ class HomeCoinListAdapter(
         val symbol   = coinInfo.getString("symbol").toLowerCase()
 
 
-        val card = holder.itemView
+        val itemView = holder.itemView
 
-        card.setOnClickListener{v-> handleCardClick(v,position)}
+        itemView.setOnClickListener{v->
+            handleCardClick(v,position)
+        }
 
 
         val coinColor = WalletCore.getColor(activity!!,symbol)
@@ -98,25 +100,29 @@ class HomeCoinListAdapter(
         bgImg?.alpha = 180
 
 
-        card.background = bgImg
+        itemView.background = bgImg
 
 
-        card.findViewById<ConstraintLayout>(R.id.contentMain)
+        itemView.findViewById<ConstraintLayout>(R.id.contentMain)
                 .setBackgroundColor(coinColorAlpha)
 
-        card.findViewById<LinearLayout>(R.id.coinNameWrapper)
+        itemView.findViewById<LinearLayout>(R.id.coinNameWrapper)
             .setBackgroundColor(coinColor)
 
         val coinNameTvText = "$coinName ($symbol)"
 
-        card.findViewById<TextView>(R.id.coinNameTv).text = coinNameTvText
+        itemView.findViewById<TextView>(R.id.coinNameTv).text = coinNameTvText
 
     }//en fun
+
 
     /**
      * handleCardClick
      */
     fun handleCardClick(v: View,position: Int){
+
+
+        println("HMM CLicked-- $position")
 
        if(selectedItemPos == position){
            return
@@ -131,4 +137,6 @@ class HomeCoinListAdapter(
     }//end fun
 
     override fun getItemCount() = dataSet.size
+
+
 }

@@ -32,7 +32,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
     private val appDB: AppDB = AppDB.getInstance(application)
 
 
-    private val userAssets: LiveData<List<UserAssets>> = appDB.userAssetsDao().all
+    private val userAssets: LiveData<List<UserAssets>> = appDB.userAssetsDao().allLive
 
     private val assetStats: LiveData<List<AssetStats>> = appDB.assetStatsDao().allLive
 

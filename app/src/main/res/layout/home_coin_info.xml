@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/balanceFirstDigit"
@@ -70,7 +71,7 @@
             android:visibility="gone"
             />
 
-        <com.google.android.material.tabs.TabLayout
+        <LinearLayout
             android:id="@+id/coinMenuTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,29 +82,40 @@
             android:layout_margin="0dp"
             app:tabInlineLabel="true"
             app:tabIndicatorHeight="0dp"
-            app:tabRippleColor="@color/white">
+            app:tabRippleColor="@color/white"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/sendAsset"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/send"/>
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/receive"
-                android:clickable="true"
-                android:focusable="true"
+                android:text="@string/send"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="@color/whiteAlpha50P"
                 />
 
-            <com.google.android.material.tabs.TabItem
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/receiveAsset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/receive"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="@color/whiteAlpha50P"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/more"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/more"
-                android:clickable="true"
-                android:focusable="true" />
-        </com.google.android.material.tabs.TabLayout>
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="@color/whiteAlpha50P"
+                />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
