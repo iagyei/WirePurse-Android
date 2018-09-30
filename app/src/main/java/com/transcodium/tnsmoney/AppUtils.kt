@@ -471,3 +471,11 @@ fun toDip(c: Context, pixel: Float): Float {
     val density = c.resources.displayMetrics.density
     return pixel / density
 }
+
+
+/**
+ * IOCoroutine
+ **/
+fun IOCoroutine() = CoroutineScope(Dispatchers.IO)
+
+fun UICoroutine() = CoroutineScope(Dispatchers.Main)

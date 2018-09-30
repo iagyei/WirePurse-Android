@@ -28,6 +28,7 @@ import com.transcodium.tnsmoney.db.entities.UserAssets
 
 @Database(
         entities = [AssetStats::class, UserAssets::class],
+        exportSchema = false,
         version = 	3
 )
 

@@ -1,28 +1,18 @@
 package com.transcodium.tnsmoney
 
-import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
 
-open class DialogBase  : DialogFragment()  {
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val win = dialog?.window
-
-        if(win != null){ win.setWindowAnimations(R.style.AppDialog) }
-    }
+open class ActivityDialogBase  : AppCompatActivity()  {
 
 
     override fun onStart() {
         super.onStart()
 
-        val win = dialog?.window
+        val win = window
 
-        val maxWidth = toDip(dialog.context,380f).toInt()
+        val maxWidth = toDip(this,380f).toInt()
 
         if(win != null) {
 
@@ -45,7 +35,5 @@ open class DialogBase  : DialogFragment()  {
             )
         }//end id
 
-        dialog?.setCancelable(false)
-        dialog?.setCanceledOnTouchOutside(false)
     }
 }

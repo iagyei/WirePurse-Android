@@ -26,16 +26,9 @@
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/dialogHeader"
         android:padding="10dp">
-
-        <include
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            layout="@layout/crypto_asset_select_dropdown"
-            />
-
+        
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
- </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 

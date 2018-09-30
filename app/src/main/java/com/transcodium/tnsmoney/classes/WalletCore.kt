@@ -173,12 +173,20 @@ class WalletCore {
 
             if(tnsData != null){ proccessedDataList.add(tnsData) }
 
+            /**
             for(key in dataJsonObj.keys()){
 
-                if(key == "tns"){ continue }
+                //if(key == "tns"){ continue }
 
+                val assetItemObj = dataJsonObj[key] as JSONObject
 
+                proccessedDataList.add(assetItemObj)
             }
+            */
+
+            println("---------HMMMMMMM------ $dataJsonObj")
+
+            return Status.success(data = proccessedDataList)
         }//end fun
 
 

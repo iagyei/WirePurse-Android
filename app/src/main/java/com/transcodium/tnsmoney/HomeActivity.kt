@@ -2,10 +2,8 @@ package com.transcodium.tnsmoney
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.transcodium.tnsmoney.classes.Anim
 import com.firebase.jobdispatcher.Job
 import com.transcodium.tnsmoney.classes.WalletCore
 import com.transcodium.tnsmoney.classes.WalletCore.Companion.homeUpdateUserAssetList
@@ -33,10 +31,6 @@ class HomeActivity : DrawerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Anim(this).slideWindow(
-                Gravity.START,
-                Gravity.END
-        )
 
         setContentView(R.layout.activity_home)
 
@@ -56,8 +50,15 @@ class HomeActivity : DrawerActivity() {
 
             //lets get the current asset
             val assetSymbol = coinInfoCard.tag.toString()
-            val frag = DepositCryptoAsset.newInstance(assetSymbol)
-            frag.show(supportFragmentManager.beginTransaction(),"receive_crypto_asset")
+
+            val data = Bundle().apply { putString("asset_symbol",assetSymbol) }
+
+            startClassActivity(
+                    activityClass = ReceiveCryptoAssetActivity::class.java,
+                    clearActivityStack = false,
+                    data = data
+            )
+
         }//end on click
 
     }//end onCreate

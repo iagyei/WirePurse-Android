@@ -20,11 +20,8 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.Gravity
-import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.transcodium.tnsmoney.classes.Anim
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.Job
@@ -39,13 +36,6 @@ open class RootActivity : AppCompatActivity(), CoroutineScope {
         get() = Dispatchers.Main
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-
-        Anim(this).slideWindow(
-                Gravity.START,
-                Gravity.END
-        )
-
-
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
 

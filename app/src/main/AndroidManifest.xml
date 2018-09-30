@@ -74,7 +74,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ReceiveCryptoActivity"></activity>
+        <activity
+            android:name=".ReceiveCryptoAssetActivity"
+            android:theme="@style/AppDialog"
+            />
     </application>
 
 </manifest>
