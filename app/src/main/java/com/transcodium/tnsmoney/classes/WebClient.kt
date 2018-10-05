@@ -88,13 +88,10 @@ class WebClient {
                 request.headers(Headers.of(headers))
             }
 
-            var formBody: MultipartBody.Builder? = null
-
-            if(params != null && params.isNotEmpty()){
-
-                formBody = MultipartBody.Builder()
+            val formBody = MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
 
+            if(params != null && params.isNotEmpty()){
 
                 params.forEach{pair ->
                     formBody.addFormDataPart(pair.first,pair.second.toString())
@@ -103,7 +100,7 @@ class WebClient {
 
 
             val requestBuilder =  request.url(url)
-                                         .method("POST",formBody?.build())
+                                         .post(formBody.build())
                                          .build()
 
             return execRequest(requestBuilder)
@@ -124,7 +121,11 @@ class WebClient {
                             .execute()
 
                     if (!response.isSuccessful) {
-                        Log.e("HTTP_ERROR", "code: ${response.code()} Message: ${response.message()} ${response.code()}")
+                        Log.e("HTTP_ERROR", " " +
+                                "CODE: ${response.code()}  " +
+                                "MESSAGE: ${response.message()} ${response.code()} " +
+                                "URL : ${request.url()}"
+                        )
 
                         Status.error(R.string.server_connection_failed)
 

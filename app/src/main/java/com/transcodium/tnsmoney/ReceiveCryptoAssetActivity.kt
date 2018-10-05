@@ -73,11 +73,9 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
         generateAddressBtn.setOnClickListener {
 
             progressBar.visibility = View.VISIBLE
-            contentView.visibility = View.GONE
 
             generateAddress()
 
-            progressBar.visibility = View.GONE
             contentView.visibility = View.VISIBLE
         }//end on click
 

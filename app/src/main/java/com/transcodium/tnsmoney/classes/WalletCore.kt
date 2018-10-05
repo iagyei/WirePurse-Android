@@ -283,7 +283,7 @@ class WalletCore {
             val dataToInsert = AssetAddress(
                address = addressData.getString("address"),
                remote_id = addressData.getString("address_id"),
-               asset = assetSymbol
+               chain = assetSymbol
             )
 
             //insert into database
@@ -307,10 +307,15 @@ class WalletCore {
 
             val assetInfo = assetInfoStatus.getData<JSONObject>()!!
 
+            println(assetInfo)
+
             val assetId = assetInfo.getString("_id")
 
             val requestStatus = TnsApi(context)
-                    .post("/wallet/address/generate/$assetId")
+                    .post(
+                            requestPath = "/wallet/address/generate",
+                            params = listOf(Pair("crypto_id",assetId))
+                    )
 
 
             if(requestStatus.isError()){
@@ -337,7 +342,7 @@ class WalletCore {
             val dataToInsert = AssetAddress(
                     address = addressData.getString("address"),
                     remote_id = addressData.getString("address_id"),
-                    asset = assetSymbol
+                    chain = assetSymbol
             )
 
             //insert into database

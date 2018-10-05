@@ -13,12 +13,12 @@ import androidx.room.OnConflictStrategy.REPLACE
 abstract class AssetAddressDao {
 
     //select one
-    @Query("Select * From asset_addresses WHERE asset = :asset ORDER BY id DESC LIMIT 1")
-    abstract fun findOne(asset: String): AssetAddress
+    @Query("Select * From asset_addresses WHERE chain = :chain ORDER BY id DESC LIMIT 1")
+    abstract fun findOne(chain: String): AssetAddress
 
     //findOneLive
-    @Query("Select * From asset_addresses WHERE asset = :asset ORDER BY id DESC LIMIT 1")
-    abstract fun findOneLive(asset: String): LiveData<AssetStats>
+    @Query("Select * From asset_addresses WHERE chain = :chain ORDER BY id DESC LIMIT 1")
+    abstract fun findOneLive(chain: String): LiveData<AssetStats>
 
     //insert
     @Insert(onConflict = REPLACE)
