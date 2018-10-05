@@ -148,6 +148,7 @@
     <string name="receive_space_asset">Receive %1$s</string>
     <string name="no_assets_available">No Assets available, contact support if problem persists</string>
     <string name="deposit_asset">Deposit Asset</string>
+    <string name="unknown_asset">Unknown Asset %1$s</string>
 
 
 </resources>

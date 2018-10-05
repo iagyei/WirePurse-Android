@@ -32,7 +32,7 @@ class TnsApi(val context: Context){
         /**
          * requestHeaders
          */
-       val getRequestHeaders by lazy{
+       private val getRequestHeaders by lazy{
 
             val appName = context.getString(R.string.app_name)
             val appVersion = BuildConfig.VERSION_NAME
@@ -62,7 +62,7 @@ class TnsApi(val context: Context){
         /**
         * RequestAuth
         **/
-        fun getRequestAuth(
+        private fun getRequestAuth(
                 addToHeaders: Boolean? = true
         ): Status{
 
@@ -147,7 +147,7 @@ class TnsApi(val context: Context){
     /**
      * proccessApiRequest
      */
-    suspend fun processAPIRequest(
+    private suspend fun processAPIRequest(
             requestType: String,
             requestPath: String,
             params: List<Pair<String,Any>>? = null,
@@ -220,7 +220,7 @@ class TnsApi(val context: Context){
      * getAccessToken Check if access token has expired, if it has expired
      * regenerate before send it back
      */
-    fun getAccessToken(
+     fun getAccessToken(
             authInfo : JSONObject
     ): Status {
 

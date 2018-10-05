@@ -38,6 +38,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
 
     private val cryptoAssetStats = appDB.assetStatsDao().findByTypeLive("crypto")
 
+
     /**
      * getAllUserAssets
      */
@@ -46,6 +47,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
     fun getAllAssetStats() = assetStats
 
     fun getCryptoAssetStats() = cryptoAssetStats
+
+    fun getAssetLatestAddress(asset: String) =  appDB.assetAddressDao().findLatestLive(asset)
 
     /**
      * updateUserAssets

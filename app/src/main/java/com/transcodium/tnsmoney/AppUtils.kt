@@ -29,7 +29,10 @@ import android.os.Vibrator
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import com.firebase.jobdispatcher.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.classes.*
 import kotlinx.android.synthetic.main.app_bar.*
@@ -476,6 +479,47 @@ fun toDip(c: Context, pixel: Float): Float {
 /**
  * IOCoroutine
  **/
-fun IOCoroutine() = CoroutineScope(Dispatchers.IO)
+val IO = CoroutineScope(Dispatchers.IO)
 
-fun UICoroutine() = CoroutineScope(Dispatchers.Main)
+val UI = CoroutineScope(Dispatchers.Main)
+
+
+/**
+ * generateQRCode
+ **/
+fun generateQRCode(
+        data: String,
+        size: Int = 200,
+        imgView: ImageView? = null
+): Status{
+
+    val multiFormatWriter = MultiFormatWriter()
+
+    return try{
+
+        val bitMatrix = multiFormatWriter.encode(data,BarcodeFormat.QR_CODE,size,size)
+
+        val qrCodeBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                qrCodeBitmap.setPixel(x, y, if (bitMatrix.get(x, y))
+                    Color.BLACK
+                else
+                    Color.TRANSPARENT)
+            }
+        }
+
+        //show image barcode
+        imgView?.setImageBitmap(qrCodeBitmap)
+
+         Status.success(data = qrCodeBitmap)
+    }catch(e: Exception){
+
+        Log.e("QRCODE_ERROR","Failed to generate QR code")
+        e.printStackTrace()
+
+        Status.error()
+    }
+
+}//end generate qr code

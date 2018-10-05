@@ -19,33 +19,25 @@ package com.transcodium.tnsmoney.classes
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.experimental.android.UI
 import org.json.JSONObject
 import kotlinx.android.synthetic.main.activity_home.*
 import androidx.cardview.widget.CardView
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
-import androidx.lifecycle.ViewModelProviders
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.transcodium.tnsmoney.*
-import com.transcodium.tnsmoney.R.id.coinInfoCard
 import com.transcodium.tnsmoney.db.AppDB
-import com.transcodium.tnsmoney.db.daos.UserAssetsDao
+import com.transcodium.tnsmoney.db.entities.AssetAddresses
 import com.transcodium.tnsmoney.db.entities.AssetStats
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
 import kotlinx.coroutines.experimental.*
-import org.jetbrains.anko.coroutines.experimental.bg
-import org.jetbrains.anko.find
 import org.json.JSONArray
 import java.lang.Exception
 import java.util.*
@@ -78,6 +70,21 @@ class WalletCore {
                 "ltc" to R.drawable.ic_ltc,
                 "eos" to R.drawable.ic_eos
             )
+        }
+
+        /**
+         * addressUri
+         */
+        fun getAssetDataUri(
+                assetSymbol: String,
+                address: String,
+                amount: Double? = null
+        ): String{
+            return when(assetSymbol){
+                "eth","tns" -> "ethereum:$address"
+                "btc" -> "bitcoin:$address"
+                else -> address
+            }
         }
 
         /**
@@ -141,7 +148,8 @@ class WalletCore {
          * dbFetchUser Assets
          */
          suspend fun dbFetchUserAssets(
-                context: Context,returnList: Boolean = false
+                context: Context,
+                returnList: Boolean? = false
         ): Status{
 
             //userAssetDao
@@ -162,7 +170,7 @@ class WalletCore {
 
             val  dataJsonObj = JSONObject(dataObjStr)
 
-            if(!returnList) {
+            if(!returnList!!) {
                 return Status.success(data = dataJsonObj)
             }
 
@@ -173,25 +181,118 @@ class WalletCore {
 
             if(tnsData != null){ proccessedDataList.add(tnsData) }
 
-            /**
+
             for(key in dataJsonObj.keys()){
 
-                //if(key == "tns"){ continue }
+                if(key != "tns") {
 
-                val assetItemObj = dataJsonObj[key] as JSONObject
+                    val assetItemObj = dataJsonObj[key] as JSONObject
 
-                proccessedDataList.add(assetItemObj)
+                    proccessedDataList.add(assetItemObj)
+                }
             }
-            */
 
-            println("---------HMMMMMMM------ $dataJsonObj")
 
             return Status.success(data = proccessedDataList)
         }//end fun
 
+        /**
+         * getAssetBySymbol
+         */
+        suspend fun getAssetInfo(context: Context, symbol: String): Status{
+
+            val userAssetsStatus = dbFetchUserAssets(context)
+
+            if(userAssetsStatus.isError()){ return userAssetsStatus}
+
+            val assetsData = userAssetsStatus.getData<JSONObject>()!!
+
+            if(!assetsData.has(symbol)){
+                return Status.error(context.getString(R.string.unknown_asset,symbol))
+            }
+
+            return Status.success(data = assetsData.getJSONObject(symbol))
+        }//end fun
+
 
         /**
-         * networkFetchAssetStats
+         * fetchAssetAddress
+         */
+        suspend fun fetchDBAssetAddresses(
+                context: Context,
+                assetSymbol: String
+        ): Status{
+
+            //check db first
+            val db = AppDB.getInstance(context)
+
+            val allAddresses = db.assetAddressDao().findAll(assetSymbol)
+
+            if(allAddresses.isEmpty()){
+                return netwokFetchAssetAdress(context,assetSymbol)
+            }
+
+            return Status.success(data = allAddresses)
+        }//end
+
+
+        /**
+         * fetchNetworkAssetAddress
+         */
+        suspend fun netwokFetchAssetAdress(
+                context: Context,
+                assetSymbol: String
+        ): Status{
+
+            val assetInfoStatus = getAssetInfo(context,assetSymbol)
+
+            if(assetInfoStatus.isError()){ return assetInfoStatus }
+
+            val assetInfo = assetInfoStatus.getData<JSONObject>()!!
+
+            val assetId = assetInfo.getString("_id")
+
+            val requestStatus = TnsApi(context)
+                                .get("/wallet/address/$assetId")
+
+
+            if(requestStatus.isError()){
+                return requestStatus
+            }
+
+            //get data
+            val addressData = requestStatus.getData<JSONObject>()
+
+            if(addressData == null){
+
+                Log.e(
+                        "ASSET_ADDRESS_ERROR",
+                        "Fetch network asset address returned null, asset: $assetSymbol"
+                )
+
+                return Status.error(R.string.unexpected_error)
+            }
+
+            //database
+            val db = AppDB.getInstance(context)
+
+
+            val dataToInsert = AssetAddresses(
+               address = addressData.getString("address"),
+               remote_id = addressData.getString("address_id"),
+               asset = assetSymbol
+            )
+
+            //insert into database
+            db.assetAddressDao().insert(dataToInsert)
+
+            //send the db obj
+            return Status.success(data = listOf(dataToInsert))
+        }//end fun
+
+
+        /**
+        * networkFetchAssetStats
          */
         suspend fun networkFetchAssetStats(context: Context): Status {
 
@@ -202,6 +303,8 @@ class WalletCore {
             if (dataStatus.isError()) {
                 return dataStatus
             }//end
+
+            println(dataStatus.toJsonObject())
 
             //lets update db
             val dataArray = dataStatus.getData<JSONArray>()

@@ -34,6 +34,11 @@
             name="android:autofilledHighlight">@android:color/transparent</item>
     </style>
 
+    <style name="ProgressBarTheme">
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="AppEditText" parent="AppTheme">
         <item name="colorControlNormal">@color/blueGreyD2</item>
        <item name="colorControlActivated">@color/blueGreyD2</item>

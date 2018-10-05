@@ -19,7 +19,9 @@ package com.transcodium.tnsmoney.classes
 import android.app.Activity
 import com.tapadoo.alerter.Alerter
 import com.transcodium.tnsmoney.R
+import com.transcodium.tnsmoney.UI
 import com.transcodium.tnsmoney.vibrate
+import kotlinx.coroutines.experimental.launch
 
 class AppAlert(val activity: Activity) {
 
@@ -40,7 +42,7 @@ class AppAlert(val activity: Activity) {
     /**
      * error
      */
-    fun error(message: Any,autoClose : Boolean = false){
+    fun error(message: Any,autoClose : Boolean = false) = UI.launch{
 
         activity.runOnUiThread {
 
@@ -70,7 +72,7 @@ class AppAlert(val activity: Activity) {
     /**
      * success
      */
-    fun success(message: Any,autoClose : Boolean = true) {
+    fun success(message: Any,autoClose : Boolean = true) = UI.launch {
 
         activity.runOnUiThread {
 
