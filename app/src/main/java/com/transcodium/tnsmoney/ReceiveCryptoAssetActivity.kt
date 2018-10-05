@@ -1,17 +1,21 @@
 package com.transcodium.tnsmoney
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.WalletCore
-import com.transcodium.tnsmoney.db.entities.AssetAddresses
+import com.transcodium.tnsmoney.db.entities.AssetAddress
 import kotlinx.android.synthetic.main.activity_receive_crypto_asset.*
 import kotlinx.android.synthetic.main.circular_progress_bar.*
 import kotlinx.android.synthetic.main.dialog_header.*
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.toast
 import org.json.JSONObject
 
 class ReceiveCryptoAssetActivity : ActivityDialogBase() {
@@ -19,6 +23,10 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
     var cryptoSymbol: String? = null
 
     val mActivity by lazy { this }
+
+    val clipboardManager by lazy {
+        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -35,7 +43,7 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
             dialogTitle.text = mActivity.getString(R.string.receive_space_asset, cryptoSymbol!!.toUpperCase())
 
-            val cryptoAddressesStatus = WalletCore.fetchDBAssetAddresses(
+            val cryptoAddressesStatus = WalletCore.fetchDBAssetAddress(
                     mActivity,
                     cryptoSymbol!!
 
@@ -45,7 +53,7 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
                 opError(cryptoAddressesStatus); return@launch
             }
 
-            val addressesData = cryptoAddressesStatus.getData<List<AssetAddresses>>()
+            val addressesData = cryptoAddressesStatus.getData<AssetAddress>()
 
             if(addressesData == null){
                 Log.e("EMPTY_DATA_RETURNED","EMPTY Data was returned")
@@ -57,31 +65,81 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
         }//end coroutine
 
-            closeModal.setOnClickListener { mActivity.finish() }
+        //copy address
+        copyAddressBtn.setOnClickListener { copyAddress() }
 
-    }
+        addressFieldCard.setOnClickListener { copyAddress() }
+
+        generateAddressBtn.setOnClickListener {
+
+            progressBar.visibility = View.VISIBLE
+            contentView.visibility = View.GONE
+
+            generateAddress()
+
+            progressBar.visibility = View.GONE
+            contentView.visibility = View.VISIBLE
+        }//end on click
+
+        //close dialog
+        closeModal.setOnClickListener { mActivity.finish() }
+
+    }//end fun
 
     /**
      * fetchAddress
      */
-     fun processAddressesUI(addressesData: List<AssetAddresses>) = UI.launch{
+     private fun processAddressesUI(addressData: AssetAddress) = UI.launch{
 
         progressBar.visibility = View.GONE
         contentView.visibility = View.VISIBLE
 
-        //latest addrress
-        val latestAddressData = addressesData.last()
 
         //lets get address
-        val latestAddress = latestAddressData.address
-
-        //generate qr code
-        generateQRCode(latestAddress, dip(280),qrCodeView)
+        val address = addressData.address
 
         //update address TextView
-        addressField.setText(latestAddress)
+        addressTextField.text = address
+
+        val addressDataUri = WalletCore.getAssetDataUri(cryptoSymbol!!,address)
+
+        //generate qr code
+        generateQRCode(addressDataUri, dip(280),qrCodeView)
 
     }//en fun
+
+
+    /**
+     * copyAddress
+     */
+    fun copyAddress(){
+
+        val clipboardData = ClipData.newPlainText("text",addressTextField.text)
+
+        clipboardManager.primaryClip = clipboardData
+
+        toast(R.string.address_copied_to_clipboard)
+    }//end copy address
+
+
+    /**
+     * generateAddress
+     */
+    private  fun generateAddress() = IO.launch{
+
+        val resultStatus = WalletCore.networkGenerateAddress(mActivity,cryptoSymbol!!)
+
+        if(resultStatus.isError()){
+            opError(resultStatus)
+            return@launch
+        }
+
+        val addressData = resultStatus.getData<AssetAddress>()
+
+        if(addressData == null) {opError(); return@launch }
+
+        processAddressesUI(addressData)
+    }//end fun
 
 
     /**

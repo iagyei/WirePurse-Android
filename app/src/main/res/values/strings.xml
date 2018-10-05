@@ -149,6 +149,9 @@
     <string name="no_assets_available">No Assets available, contact support if problem persists</string>
     <string name="deposit_asset">Deposit Asset</string>
     <string name="unknown_asset">Unknown Asset %1$s</string>
+    <string name="copy">Copy</string>
+    <string name="generate">Generate</string>
+    <string name="address_copied_to_clipboard">Address copied to clipboard</string>
 
 
 </resources>

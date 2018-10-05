@@ -32,7 +32,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import com.transcodium.tnsmoney.*
 import com.transcodium.tnsmoney.db.AppDB
-import com.transcodium.tnsmoney.db.entities.AssetAddresses
+import com.transcodium.tnsmoney.db.entities.AssetAddress
 import com.transcodium.tnsmoney.db.entities.AssetStats
 import com.transcodium.tnsmoney.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
@@ -80,6 +80,9 @@ class WalletCore {
                 address: String,
                 amount: Double? = null
         ): String{
+
+            println("ASSET $assetSymbol")
+
             return when(assetSymbol){
                 "eth","tns" -> "ethereum:$address"
                 "btc" -> "bitcoin:$address"
@@ -218,7 +221,7 @@ class WalletCore {
         /**
          * fetchAssetAddress
          */
-        suspend fun fetchDBAssetAddresses(
+        suspend fun fetchDBAssetAddress(
                 context: Context,
                 assetSymbol: String
         ): Status{
@@ -226,13 +229,13 @@ class WalletCore {
             //check db first
             val db = AppDB.getInstance(context)
 
-            val allAddresses = db.assetAddressDao().findAll(assetSymbol)
+            val addressData : AssetAddress? = db.assetAddressDao().findOne(assetSymbol)
 
-            if(allAddresses.isEmpty()){
+            if(addressData == null){
                 return netwokFetchAssetAdress(context,assetSymbol)
             }
 
-            return Status.success(data = allAddresses)
+            return Status.success(data = addressData)
         }//end
 
 
@@ -266,8 +269,8 @@ class WalletCore {
             if(addressData == null){
 
                 Log.e(
-                        "ASSET_ADDRESS_ERROR",
-                        "Fetch network asset address returned null, asset: $assetSymbol"
+                   "ASSET_ADDRESS_ERROR",
+                   "Fetch network asset address returned null, asset: $assetSymbol"
                 )
 
                 return Status.error(R.string.unexpected_error)
@@ -277,7 +280,7 @@ class WalletCore {
             val db = AppDB.getInstance(context)
 
 
-            val dataToInsert = AssetAddresses(
+            val dataToInsert = AssetAddress(
                address = addressData.getString("address"),
                remote_id = addressData.getString("address_id"),
                asset = assetSymbol
@@ -287,7 +290,62 @@ class WalletCore {
             db.assetAddressDao().insert(dataToInsert)
 
             //send the db obj
-            return Status.success(data = listOf(dataToInsert))
+            return Status.success(data = dataToInsert)
+        }//end fun
+
+        /**
+         * networkGenerateAddress
+         */
+        suspend fun networkGenerateAddress(
+           context: Context,
+           assetSymbol: String
+        ): Status{
+
+            val assetInfoStatus = getAssetInfo(context,assetSymbol)
+
+            if(assetInfoStatus.isError()){ return assetInfoStatus }
+
+            val assetInfo = assetInfoStatus.getData<JSONObject>()!!
+
+            val assetId = assetInfo.getString("_id")
+
+            val requestStatus = TnsApi(context)
+                    .post("/wallet/address/generate/$assetId")
+
+
+            if(requestStatus.isError()){
+                return requestStatus
+            }
+
+            //get data
+            val addressData = requestStatus.getData<JSONObject>()
+
+            if(addressData == null){
+
+                Log.e(
+                        "GENERATE_ADDRESS",
+                        "Network generate address returned null, asset: $assetSymbol"
+                )
+
+                return Status.error(R.string.unexpected_error)
+            }
+
+            //database
+            val db = AppDB.getInstance(context)
+
+
+            val dataToInsert = AssetAddress(
+                    address = addressData.getString("address"),
+                    remote_id = addressData.getString("address_id"),
+                    asset = assetSymbol
+            )
+
+            //insert into database
+            db.assetAddressDao().insert(dataToInsert)
+
+            //send the db obj
+            return Status.success(data = dataToInsert)
+
         }//end fun
 
 
@@ -304,7 +362,7 @@ class WalletCore {
                 return dataStatus
             }//end
 
-            println(dataStatus.toJsonObject())
+            //println(dataStatus.toJsonObject())
 
             //lets update db
             val dataArray = dataStatus.getData<JSONArray>()

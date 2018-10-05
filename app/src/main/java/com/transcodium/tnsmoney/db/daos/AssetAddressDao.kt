@@ -4,26 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.transcodium.tnsmoney.db.entities.AssetAddresses
+import com.transcodium.tnsmoney.db.entities.AssetAddress
 import com.transcodium.tnsmoney.db.entities.AssetStats
+import androidx.room.OnConflictStrategy.REPLACE
+
 
 @Dao
-abstract class AssetAddressesDao {
+abstract class AssetAddressDao {
 
     //select one
     @Query("Select * From asset_addresses WHERE asset = :asset ORDER BY id DESC LIMIT 1")
-    abstract fun findLatest(asset: String): AssetAddresses
-
-    //select all
-    @Query("Select * From asset_addresses WHERE asset = :asset ORDER BY id DESC")
-    abstract fun findAll(asset: String): List<AssetAddresses>
+    abstract fun findOne(asset: String): AssetAddress
 
     //findOneLive
     @Query("Select * From asset_addresses WHERE asset = :asset ORDER BY id DESC LIMIT 1")
-    abstract fun findLatestLive(asset: String): LiveData<AssetStats>
+    abstract fun findOneLive(asset: String): LiveData<AssetStats>
 
     //insert
-    @Insert
-    abstract fun insert(data: AssetAddresses)
+    @Insert(onConflict = REPLACE)
+    abstract fun insert(data: AssetAddress)
 
 }

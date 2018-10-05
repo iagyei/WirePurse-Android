@@ -48,20 +48,4 @@ class HomeViewModel(application: Application) : AndroidViewModel(application){
 
     fun getCryptoAssetStats() = cryptoAssetStats
 
-    fun getAssetLatestAddress(asset: String) =  appDB.assetAddressDao().findLatestLive(asset)
-
-    /**
-     * updateUserAssets
-     */
-    fun updateUserAssets(data: UserAssets) = launchIO {
-
-        try {
-            appDB.userAssetsDao().updateData(data)
-        } catch (e: Exception) {
-            Log.e("USER_ASSETS", "Failed to update user stats")
-            e.printStackTrace()
-        }
-    }//end
-
-
-}
+}//end class

@@ -88,10 +88,13 @@ class WebClient {
                 request.headers(Headers.of(headers))
             }
 
-            val formBody = MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
+            var formBody: MultipartBody.Builder? = null
 
             if(params != null && params.isNotEmpty()){
+
+                formBody = MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+
 
                 params.forEach{pair ->
                     formBody.addFormDataPart(pair.first,pair.second.toString())
@@ -100,7 +103,7 @@ class WebClient {
 
 
             val requestBuilder =  request.url(url)
-                                         .post(formBody.build())
+                                         .method("POST",formBody?.build())
                                          .build()
 
             return execRequest(requestBuilder)

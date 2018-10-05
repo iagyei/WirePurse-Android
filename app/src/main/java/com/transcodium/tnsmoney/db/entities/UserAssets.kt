@@ -26,6 +26,6 @@ import androidx.room.PrimaryKey
         indices = [Index("data")]
 )
 data class UserAssets(
-        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = 0L,
+        @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = null,
         @ColumnInfo(name = "data") var data: String
 )

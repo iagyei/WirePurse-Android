@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="200dp"
-        android:background="@color/white"
+        android:background="@color/blueGreyL5"
         app:layout_constraintTop_toBottomOf="@id/dialogHeader"
         android:padding="10dp">
 
@@ -50,10 +50,63 @@
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addressField"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/addressFieldCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/qrCodeView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:contentPadding="10dp"
+                app:cardBackgroundColor="@color/white"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardElevation="0dp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/addressTextField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/blueGreyD2"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintTop_toBottomOf="@id/addressFieldCard"
+                android:layout_marginTop="8dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/copyAddressBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_btn"
+                    app:backgroundTint="@color/colorAccent"
+                    android:text="@string/copy"
+                    android:textColor="@color/white"
+                    android:layout_marginEnd="2dp"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/generateAddressBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_btn"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:text="@string/generate"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="2dp"
+                    />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
