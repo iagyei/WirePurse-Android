@@ -151,4 +151,5 @@
     <string name="address_copied_to_clipboard">Address copied to clipboard</string>
     <string name="app_loading_data">App is downloading data, kindly wait</string>
     <string name="send_space_asset">Send %1$s</string>
+    <string name="send_to_address">Send To Address</string>
 </resources>

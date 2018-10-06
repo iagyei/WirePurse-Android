@@ -155,5 +155,6 @@
     <string name="app_loading_data">App is loading, kindly wait</string>
     <string name="send_space_asset">Send %1$s</string>
 
-
+   <string name="send_to_address">Send To Address</string>
+    <string name="send_to_user">Send To User</string>
 </resources>

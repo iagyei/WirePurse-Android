@@ -1,12 +1,10 @@
 package com.transcodium.tnsmoney
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import com.transcodium.tnsmoney.classes.Status
+import com.transcodium.tnsmoney.classes.ViewPagerAdapter
 import com.transcodium.tnsmoney.classes.WalletCore
+import kotlinx.android.synthetic.main.activity_send_crypto_asset.*
 import kotlinx.android.synthetic.main.dialog_header.*
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
@@ -53,30 +51,53 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
                 opError(); return@launch
             }
 
-            assetId = assetInfo!!.getString("_id")
+            val assetId = assetInfo!!.getString("_id")
 
-            chain = assetInfo!!.getString("chain")
+            val assetChain = assetInfo!!.getString("chain")
 
             dialogTitle.text = mActivity.getString(R.string.send_space_asset, cryptoSymbol!!.toUpperCase())
 
-            //close dialog
-            closeModal.setOnClickListener { mActivity.finish() }
 
-        }
+            UI.launch {
+
+                //close dialog
+                closeModal.setOnClickListener { mActivity.finish() }
+
+                val adapter = ViewPagerAdapter(supportFragmentManager)
+
+                adapter.addFragment(
+                        SendCryptoAssetFragment.newInstance(
+                                layoutId = R.layout.send_crypto_asset_external,
+                                assetSymbol = cryptoSymbol!!,
+                                assetId = assetId,
+                                assetChain = assetChain
+                        ),
+                        mActivity.getString(R.string.send_to_address)
+                )
+
+                adapter.addFragment(
+
+                        SendCryptoAssetFragment.newInstance(
+                                layoutId = R.layout.send_crypto_asset_internal,
+                                assetSymbol = cryptoSymbol!!,
+                                assetId = assetId,
+                                assetChain = assetChain
+                        ),
+
+                        mActivity.getString(R.string.send_to_user)
+                )
+
+
+                viewPager.adapter = adapter
+
+                tabLayout.setupWithViewPager(viewPager)
+
+            }//end ui operations
+
+        }//end IO operation
+
 
     }//end onCreate
 
-
-    /**
-     * pageAdapter
-     */
-    inner class pageAdapter(fm: FragmentManager): FragmentPagerAdapter(fm){
-
-        override fun getCount(): Int = 2
-
-        override fun getItem(position: Int): Fragment {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
 
 }//end class
