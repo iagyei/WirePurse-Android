@@ -149,4 +149,6 @@
     <string name="copy">Copy</string>
     <string name="generate">Generate</string>
     <string name="address_copied_to_clipboard">Address copied to clipboard</string>
+    <string name="app_loading_data">App is downloading data, kindly wait</string>
+    <string name="send_space_asset">Send %1$s</string>
 </resources>

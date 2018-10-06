@@ -30,6 +30,8 @@ import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
+import androidx.core.widget.ContentLoadingProgressBar
 import com.firebase.jobdispatcher.*
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -523,3 +525,11 @@ fun generateQRCode(
     }
 
 }//end generate qr code
+
+
+/**
+ * showContentLoader
+ **/
+ fun ProgressBar.show() = UI.launch{ setVisibility(View.VISIBLE) }
+
+ fun ProgressBar.hide() = UI.launch{ setVisibility(View.GONE) }

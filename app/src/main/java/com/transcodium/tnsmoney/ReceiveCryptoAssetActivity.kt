@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.WalletCore
@@ -22,11 +23,19 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
     var cryptoSymbol: String? = null
 
+    var assetId: String? = null
+
+    var chain: String? = null
+
+    var assetInfo: JSONObject? = null
+
     val mActivity by lazy { this }
 
     val clipboardManager by lazy {
         getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
+
+    var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,14 +48,35 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
             val data = intent.extras!!
 
-            cryptoSymbol = data.getString("asset_symbol")
+            cryptoSymbol = data.getString("asset_symbol") ?: null
+
+            if(cryptoSymbol == null){
+                opError(Status.error(R.string.unknown_asset))
+                return@launch
+            }
+
+            val assetInfoStatus = WalletCore.getAssetInfo(mActivity,cryptoSymbol!!)
+
+            if(assetInfoStatus.isError()) {
+                opError(assetInfoStatus)
+            }
+
+             assetInfo = assetInfoStatus.getData<JSONObject>()
+
+            if(assetInfo == null){
+                opError(); return@launch
+            }
+
+            assetId = assetInfo!!.getString("_id")
+
+            chain = assetInfo!!.getString("chain")
 
             dialogTitle.text = mActivity.getString(R.string.receive_space_asset, cryptoSymbol!!.toUpperCase())
 
             val cryptoAddressesStatus = WalletCore.fetchDBAssetAddress(
                     mActivity,
-                    cryptoSymbol!!
-
+                    assetId!!,
+                    chain!!
             )
 
             if (cryptoAddressesStatus.isError()) {
@@ -71,12 +101,7 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
         addressFieldCard.setOnClickListener { copyAddress() }
 
         generateAddressBtn.setOnClickListener {
-
-            progressBar.visibility = View.VISIBLE
-
             generateAddress()
-
-            contentView.visibility = View.VISIBLE
         }//end on click
 
         //close dialog
@@ -89,7 +114,8 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
      */
      private fun processAddressesUI(addressData: AssetAddress) = UI.launch{
 
-        progressBar.visibility = View.GONE
+        progressBar.hide()
+
         contentView.visibility = View.VISIBLE
 
 
@@ -99,7 +125,7 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
         //update address TextView
         addressTextField.text = address
 
-        val addressDataUri = WalletCore.getAssetDataUri(cryptoSymbol!!,address)
+        val addressDataUri = WalletCore.getAssetDataUri(chain!!,address)
 
         //generate qr code
         generateQRCode(addressDataUri, dip(280),qrCodeView)
@@ -125,9 +151,23 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
      */
     private  fun generateAddress() = IO.launch{
 
-        val resultStatus = WalletCore.networkGenerateAddress(mActivity,cryptoSymbol!!)
+        if(isLoading){
+            UI.launch { toast(R.string.app_loading_data) }
+            return@launch
+        }
+
+        progressBar.show()
+
+        isLoading = true
+
+        val resultStatus = WalletCore.networkGenerateAddress(
+                 mActivity,
+                 assetId!!,
+                 chain!!
+        )
 
         if(resultStatus.isError()){
+            isLoading = false
             opError(resultStatus)
             return@launch
         }
@@ -136,23 +176,10 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
         if(addressData == null) {opError(); return@launch }
 
+        isLoading = false
+
         processAddressesUI(addressData)
     }//end fun
 
-
-    /**
-     * error
-     */
-    fun opError(status: Status? = null) = UI.launch{
-
-        val alertData = if(status != null){
-            status
-        }else{
-            Status.error(R.string.unexpected_error)
-        }
-
-        progressBar.visibility = View.GONE
-        AppAlert(mActivity).showStatus(alertData)
-    }
 
 }

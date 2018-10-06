@@ -5,10 +5,17 @@ import android.os.PersistableBundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import com.transcodium.tnsmoney.classes.AppAlert
+import com.transcodium.tnsmoney.classes.Status
+import kotlinx.android.synthetic.main.circular_progress_bar.*
+import kotlinx.coroutines.experimental.launch
 
 open class ActivityDialogBase  : RootActivity()  {
 
-
+    val baseActivity by lazy{
+        this
+    }
 
     override fun onStart() {
         super.onStart()
@@ -38,5 +45,21 @@ open class ActivityDialogBase  : RootActivity()  {
             )
         }//end id
 
+    }
+
+    /**
+     * error
+     */
+    fun opError(status: Status? = null) = UI.launch{
+
+        val alertData = if(status != null){
+            status
+        }else{
+            Status.error(R.string.unexpected_error)
+        }
+
+        if(progressBar.isVisible){ progressBar.hide() }
+
+        AppAlert(baseActivity).showStatus(alertData)
     }
 }

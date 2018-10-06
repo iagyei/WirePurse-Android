@@ -2,6 +2,7 @@ package com.transcodium.tnsmoney
 
 import android.content.Context
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.firebase.jobdispatcher.Job
@@ -12,9 +13,11 @@ import com.transcodium.tnsmoney.classes.WalletCore.Companion.pollNetworkAssetSta
 import com.transcodium.tnsmoney.classes.jobs.AssetsDataJob
 import com.transcodium.tnsmoney.view_models.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.circular_progress_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.Main
+import org.jetbrains.anko.toast
 import org.json.JSONObject
 
 
@@ -47,21 +50,44 @@ class HomeActivity : DrawerActivity() {
          * receive
          */
         receiveAsset.setOnClickListener {
-
-            //lets get the current asset
-            val assetSymbol = coinInfoCard.tag.toString()
-
-            val data = Bundle().apply { putString("asset_symbol",assetSymbol) }
-
-            startClassActivity(
-                    activityClass = ReceiveCryptoAssetActivity::class.java,
-                    clearActivityStack = false,
-                    data = data
-            )
-
+            sendOrReceiveAssetDialog(ReceiveCryptoAssetActivity::class.java)
         }//end on click
 
+
+        /**
+         * sendCryptoAsset
+         */
+        sendAsset.setOnClickListener {
+            sendOrReceiveAssetDialog(SendCryptoAssetActivity::class.java)
+        }
+
     }//end onCreate
+
+
+    /**
+     * sendOrReceiveAssetDialog
+     */
+    fun <T>sendOrReceiveAssetDialog(clazz: Class<T>){
+
+        //lets get the current asset
+        ///fix errrrrrror... crashes onload cos its empty
+        val assetSymbol = coinInfoCard.tag
+
+        if(assetSymbol == null){
+            toast(R.string.app_loading_data)
+            return
+        }
+
+        val data = Bundle().apply { putString("asset_symbol",assetSymbol.toString()) }
+
+        startClassActivity(
+                activityClass = clazz,
+                clearActivityStack = false,
+                data = data
+        )
+
+    }//end
+
 
     /**
      * observe Live Data
@@ -71,9 +97,12 @@ class HomeActivity : DrawerActivity() {
        val viewProvider = ViewModelProviders.of(this)
                         .get(HomeViewModel::class.java)
 
+        val pb = progressBar
 
         viewProvider.getUserAssets()
                   .observe(this, Observer{ userAsset->
+
+                   if(pb.isVisible){ pb.hide() }
 
                    if(userAsset == null || userAsset.isEmpty()){
                        return@Observer

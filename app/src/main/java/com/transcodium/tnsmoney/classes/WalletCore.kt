@@ -81,7 +81,7 @@ class WalletCore {
                 amount: Double? = null
         ): String{
 
-            println("ASSET $assetSymbol")
+            //println("ASSET $assetSymbol")
 
             return when(assetSymbol){
                 "eth","tns" -> "ethereum:$address"
@@ -223,16 +223,17 @@ class WalletCore {
          */
         suspend fun fetchDBAssetAddress(
                 context: Context,
-                assetSymbol: String
+                assetId: String,
+                chain: String
         ): Status{
 
             //check db first
             val db = AppDB.getInstance(context)
 
-            val addressData : AssetAddress? = db.assetAddressDao().findOne(assetSymbol)
+            val addressData : AssetAddress? = db.assetAddressDao().findOne(chain)
 
             if(addressData == null){
-                return netwokFetchAssetAdress(context,assetSymbol)
+                return netwokFetchAssetAddress(context,assetId,chain)
             }
 
             return Status.success(data = addressData)
@@ -242,18 +243,11 @@ class WalletCore {
         /**
          * fetchNetworkAssetAddress
          */
-        suspend fun netwokFetchAssetAdress(
+        suspend fun netwokFetchAssetAddress(
                 context: Context,
-                assetSymbol: String
+                assetId: String,
+                chain: String
         ): Status{
-
-            val assetInfoStatus = getAssetInfo(context,assetSymbol)
-
-            if(assetInfoStatus.isError()){ return assetInfoStatus }
-
-            val assetInfo = assetInfoStatus.getData<JSONObject>()!!
-
-            val assetId = assetInfo.getString("_id")
 
             val requestStatus = TnsApi(context)
                                 .get("/wallet/address/$assetId")
@@ -270,7 +264,7 @@ class WalletCore {
 
                 Log.e(
                    "ASSET_ADDRESS_ERROR",
-                   "Fetch network asset address returned null, asset: $assetSymbol"
+                   "Fetch network asset address returned null, chain: $chain"
                 )
 
                 return Status.error(R.string.unexpected_error)
@@ -283,7 +277,7 @@ class WalletCore {
             val dataToInsert = AssetAddress(
                address = addressData.getString("address"),
                remote_id = addressData.getString("address_id"),
-               chain = assetSymbol
+               chain = chain
             )
 
             //insert into database
@@ -298,18 +292,10 @@ class WalletCore {
          */
         suspend fun networkGenerateAddress(
            context: Context,
-           assetSymbol: String
+           assetId: String,
+           chain: String
         ): Status{
 
-            val assetInfoStatus = getAssetInfo(context,assetSymbol)
-
-            if(assetInfoStatus.isError()){ return assetInfoStatus }
-
-            val assetInfo = assetInfoStatus.getData<JSONObject>()!!
-
-            println(assetInfo)
-
-            val assetId = assetInfo.getString("_id")
 
             val requestStatus = TnsApi(context)
                     .post(
@@ -329,7 +315,7 @@ class WalletCore {
 
                 Log.e(
                         "GENERATE_ADDRESS",
-                        "Network generate address returned null, asset: $assetSymbol"
+                        "Network generate address returned null, chain: $chain"
                 )
 
                 return Status.error(R.string.unexpected_error)
@@ -340,9 +326,9 @@ class WalletCore {
 
 
             val dataToInsert = AssetAddress(
-                    address = addressData.getString("address"),
+                    address   = addressData.getString("address"),
                     remote_id = addressData.getString("address_id"),
-                    chain = assetSymbol
+                    chain     = chain
             )
 
             //insert into database

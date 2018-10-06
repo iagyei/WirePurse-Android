@@ -199,12 +199,11 @@ class TnsApi(val context: Context){
         }
 
 
-        val responseData = requestStatus.getData<String>()!!
-
-
         return try {
 
-           val responseStatusJson = JSONObject(responseData)
+            val responseData = requestStatus.getData<String>()
+
+            val responseStatusJson = JSONObject(responseData)
 
             Status.fromJson(responseStatusJson)
 
