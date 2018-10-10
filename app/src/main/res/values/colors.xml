@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <resources>
-        <color name="colorPrimary">#03A9F4</color>
-        <color name="colorPrimaryDark">#0288D1</color>
+        <color name="colorPrimary">#03a9f4</color>
+        <color name="colorPrimaryDark">#0288d1</color>
         <color name="primary_light">#B3E5FC</color>
         <color name="colorAccent">#FF4081</color>
         <color name="colorPrimaryText">#212121</color>
@@ -20,14 +20,15 @@
         <color name="blackAlpha30Percent">#4D000000</color>
         <color name="loginInputBgTint">#b0bec5</color>
         <color name="blueGrey">#607d8b</color>
+        <color name="blueGreyL3">#b0bec5</color>
         <color name="blueGreyL4">#cfd8dc</color>
         <color name="colorAccentText">#fcf2f5</color>
         <color name="blueGreyD2">#455a64</color>
-        <color name="blueGreyL3">#b0bec5</color>
         <color name="colorGooglePlus">#F34A38</color>
         <color name="colorFacebook">#1976D2</color>
         <color name="colorTwitter">#03A9F4</color>
         <color name="blueGreyL5">#eceff1</color>
+        <color name="blueGreyL2">#90a4ae</color>
         <color name="green">#4caf50</color>
         <color name="purpleDarken2">#7b1fa2</color>
         <color name="purple">#9c27b0</color>

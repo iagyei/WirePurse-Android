@@ -53,8 +53,8 @@
     <string name="social_account_verification">%1$s Social Account Verification</string>
     <string name="social_login_verification_info">
        Logging into an existing account with a new social provider requires a one time verification
-        Please check the inbox or spam box of the email associated with this account for the
-        code sent to you.
+        Please check the inbox or spam box of the email address associated with this account for the
+       verification code.
     </string>
     <string name="verification_code">Verification Code</string>
     <string name="verify">Verify</string>
@@ -155,6 +155,31 @@
     <string name="app_loading_data">App is loading, kindly wait</string>
     <string name="send_space_asset">Send %1$s</string>
 
-   <string name="send_to_address">Send To Address</string>
+    <string name="send_to_address">Send To Address</string>
     <string name="send_to_user">Send To User</string>
+    <string name="scan_with_camera">Scan With Camera</string>
+
+    <string name="camera_permission_message">To use the scanner, please select \'Allow\' when prompted on camera\'s permission</string>
+    <string name="camera_perm_denied">Camera Permission Denied</string>
+    <string name="qr_scanner_message">Place barcode inside the box</string>
+    <string name="scanner_toggle_torch">Volume up / down for torch</string>
+    <string name="qrcode_has_empty_data">QRCode contains no data</string>
+    <string name="unsupported_payment_address">Unsupported Payment Address</string>
+    <string name="invalid_qr_code">QRCode does not contain a valid %1$s data</string>
+    <string name="address">Address</string>
+    <string name="asset_name_space_address">%1$s Address</string>
+    <string name="amount">Amount</string>
+    <string name="save_address">Save Address</string>
+    <string name="label">Label</string>
+    <string name="label_optional">Label (optional)</string>
+    <string name="receipient_email_address">Recipient Email Address</string>
+    <string name="amount_to_send">Amount To Send</string>
+    <string name="operation_aborted_by_user">Operation aborted by user</string>
+    <string name="set_app_pin_message">
+        You are required to set an app access pin code, a 4 numeric characters
+        which will be used to prevent any unauthorized access.
+    </string>
+    <string name="four_digits_pin_code">4 Digits Pin Code</string>
+    <string name="confirm_pin_code">Confirm Pin Code</string>
+    <string name="enable_fingerprint_support">Enable Fingerprint Support</string>
 </resources>

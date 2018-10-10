@@ -17,10 +17,11 @@
 package com.transcodium.tnsmoney.classes
 
 import android.util.Log
+import com.transcodium.tnsmoney.IO
 import com.transcodium.tnsmoney.R
 import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 import okhttp3.*
-import org.jetbrains.anko.coroutines.experimental.bg
 
 class WebClient {
 
@@ -113,9 +114,9 @@ class WebClient {
         suspend fun execRequest(request: Request): Status {
 
             //run in background
-            val httpData: Deferred<Status> = bg {
+            val httpData: Deferred<Status> = IO.async {
 
-                return@bg try {
+                return@async try {
 
                     val response = client.newCall(request)
                             .execute()

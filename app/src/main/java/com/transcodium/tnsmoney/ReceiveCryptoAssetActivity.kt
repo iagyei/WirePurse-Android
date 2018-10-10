@@ -125,7 +125,7 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
         //update address TextView
         addressTextField.text = address
 
-        val addressDataUri = WalletCore.getAssetDataUri(chain!!,address)
+        val addressDataUri = WalletCore.getChainPaymentUri(chain!!,address)
 
         //generate qr code
         generateQRCode(addressDataUri, dip(280),qrCodeView)

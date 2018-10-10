@@ -75,18 +75,31 @@ class WalletCore {
         /**
          * addressUri
          */
-        fun getAssetDataUri(
-                assetSymbol: String,
+        fun getChainPaymentUri(
+                chain: String,
                 address: String,
                 amount: Double? = null
         ): String{
 
-            //println("ASSET $assetSymbol")
+            val chainName = getChainName(chain)
 
-            return when(assetSymbol){
-                "eth","tns" -> "ethereum:$address"
-                "btc" -> "bitcoin:$address"
-                else -> address
+            var data = "$chainName:$address"
+
+            return if(amount != null){
+                "$data?amount=$amount"
+            }else{
+                data
+            }
+        }//end fun
+
+        /**
+         * getChainName
+         */
+        fun getChainName(chain: String): String{
+            return when(chain){
+                "eth" -> "ethereum"
+                "btc" -> "bitcoin"
+                else -> chain
             }
         }
 
@@ -651,8 +664,7 @@ class WalletCore {
 
                 val gridLayout = GridLayoutManager(activity,calColumn)
 
-                recyclerView.layoutManager = gridLayout
-
+                recyclerView.setLayoutManager(gridLayout)
 
                 recyclerView.adapter = adapter
 

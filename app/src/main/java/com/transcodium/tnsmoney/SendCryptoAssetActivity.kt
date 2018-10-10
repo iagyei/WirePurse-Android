@@ -1,5 +1,6 @@
 package com.transcodium.tnsmoney
 
+import android.content.Intent
 import android.os.Bundle
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.ViewPagerAdapter
@@ -55,6 +56,8 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
             val assetChain = assetInfo!!.getString("chain")
 
+            val assetName = assetInfo!!.getString("name")
+
             dialogTitle.text = mActivity.getString(R.string.send_space_asset, cryptoSymbol!!.toUpperCase())
 
 
@@ -98,6 +101,34 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
 
     }//end onCreate
+
+    /**
+     * forward all onActivityResults to fragments
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        val allFragments = supportFragmentManager.fragments
+
+        for(fragment in allFragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    /**
+     * forward all onRequestPermissionsResult to fragments
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+        val allFragments = supportFragmentManager.fragments
+
+        for(fragment in allFragments) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
 
 }//end class

@@ -237,7 +237,7 @@ class SocialLoginActivity : RootActivity() {
             val acct = task.getResult(ApiException::class.java)
 
             launch(Dispatchers.IO) {
-                SocialLoginCore(activity).processSocialLogin("google",acct)
+                SocialLoginCore(activity).processSocialLogin("google",(acct as Any))
             }
 
         }catch(e: ApiException){

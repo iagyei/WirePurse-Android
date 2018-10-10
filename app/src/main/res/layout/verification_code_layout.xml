@@ -13,20 +13,20 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:layout_marginTop="10dp"
-        app:hintEnabled="false"
         app:errorEnabled="true"
         android:layout_weight="7"
-        android:layout_marginEnd="3dp">
+        android:layout_marginEnd="3dp"
+        android:hint="@string/verification_code"
+        style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/verificationCodeInput"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="@string/verification_code"
             android:textSize="20sp"
             android:inputType="number"
-            android:background="@drawable/rounded_text_input_selector"
-            android:drawableStart="@drawable/ic_fingerprint_pink_24dp"
+            android:drawableStart="@drawable/ic_verified_user"
+            android:drawableTint="@color/colorAccent"
             />
 
     </com.google.android.material.textfield.TextInputLayout>

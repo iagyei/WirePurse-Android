@@ -19,6 +19,7 @@ package com.transcodium.tnsmoney
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
@@ -533,3 +534,5 @@ fun generateQRCode(
  fun ProgressBar.show() = UI.launch{ setVisibility(View.VISIBLE) }
 
  fun ProgressBar.hide() = UI.launch{ setVisibility(View.GONE) }
+
+ fun Context.hasCamera(): Boolean =  packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)

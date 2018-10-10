@@ -2,14 +2,16 @@ package com.transcodium.tnsmoney
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import com.transcodium.tnsmoney.classes.Crypt
-import org.jetbrains.anko.alert
 import com.facebook.stetho.Stetho
 
 class AppEntry : AppCompatActivity() {
 
 
     private lateinit var nextActivityClass: Class<*>
+
+    private val mActivity by lazy{ this }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,7 @@ class AppEntry : AppCompatActivity() {
                 nextActivityClass = SocialLoginActivity::class.java
             }
 
-            //nextActivityClass = HomeActivity::class.java
+            nextActivityClass = setAppPinActivity::class.java
 
             startClassActivity(nextActivityClass, true)
 
@@ -56,16 +58,12 @@ class AppEntry : AppCompatActivity() {
 
         if(createAppKey.isError()){
 
-            val alert = alert(R.string.initialization_error_message,
-                                R.string.initialization_error
-            )
-
-            alert.isCancelable = false
-            alert.positiveButton(R.string.ok){
-                this.finish()
-            }
-
-            alert.show()
+             AlertDialog.Builder(this,R.style.Theme_AppCompat)
+                    .setTitle(R.string.initialization_error)
+                    .setMessage(R.string.initialization_error_message)
+                    .setPositiveButton(R.string.ok){dialog,_ ->
+                        mActivity.finish()
+             }.show()
 
             return false
         }//end if error
