@@ -182,4 +182,8 @@
     <string name="four_digits_pin_code">4 Digits Pin Code</string>
     <string name="confirm_pin_code">Confirm Pin Code</string>
     <string name="enable_fingerprint_support">Enable Fingerprint Support</string>
+    <string name="save">Save</string>
+    <string name="pincode_lenght_error">Pin code field requires a 4 numeric charaters</string>
+    <string name="pincodes_dont_match">Pin codes do not match</string>
+
 </resources>

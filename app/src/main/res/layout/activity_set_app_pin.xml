@@ -7,7 +7,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blueGreyL5">
+    android:background="@color/white">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,15 +16,27 @@
         android:padding="10dp"
         android:layout_marginTop="40dp">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_verified_user"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
         <TextView
             android:id="@+id/setPinCodeMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/set_app_pin_message"
             android:textAlignment="center"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/blueGreyD2"
+            app:layout_constraintTop_toBottomOf="@id/imgView"
+            android:textColor="@color/blueGreyL2"
             android:textSize="16sp"
+            android:layout_marginTop="10dp"
             />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -37,7 +49,8 @@
             app:layout_constraintTop_toBottomOf="@id/setPinCodeMessage"
             style="@style/TextInputLayoutStyle"
             android:maxWidth="250dp"
-            android:hint="@string/four_digits_pin_code">
+            android:hint="@string/four_digits_pin_code"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pinCodeInput"
@@ -46,12 +59,14 @@
                 android:inputType="numberPassword"
                 android:maxLines="1"
                 android:maxLength="4"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textIsSelectable="false"
                 android:textStyle="bold"
                 android:letterSpacing="1.0"
                 android:textColor="@color/blueGreyD2"
                 android:textAlignment="center"
+                android:focusable="true"
+                android:focusedByDefault="true"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -67,7 +82,8 @@
             app:layout_constraintTop_toBottomOf="@id/pinCodeInputLayout"
             style="@style/TextInputLayoutStyle"
             android:maxWidth="250dp"
-            android:hint="@string/confirm_pin_code">
+            android:hint="@string/confirm_pin_code"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirmPinCodeInput"
@@ -76,7 +92,7 @@
                 android:inputType="numberPassword"
                 android:maxLines="1"
                 android:maxLength="4"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textIsSelectable="false"
                 android:textStyle="bold"
                 android:letterSpacing="1.0"
@@ -100,13 +116,17 @@
             />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/savePinBtn"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:background="@drawable/rounded_outlined_btn"
+            android:background="@drawable/rounded_btn"
             app:backgroundTint="@color/colorAccent"
             app:layout_constraintTop_toBottomOf="@id/enableFingerprintSupport"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/whiteAlpha30"
+            android:text="@string/save"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

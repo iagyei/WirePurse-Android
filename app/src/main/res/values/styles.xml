@@ -44,6 +44,7 @@
         <item name="boxCornerRadiusTopStart">40dp</item>
     </style>
 
+
     <style name="AppIntroTheme" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="AppTheme.TransparentStatusBar" parent="AppTheme">
