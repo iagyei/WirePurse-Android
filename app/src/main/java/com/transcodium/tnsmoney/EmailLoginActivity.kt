@@ -71,8 +71,8 @@ class EmailLoginActivity : RootActivity() {
          * if success log user in
          */
         if(loginStatus.isSuccess()){
-            delay(3000)
-            startClassActivity(HomeActivity::class.java)
+            delay(2000)
+            startClassActivity(PinCodeAuthActivity::class.java,true)
         }
 
     }//end fun

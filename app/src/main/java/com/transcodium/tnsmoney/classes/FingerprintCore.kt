@@ -1,0 +1,158 @@
+package com.transcodium.tnsmoney.classes
+
+import android.content.Context
+import android.hardware.biometrics.BiometricPrompt
+import android.os.Build
+import androidx.core.os.CancellationSignal
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat.AuthenticationResult
+import android.security.keystore.KeyProperties
+import android.security.keystore.KeyGenParameterSpec
+import androidx.annotation.RequiresApi
+import com.transcodium.tnsmoney.R
+import java.security.*
+import java.security.spec.ECGenParameterSpec
+
+
+
+
+class FingerprintCore(val ctx: Context) {
+
+    val fm by lazy{ FingerprintManagerCompat.from(ctx) }
+
+    val KEY_NAME = "tnsMoneyFingerPrint"
+
+    /**
+     * hasHardware
+     */
+    fun hasHardware(): Boolean {
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            return false
+        }
+
+        return fm.isHardwareDetected
+    }
+
+    /**
+     * isEnabled
+     */
+    fun isEnabled(): Boolean {
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            return false
+        }
+
+        return fm.hasEnrolledFingerprints()
+    }
+
+
+    /**
+     * keyPair
+     */
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun generateKeyPair(): KeyPair{
+
+        //create a cipher
+        val keyPairGen = KeyPairGenerator.getInstance(
+                KeyProperties.KEY_ALGORITHM_EC,
+                "AndroidKeyStore"
+        )
+
+        keyPairGen.initialize(
+                KeyGenParameterSpec.Builder(KEY_NAME,
+                        KeyProperties.PURPOSE_SIGN)
+                        .setDigests(KeyProperties.DIGEST_SHA256)
+                        .setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                        .setUserAuthenticationRequired(true)
+                        .build())
+
+        return keyPairGen.generateKeyPair()
+    }//end fun
+
+    /**
+     * create
+     */
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun create(): Status{
+
+        //for api 28+, nothing must be done
+        //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+          //  return Status.success()
+        //}
+
+        return try{
+            generateKeyPair()
+            Status.success()
+        }catch(e: Exception){
+            Status.error(ctx.getString(R.string.fingerprint_init_failed))
+        }
+    }
+
+
+    /**
+     * handleUI
+     */
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun handleFingerPrint(
+            onAuthSuccess: (AuthenticationResult?) -> Unit,
+            onAuthError: (Int,String?) -> Unit,
+            onAuthFailed: () -> Unit
+    ): Status{
+
+
+         val signature = Signature.getInstance("SHA256withECDSA")
+
+         val keyStore = KeyStore.getInstance("AndroidKeyStore")
+         keyStore.load(null)
+
+         val publicKey = keyStore.getCertificate(KEY_NAME).publicKey
+
+         val privateKey = keyStore.getKey(KEY_NAME,null) as PrivateKey?
+
+         if(publicKey == null || privateKey == null){
+             return Status.error(ctx.getString(R.string.fingerprint_auth_failed))
+         }
+
+         signature.initSign(privateKey)
+
+         val cryptoObject = FingerprintManagerCompat.CryptoObject(signature)
+
+        val cancellationSignal = CancellationSignal()
+
+        val authCallback = object: FingerprintManagerCompat.AuthenticationCallback(){
+
+            /**
+             * on Auth Error
+             */
+            override fun onAuthenticationError(errMsgId: Int, errString: CharSequence?) {
+                super.onAuthenticationError(errMsgId, errString)
+                 onAuthError(errMsgId,errString?.toString())
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                onAuthFailed()
+            }
+
+             override fun onAuthenticationSucceeded(result: AuthenticationResult?) {
+                super.onAuthenticationSucceeded(result)
+                 onAuthSuccess(result)
+            }
+        }//end callback
+
+
+        fm.authenticate(
+                cryptoObject,
+            0,
+            cancellationSignal,
+            authCallback,
+            null
+        )
+
+         return Status.success()
+         //}//end fun
+
+    }//end fun
+
+}//end class

@@ -21,10 +21,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.transcodium.tnsmoney.HomeActivity
-import com.transcodium.tnsmoney.R
-import com.transcodium.tnsmoney.SocialLoginVerification
-import com.transcodium.tnsmoney.startClassActivity
+import com.transcodium.tnsmoney.*
 import com.twitter.sdk.android.core.TwitterSession
 import org.json.JSONObject
 
@@ -142,7 +139,7 @@ class SocialLoginCore(val activity: AppCompatActivity) {
         val saveData = Account(activity).saveUserInfo(data)
 
         if(saveData.isSuccess()) {
-            activity.startClassActivity(HomeActivity::class.java, true)
+            activity.startClassActivity(PinCodeAuthActivity::class.java, true)
         }
     }//end fun
 

@@ -180,4 +180,15 @@
     <string name="save">Save</string>
     <string name="pincode_lenght_error">Pin code field requires a 4 numeric charaters</string>
     <string name="pincodes_dont_match">Pin codes do not match</string>
+
+    <string name="enable_fingerprint_setting">
+         Your device\'s fingerprint hardware is not enabled,
+        you will be forwarded to settings to
+        enable it before you proceed.</string>
+    <string name="pincode_saved">Pincode saved successfully</string>
+    <string name="enter_pincode">Enter Pin Code</string>
+
+    <string name="_continue">Continue</string>
+    <string name="fingerprint_init_failed">Fingerprint initialization failed</string>
+    <string name="fingerprint_auth_failed">Fingerprint authentication failed</string>
 </resources>

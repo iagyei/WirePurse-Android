@@ -23,6 +23,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
+import android.media.FaceDetector
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +33,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import com.firebase.jobdispatcher.*
 import com.google.zxing.BarcodeFormat
@@ -439,12 +441,26 @@ fun setPeriodic(interval: Long, block: TimerTask.()->Unit): Timer{
  * toMD5
  */
 fun String.toMD5(): String? {
+    return hashData(this,"MD5")
+}
+
+/**
+ * sha256
+ */
+fun String.toSha256(): String? {
+    return hashData(this,"SHA-256")
+}
+
+/**
+ * hashData
+ */
+fun hashData(str: String, algo: String): String? {
 
     return try{
 
-        val md = MessageDigest.getInstance("MD5")
+        val md = MessageDigest.getInstance(algo)
 
-        val digest = md.digest(this.toByteArray())
+        val digest = md.digest(str.toByteArray())
 
         val result = StringBuilder()
 
@@ -536,3 +552,4 @@ fun generateQRCode(
  fun ProgressBar.hide() = UI.launch{ setVisibility(View.GONE) }
 
  fun Context.hasCamera(): Boolean =  packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+
