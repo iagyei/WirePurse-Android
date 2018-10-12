@@ -191,4 +191,10 @@
     <string name="_continue">Continue</string>
     <string name="fingerprint_init_failed">Fingerprint initialization failed</string>
     <string name="fingerprint_auth_failed">Fingerprint authentication failed</string>
+    <string name="fingerprint_auth">Fingerprint Authentication</string>
+    <string name="fingerint_auth_msg">Kindly confirm your fingerprint to continue</string>
+    <string name="fingerprint_auth_instruction">
+        Touch your device\'s  fingerprint sensor
+    </string>
+    <string name="usePinCode">"Use Pin Code "</string>
 </resources>

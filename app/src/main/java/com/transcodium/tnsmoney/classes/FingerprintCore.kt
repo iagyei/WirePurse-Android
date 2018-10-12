@@ -94,12 +94,11 @@ class FingerprintCore(val ctx: Context) {
      * handleUI
      */
     @RequiresApi(Build.VERSION_CODES.M)
-    fun handleFingerPrint(
+    fun authenticate(
             onAuthSuccess: (AuthenticationResult?) -> Unit,
             onAuthError: (Int,String?) -> Unit,
             onAuthFailed: () -> Unit
     ): Status{
-
 
          val signature = Signature.getInstance("SHA256withECDSA")
 
@@ -121,7 +120,6 @@ class FingerprintCore(val ctx: Context) {
         val cancellationSignal = CancellationSignal()
 
         val authCallback = object: FingerprintManagerCompat.AuthenticationCallback(){
-
             /**
              * on Auth Error
              */
@@ -150,7 +148,7 @@ class FingerprintCore(val ctx: Context) {
             null
         )
 
-         return Status.success()
+         return Status.success(data = cancellationSignal)
          //}//end fun
 
     }//end fun
