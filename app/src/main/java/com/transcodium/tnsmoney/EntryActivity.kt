@@ -16,8 +16,7 @@ class AppEntry : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var clearStack = true
-
+        
         //init app
         val isOk = initApp()
 
@@ -39,15 +38,12 @@ class AppEntry : AppCompatActivity() {
 
                 nextActivityClass = PinCodeAuthActivity::class.java
 
-                clearStack = false
-
             } else {
                 nextActivityClass = SocialLoginActivity::class.java
             }
 
-            //nextActivityClass = SetPinCodeActivity::class.java
 
-            startClassActivity(nextActivityClass,clearStack)
+            startClassActivity(nextActivityClass,true)
 
         }//end if
 

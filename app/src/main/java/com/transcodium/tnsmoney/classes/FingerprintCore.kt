@@ -3,11 +3,13 @@ package com.transcodium.tnsmoney.classes
 import android.content.Context
 import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
+import android.security.keystore.KeyExpiredException
 import androidx.core.os.CancellationSignal
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat.AuthenticationResult
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyPermanentlyInvalidatedException
 import androidx.annotation.RequiresApi
 import com.transcodium.tnsmoney.R
 import java.security.*
@@ -59,13 +61,19 @@ class FingerprintCore(val ctx: Context) {
                 "AndroidKeyStore"
         )
 
-        keyPairGen.initialize(
-                KeyGenParameterSpec.Builder(KEY_NAME,
-                        KeyProperties.PURPOSE_SIGN)
-                        .setDigests(KeyProperties.DIGEST_SHA256)
-                        .setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
-                        .setUserAuthenticationRequired(true)
-                        .build())
+        val keygenParamSpec = KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_SIGN)
+                                    .setDigests(KeyProperties.DIGEST_SHA256)
+                                    .setAlgorithmParameterSpec(ECGenParameterSpec("secp256r1"))
+                                    .setUserAuthenticationRequired(true)
+
+        /*/only SDK api 24 (nuogat) +
+        //this makes it less secure, what if there is a change in ownership???
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //we cannot use this as it requires api 23,we will do it manually
+            keygenParamSpec.setInvalidatedByBiometricEnrollment(false)
+        }*/
+
+        keyPairGen.initialize(keygenParamSpec.build())
 
         return keyPairGen.generateKeyPair()
     }//end fun
@@ -100,56 +108,79 @@ class FingerprintCore(val ctx: Context) {
             onAuthFailed: () -> Unit
     ): Status{
 
-         val signature = Signature.getInstance("SHA256withECDSA")
 
-         val keyStore = KeyStore.getInstance("AndroidKeyStore")
-         keyStore.load(null)
+        return try {
 
-         val publicKey = keyStore.getCertificate(KEY_NAME).publicKey
+            val signature = Signature.getInstance("SHA256withECDSA")
 
-         val privateKey = keyStore.getKey(KEY_NAME,null) as PrivateKey?
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
 
-         if(publicKey == null || privateKey == null){
-             return Status.error(ctx.getString(R.string.fingerprint_auth_failed))
-         }
+            val publicKey = keyStore.getCertificate(KEY_NAME).publicKey
 
-         signature.initSign(privateKey)
+            val privateKey = keyStore.getKey(KEY_NAME, null) as PrivateKey?
 
-         val cryptoObject = FingerprintManagerCompat.CryptoObject(signature)
-
-        val cancellationSignal = CancellationSignal()
-
-        val authCallback = object: FingerprintManagerCompat.AuthenticationCallback(){
-            /**
-             * on Auth Error
-             */
-            override fun onAuthenticationError(errMsgId: Int, errString: CharSequence?) {
-                super.onAuthenticationError(errMsgId, errString)
-                 onAuthError(errMsgId,errString?.toString())
+            if (publicKey == null || privateKey == null) {
+                return Status.error(ctx.getString(R.string.fingerprint_auth_failed))
             }
 
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                onAuthFailed()
-            }
 
-             override fun onAuthenticationSucceeded(result: AuthenticationResult?) {
-                super.onAuthenticationSucceeded(result)
-                 onAuthSuccess(result)
-            }
-        }//end callback
+            val cancellationSignal = CancellationSignal()
+
+            val authCallback = object : FingerprintManagerCompat.AuthenticationCallback() {
+                /**
+                 * on Auth Error
+                 */
+                override fun onAuthenticationError(errMsgId: Int, errString: CharSequence?) {
+                    super.onAuthenticationError(errMsgId, errString)
+                    onAuthError(errMsgId, errString?.toString())
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    onAuthFailed()
+                }
+
+                override fun onAuthenticationSucceeded(result: AuthenticationResult?) {
+                    super.onAuthenticationSucceeded(result)
+                    onAuthSuccess(result)
+                }
+            }//end callback
 
 
-        fm.authenticate(
-                cryptoObject,
-            0,
-            cancellationSignal,
-            authCallback,
-            null
-        )
+            signature.initSign(privateKey)
 
-         return Status.success(data = cancellationSignal)
-         //}//end fun
+            val cryptoObject = FingerprintManagerCompat.CryptoObject(signature)
+
+            fm.authenticate(
+                    cryptoObject,
+                    0,
+                    cancellationSignal,
+                    authCallback,
+                    null
+            )
+
+            Status.success(data = cancellationSignal)
+
+        }catch(e: java.lang.Exception) {
+
+            return when (e) {
+
+                //if fingerprint is changed or key expired
+                is KeyPermanentlyInvalidatedException, is KeyExpiredException -> {
+
+                    //recreate  fingerpring
+                    create()
+
+                    //re authenticate the data
+                    authenticate(onAuthSuccess, onAuthError, onAuthFailed)
+                }
+
+                else -> Status.error()
+
+            }//end when
+
+        }//end exceptions
 
     }//end fun
 

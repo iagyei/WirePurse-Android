@@ -191,10 +191,14 @@
     <string name="_continue">Continue</string>
     <string name="fingerprint_init_failed">Fingerprint initialization failed</string>
     <string name="fingerprint_auth_failed">Fingerprint authentication failed</string>
-    <string name="fingerprint_auth">Fingerprint Authentication</string>
+    <string name="fingerprint">Fingerprint</string>
     <string name="fingerint_auth_msg">Kindly confirm your fingerprint to continue</string>
     <string name="fingerprint_auth_instruction">
         Touch your device\'s  fingerprint sensor
     </string>
-    <string name="usePinCode">"Use Pin Code "</string>
+    <string name="use_pin_code">Use Pin Code</string>
+    <string name="use_fingerprint">UseFingerprint</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="idle_fingerprint_ui_closed">Idle fingerprint window closed to save resources</string>
+    <string name="fingerprint_records_not_found">Your fingerprint data was not found on device, disabling fingerprint support</string>
 </resources>
