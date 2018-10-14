@@ -1,8 +1,11 @@
 package com.transcodium.tnsmoney
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.AppAlert
+import com.transcodium.tnsmoney.classes.Progress
 import kotlinx.android.synthetic.main.activity_email_login.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
@@ -15,7 +18,7 @@ class EmailLoginActivity : RootActivity() {
         this
     }
 
-    private val appAlert by lazy{
+    private val appAlert by lazy {
         AppAlert(this)
     }
 
@@ -24,9 +27,9 @@ class EmailLoginActivity : RootActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_email_login)
 
-        submitEmailLogin.setOnClickListener{processEmailLogin()}
+        submitEmailLogin.setOnClickListener { processEmailLogin() }
 
-        loginFormBackFab.setOnClickListener{
+        loginFormBackFab.setOnClickListener {
             mActivity.onBackPressed()
         }
 
@@ -35,7 +38,7 @@ class EmailLoginActivity : RootActivity() {
     /**
      * processEmailLogin
      */
-    private fun processEmailLogin() = launch(UI){
+    private fun processEmailLogin() = launch(UI) {
 
         var hasError = false
         emailAddressInputLayout.error = ""
@@ -44,37 +47,72 @@ class EmailLoginActivity : RootActivity() {
         val emailAddress = emailAddressInput.text.toString()
 
         //validate email
-        if(!emailAddress.isValidEmail()){
+        if (!emailAddress.isValidEmail()) {
             emailAddressInputLayout.error = getString(R.string.valid_email_required)
             hasError = true
         }
 
         val password = passwordInput.text.toString()
 
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             passwordInputLayout.error = getString(R.string.password_required)
             hasError = true
         }
 
         //dont continue if error
-        if(hasError){
+        if (hasError) {
             vibrate()
             return@launch
         }
 
+
+        val progress = Progress(mActivity)
+
+        progress.show(
+                title = R.string.loading,
+                text = R.string.login_progress_text,
+                bgColor = R.color.purple
+        )
+
         //process login
-        val loginStatus = Account(mActivity).processEmailLogin(emailAddress,password)
+        val loginStatus = Account(mActivity).processEmailLogin(emailAddress, password)
+
+        progress.hide()
 
         appAlert.showStatus(loginStatus)
 
         /**
          * if success log user in
          */
-        if(loginStatus.isSuccess()){
+        if (loginStatus.isSuccess()) {
             delay(2000)
-            startClassActivity(PinCodeAuthActivity::class.java,true)
+            startClassActivity(PinCodeAuthActivity::class.java, true)
         }
 
     }//end fun
 
-}
+
+    /**
+     * onActivityResult
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        //if its pin code activity auth
+        if (!(requestCode == INAPP_AUTH_REQUEST_CODE &&
+              resultCode == Activity.RESULT_OK)) {
+            return
+        }
+
+        val status = data?.getStatus()!!
+
+
+        if (status.isSuccess()) {
+                startClassActivity(HomeActivity::class.java, true)
+                return
+        }//end
+
+    }//end fun
+
+
+}//end class
+

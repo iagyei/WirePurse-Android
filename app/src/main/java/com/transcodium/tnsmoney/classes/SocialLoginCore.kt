@@ -16,6 +16,7 @@
 
 package com.transcodium.tnsmoney.classes
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -138,11 +139,16 @@ class SocialLoginCore(val activity: AppCompatActivity) {
         //save user data
         val saveData = Account(activity).saveUserInfo(data)
 
-        if(saveData.isSuccess()) {
-            activity.startClassActivity(PinCodeAuthActivity::class.java, true)
+        if(saveData.isError()) {
+            AppAlert(activity).showStatus(saveData)
+            return
         }
+
+        //the result will be listened in Login Activity
+        //with onActivityResult
+        activity.startInAppAuth()
+
     }//end fun
 
 
-
-}//end  fun
+}//end  class

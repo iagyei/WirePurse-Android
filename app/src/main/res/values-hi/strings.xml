@@ -206,4 +206,5 @@
     <string name="in_app_auth_failed">
         InApp Authentication Failed, You will be locked out for %1$s minutes
     </string>
+    <string name="in_app_auth_success">InApp Authentication Successful</string>
 </resources>

@@ -25,10 +25,8 @@ import com.transcodium.tnsmoney.*
 import org.json.JSONObject
 
 
-class Account(val activity: Activity) {
+class Account(private val mContext: Context) {
 
-
-    private val mContext by lazy { activity as Context }
 
     //if user is logged in
     fun isLoggedIn(): Boolean {
@@ -58,13 +56,6 @@ class Account(val activity: Activity) {
          password: String
     ): Status {
 
-        val progress = Progress(activity)
-
-        progress.show(
-                title = R.string.loading,
-                text = R.string.login_progress_text,
-                bgColor = R.color.purple
-        )
 
         val loginParam = listOf(
                 Pair("email",email as Any),
@@ -77,8 +68,6 @@ class Account(val activity: Activity) {
                 loginParam
         )
 
-        //hide progress
-        progress.hide()
 
         if(loginStatus.isError()){
             return loginStatus
@@ -134,11 +123,13 @@ class Account(val activity: Activity) {
             bundle.putString("status",status.toJsonString())
         }
 
-       activity.startClassActivity(
+      if(mContext is Activity){
+            mContext.startClassActivity(
                activityClass = LoginActivity::class.java,
                clearActivityStack = true,
                data = bundle
-        )
+            )
+       }
 
     }
 }

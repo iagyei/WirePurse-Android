@@ -16,16 +16,12 @@
 
 package com.transcodium.tnsmoney.classes.jobs
 
-import android.app.Service
-import android.util.Log
+
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
+import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.WalletCore
-import com.transcodium.tnsmoney.launchIO
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
 
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -34,6 +30,8 @@ class AssetsDataJob : JobService(), CoroutineScope {
     override val coroutineContext: CoroutineContext
                     get() = Dispatchers.IO
 
+    var coroutineJob: Job? = null
+
     /**
      * doWork
      */
@@ -41,13 +39,19 @@ class AssetsDataJob : JobService(), CoroutineScope {
 
         val ctx = this
 
-        val job = launch {
+        coroutineJob = launch {
+
+            if(!Account(ctx).isLoggedIn()){
+                stopSelf()
+                return@launch
+            }
+
                 WalletCore.networkFetchUserAssets(ctx)
-            Log.i("UPDATING USER STATS","True -----")
+            //Log.i("UPDATING USER STATS","True -----")
         }
 
         //wait for job to finish
-        job.onJoin
+        coroutineJob?.onJoin
 
         return false
     }//end fun
@@ -56,6 +60,9 @@ class AssetsDataJob : JobService(), CoroutineScope {
      * onStopJob
      */
     override fun onStopJob(job: JobParameters?): Boolean {
+
+        coroutineJob?.cancel()
+
         return false
     }
 

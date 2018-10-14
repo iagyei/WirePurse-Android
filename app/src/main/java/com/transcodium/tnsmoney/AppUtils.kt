@@ -578,3 +578,15 @@ fun Activity.dialog(block: AlertDialog.Builder.() -> Unit){
         block(this)
     }
 }
+
+
+/**
+ * startInAppAuth
+ **/
+fun Activity.startInAppAuth(){
+
+    val i = Intent(this,PinCodeAuthActivity::class.java)
+
+    //if user is logged in, lets get check for inApp Auth
+    startActivityForResult(i, INAPP_AUTH_REQUEST_CODE)
+}//end fun

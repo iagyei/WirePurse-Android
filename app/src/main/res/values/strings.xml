@@ -194,7 +194,7 @@
     <string name="pincode_saved">Pincode saved successfully</string>
     <string name="enter_pincode">Enter Pin Code</string>
     <string name="_continue">Continue</string>
-    <string name="fingerprint_init_failed">Fingerprint initialization failed</string>
+    <string name="fingerprint_init_failed">Failed to initialize fingerprint due to many failed attempts</string>
     <string name="fingerprint_auth_failed">Fingerprint authentication failed</string>
     <string name="fingerprint">Fingerprint</string>
     <string name="fingerint_auth_msg">Kindly confirm your fingerprint to continue</string>
@@ -211,4 +211,5 @@
     <string name="in_app_auth_failed">
         InApp Authentication Failed, You will be locked out for %1$s minutes
     </string>
+    <string name="in_app_auth_success">InApp Authentication Successful</string>
 </resources>

@@ -6,11 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.transcodium.tnsmoney.classes.Crypt
 import com.facebook.stetho.Stetho
+import com.transcodium.tnsmoney.classes.Account
 import org.jetbrains.anko.startActivityForResult
 
 class AppEntry : AppCompatActivity() {
-
-    private val IN_APP_REQUEST_CODE = 12
 
     private val mActivity by lazy{ this }
 
@@ -38,10 +37,7 @@ class AppEntry : AppCompatActivity() {
             //if user is already logged in
             else if(isLoggedIn()) {
 
-                val i = Intent(this,PinCodeAuthActivity::class.java)
-
-                //if user is logged in, lets get check for inApp Auth
-                startActivityForResult(i,IN_APP_REQUEST_CODE)
+                startInAppAuth()
 
             } else {
 
@@ -61,12 +57,12 @@ class AppEntry : AppCompatActivity() {
 
         if(createAppKey.isError()){
 
-             AlertDialog.Builder(this,R.style.Theme_AppCompat)
-                    .setTitle(R.string.initialization_error)
-                    .setMessage(R.string.initialization_error_message)
-                    .setPositiveButton(R.string.ok){dialog,_ ->
-                        mActivity.finish()
-             }.show()
+             dialog {
+                    setTitle(R.string.initialization_error)
+                    setMessage(R.string.initialization_error_message)
+                    setPositiveButton(R.string.ok){_,_ -> mActivity.finish()}
+                    show()
+             }
 
             return false
         }//end if error
@@ -81,20 +77,24 @@ class AppEntry : AppCompatActivity() {
     }//end fun
 
 
-    /**
-     * listen to inApp Auth
-     */
+    //onActivityResult
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        if(requestCode != IN_APP_REQUEST_CODE){
+        if(requestCode != INAPP_AUTH_REQUEST_CODE){
             super.onActivityResult(requestCode, resultCode, data)
             return
         }
 
         val status = data!!.getStatus()!!
 
-        println("----- DATA : ${status.toJsonString()}")
-    }
+        if(status.isError()){
+            Account(this).doLogout(status)
+            return
+        }
+
+        startClassActivity(HomeActivity::class.java,true)
+    }//end on activity result
+
 
 
 }//end class

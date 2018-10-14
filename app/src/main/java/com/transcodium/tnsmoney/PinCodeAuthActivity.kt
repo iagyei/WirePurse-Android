@@ -218,8 +218,9 @@ class PinCodeAuthActivity : RootActivity() {
 
         Log.e("FINGERPRINT_ERROR","Error Code: $errCode : Message: $errMsg")
 
-        toast("HMMMMMMMMMMMM")
-        showPincodeUI()
+        longToast(R.string.fingerprint_init_failed)
+
+        showPincodeUI(true)
     }//end fun
 
 
@@ -231,7 +232,7 @@ class PinCodeAuthActivity : RootActivity() {
         //decrement
         fingerPrintRetryAttempts -= 1
 
-        longToast(getString(R.string.retry_msg,fingerPrintRetryAttempts.toString()))
+        toast(getString(R.string.retry_msg,fingerPrintRetryAttempts.toString()))
 
 
         if(fingerPrintRetryAttempts == 0){
@@ -248,8 +249,17 @@ class PinCodeAuthActivity : RootActivity() {
     /**
      * authSuccess
      */
-    fun handleAuthSuccess(){
-        toast("Success")
+    private fun handleAuthSuccess(){
+
+        fpUICancelDelayJob?.cancel()
+
+        longToast(R.string.in_app_auth_success)
+
+        val data = Intent()
+        data.setStatus(Status.success())
+        setResult(Activity.RESULT_OK,data)
+
+        finish()
     }//end fun
 
 
@@ -257,6 +267,8 @@ class PinCodeAuthActivity : RootActivity() {
      * handleAuthFailure
      */
     private fun handleAuthFailure(){
+
+        fpUICancelDelayJob?.cancel()
 
         val appLockExpiry = System.currentTimeMillis() + (APP_LOCK_EXPIRY * 6000)
 
@@ -310,6 +322,7 @@ class PinCodeAuthActivity : RootActivity() {
         }
 
     }//end fun
+
 
 }//end class
 

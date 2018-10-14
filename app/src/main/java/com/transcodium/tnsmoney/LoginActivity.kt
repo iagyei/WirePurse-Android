@@ -1,5 +1,6 @@
 package com.transcodium.tnsmoney
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -255,8 +256,21 @@ class LoginActivity : RootActivity() {
      */
     override  fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
+
+        //if its pin code activity auth
+        if(requestCode == INAPP_AUTH_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+
+            val status = data?.getStatus()!!
+
+
+            if(status.isSuccess()){
+                startClassActivity(HomeActivity::class.java,true)
+                return
+            }
+        }
+
         //if the returned results is from google signin request
-        if(requestCode == GOOGLE_SIGNIN){
+        else if(requestCode == GOOGLE_SIGNIN){
             handleGoogleSignInResult(data)
         }
         //if is facebook
