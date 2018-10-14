@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TimeUtils
 import androidx.core.os.CancellationSignal
 import android.view.View
@@ -27,7 +28,7 @@ class PinCodeAuthActivity : RootActivity() {
 
     val mActivity by lazy { this }
 
-    var fingerPrintRetryAttempts = 4
+    var fingerPrintRetryAttempts = 5
 
     var pinCodeRetryAttempt = 5
 
@@ -180,7 +181,7 @@ class PinCodeAuthActivity : RootActivity() {
 
 
         val authStatus = fingerprintCore.authenticate(
-                onAuthError = {_,_ -> showPincodeUI() },
+                onAuthError = {errCode,errMsg -> onFingerprintError(errCode,errMsg) },
                 onAuthFailed = { onFingerprintFailed() },
                 onAuthSuccess = { _-> handleAuthSuccess() }
         )
@@ -210,6 +211,17 @@ class PinCodeAuthActivity : RootActivity() {
 
     }//end
 
+    /**
+     * onFingerprintError
+     */
+    fun onFingerprintError(errCode: Int, errMsg: String?){
+
+        Log.e("FINGERPRINT_ERROR","Error Code: $errCode : Message: $errMsg")
+
+        toast("HMMMMMMMMMMMM")
+        showPincodeUI()
+    }//end fun
+
 
     /**
      * handle authFailed
@@ -224,7 +236,7 @@ class PinCodeAuthActivity : RootActivity() {
 
         if(fingerPrintRetryAttempts == 0){
 
-            longToast(R.string.fingerprint_auth_failed)
+            toast(R.string.fingerprint_auth_failed)
 
             showPincodeUI(true)
             return
@@ -260,7 +272,7 @@ class PinCodeAuthActivity : RootActivity() {
         //show logout dialog
         dialog {
             setCancelable(false)
-            setMessage(getString(R.string.in_app_auth_failed,appLockExpiry.toString()))
+            setMessage(getString(R.string.in_app_auth_failed,APP_LOCK_EXPIRY.toString()))
             setPositiveButton(R.string.ok){d,w->
                 d.dismiss()
                 Account(mActivity).doLogout()

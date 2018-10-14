@@ -203,5 +203,7 @@
     <string name="fingerprint_records_not_found">Your fingerprint data was not found on device, disabling fingerprint support</string>
     <string name="retry_msg">You have %1$s attempts</string>
     <string name="invalid_pincode">Invalid Pin code, %1$s chance to try</string>
-    <string name="in_app_auth_failed">InApp Authentication Failed, App locked for %1$s</string>
+    <string name="in_app_auth_failed">
+        InApp Authentication Failed, You will be locked out for %1$s minutes
+    </string>
 </resources>
