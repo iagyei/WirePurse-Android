@@ -135,7 +135,7 @@ class Account(val activity: Activity) {
         }
 
        activity.startClassActivity(
-               activityClass = SocialLoginActivity::class.java,
+               activityClass = LoginActivity::class.java,
                clearActivityStack = true,
                data = bundle
         )

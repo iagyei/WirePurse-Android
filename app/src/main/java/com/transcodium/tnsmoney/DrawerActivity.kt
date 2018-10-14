@@ -72,7 +72,7 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
     fun getUserInfoData(): JSONObject? {
 
         if(!isLoggedIn()){
-            startClassActivity(SocialLoginActivity::class.java,true)
+            startClassActivity(LoginActivity::class.java,true)
             return  null
         }
 
@@ -80,7 +80,7 @@ open class DrawerActivity : AppCompatActivity(), CoroutineScope {
                 .getJsonObject(USER_AUTH_INFO)
 
         if(userInfo == null){
-            startClassActivity(SocialLoginActivity::class.java,true)
+            startClassActivity(LoginActivity::class.java,true)
             return null
         }
 

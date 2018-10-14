@@ -27,7 +27,7 @@ import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 
-class SocialLoginActivity : RootActivity() {
+class LoginActivity : RootActivity() {
 
 
     //we will use intent key to detect google signin result

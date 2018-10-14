@@ -1,26 +1,35 @@
 package com.transcodium.tnsmoney
 
-import android.app.Application
-import android.content.ComponentCallbacks
-import android.hardware.biometrics.BiometricPrompt
+
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TimeUtils
 import androidx.core.os.CancellationSignal
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import androidx.core.content.edit
+import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.FingerprintCore
+import com.transcodium.tnsmoney.classes.Status
 import kotlinx.android.synthetic.main.activity_pin_code_auth.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 class PinCodeAuthActivity : RootActivity() {
 
-    var fingerPrintFailCount = 0
+    val mActivity by lazy { this }
+
+    var fingerPrintRetryAttempts = 4
+
+    var pinCodeRetryAttempt = 5
 
     var fingerprintCancellationSignal: CancellationSignal? = null
 
@@ -35,13 +44,13 @@ class PinCodeAuthActivity : RootActivity() {
 
 
     //lets get pincode
-    val pinCodeHash by lazy { sharedPref().getString("pin_code", null) }
+    val savePinCodeHash by lazy { sharedPref().getString("pin_code", null) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         //if not set, open the activity
-        if (pinCodeHash == null) {
+        if (savePinCodeHash == null) {
             startClassActivity(SetPinCodeActivity::class.java, true)
             return
         }//end if
@@ -64,6 +73,10 @@ class PinCodeAuthActivity : RootActivity() {
         }//end if
 
 
+        /**
+         * pincode continue btn
+         */
+        pincodeContinueBtn.setOnClickListener { handlePinCodeAuth() }
     }//end fun
 
     /**
@@ -81,7 +94,49 @@ class PinCodeAuthActivity : RootActivity() {
         if(isFingerPrintPaused && hasFingerprint){
             handleFingerprint()
         }
-    }
+    }//end on resume
+
+
+    /**
+     * processPinCodeAuth
+     */
+    fun handlePinCodeAuth(){
+
+       val pinCode = pinCodeInput.text!!
+
+       pinCodeInputLayout.error = ""
+
+       if(pinCode.length < 4){
+           vibrate()
+           pinCodeInputLayout.error = getString(R.string.pincode_lenght_error)
+           return
+       }
+
+       //lets hash the pin and compare
+       val userHashedPin = pinCode.toString().toSha256()
+
+       //validate
+       if(savePinCodeHash!!.compareTo(userHashedPin!!) == 0){
+           handleAuthSuccess()
+           return
+       }//end if
+
+
+        /**
+         * Auth Failed
+         */
+        vibrate()
+
+        pinCodeRetryAttempt -= 1
+
+        pinCodeInputLayout.error = getString(R.string.invalid_pincode,pinCodeRetryAttempt.toString())
+
+        //after 5 times of failure, fail permanently
+        if(pinCodeRetryAttempt == 0){
+            handleAuthFailure()
+        }//end if
+
+    }//end fun
 
 
     /**
@@ -95,6 +150,7 @@ class PinCodeAuthActivity : RootActivity() {
 
         //if fingerprint was not enabled, remove the fingerprint
         if(!hasFingerprint){
+            showPincodeUI(true)
             return
         }
 
@@ -123,15 +179,14 @@ class PinCodeAuthActivity : RootActivity() {
         showFingerprintUI()
 
 
-
         val authStatus = fingerprintCore.authenticate(
                 onAuthError = {_,_ -> showPincodeUI() },
-                onAuthFailed = { handleAuthFailure() },
+                onAuthFailed = { onFingerprintFailed() },
                 onAuthSuccess = { _-> handleAuthSuccess() }
         )
 
         if(authStatus.isError()){
-            showPincodeUI()
+            showPincodeUI(true)
             return
         }
 
@@ -159,23 +214,61 @@ class PinCodeAuthActivity : RootActivity() {
     /**
      * handle authFailed
      */
-    fun handleAuthFailure(){
+    fun onFingerprintFailed(){
 
-        if(fingerPrintFailCount == 3){
-            showPincodeUI()
+        //decrement
+        fingerPrintRetryAttempts -= 1
+
+        longToast(getString(R.string.retry_msg,fingerPrintRetryAttempts.toString()))
+
+
+        if(fingerPrintRetryAttempts == 0){
+
+            longToast(R.string.fingerprint_auth_failed)
+
+            showPincodeUI(true)
             return
         }
 
-        //increment
-        fingerPrintFailCount += 1
     }//end
 
 
-
+    /**
+     * authSuccess
+     */
     fun handleAuthSuccess(){
         toast("Success")
-    }
+    }//end fun
 
+
+    /**
+     * handleAuthFailure
+     */
+    private fun handleAuthFailure(){
+
+        val appLockExpiry = System.currentTimeMillis() + (APP_LOCK_EXPIRY * 6000)
+
+        sharedPref().edit{
+            putLong("app_locked_for",appLockExpiry)
+            putBoolean("force_login",true)
+        }
+
+        val data = Intent()
+        data.setStatus(Status.error(R.string.in_app_auth_failed))
+        setResult(Activity.RESULT_OK,data)
+
+        //show logout dialog
+        dialog {
+            setCancelable(false)
+            setMessage(getString(R.string.in_app_auth_failed,appLockExpiry.toString()))
+            setPositiveButton(R.string.ok){d,w->
+                d.dismiss()
+                Account(mActivity).doLogout()
+                mActivity.finish()
+            }.show()
+        }
+
+    }//end
 
     /**
      * showFingerprintUI
@@ -188,13 +281,21 @@ class PinCodeAuthActivity : RootActivity() {
     /**
      * showPincodeUI
      */
-    fun showPincodeUI(){
+    fun showPincodeUI(hideUseFingerprint: Boolean? = false){
 
         //if fingerprint is showing, cancel it
         fingerprintCancellationSignal?.cancel()
 
+        fpUICancelDelayJob?.cancel()
+
+        pinCodeInput.requestFocus()
+
         pincodeViewParent.visibility = View.VISIBLE
         fingerprintViewParent.visibility = View.GONE
+
+        if(hideUseFingerprint!!){
+            useFingerprint.visibility = View.GONE
+        }
 
     }//end fun
 

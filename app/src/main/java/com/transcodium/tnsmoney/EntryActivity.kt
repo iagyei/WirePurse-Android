@@ -1,15 +1,16 @@
 package com.transcodium.tnsmoney
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.transcodium.tnsmoney.classes.Crypt
 import com.facebook.stetho.Stetho
+import org.jetbrains.anko.startActivityForResult
 
 class AppEntry : AppCompatActivity() {
 
-
-    private lateinit var nextActivityClass: Class<*>
+    private val IN_APP_REQUEST_CODE = 12
 
     private val mActivity by lazy{ this }
 
@@ -31,21 +32,24 @@ class AppEntry : AppCompatActivity() {
 
             //if if intro is not completed, then next activity class is intro
             if (!introCompleted) {
-                nextActivityClass = AppIntroActivity::class.java
+                startClassActivity(AppIntroActivity::class.java,true)
             }
 
+            //if user is already logged in
             else if(isLoggedIn()) {
 
-                nextActivityClass = PinCodeAuthActivity::class.java
+                val i = Intent(this,PinCodeAuthActivity::class.java)
+
+                //if user is logged in, lets get check for inApp Auth
+                startActivityForResult(i,IN_APP_REQUEST_CODE)
 
             } else {
-                nextActivityClass = SocialLoginActivity::class.java
+
+                //start login
+                startClassActivity(LoginActivity::class.java,true)
             }
 
-
-            startClassActivity(nextActivityClass,true)
-
-        }//end if
+        }//end if everything is ok
 
     }//end fun
 
@@ -75,6 +79,22 @@ class AppEntry : AppCompatActivity() {
 
         return true
     }//end fun
+
+
+    /**
+     * listen to inApp Auth
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if(requestCode != IN_APP_REQUEST_CODE){
+            super.onActivityResult(requestCode, resultCode, data)
+            return
+        }
+
+        val status = data!!.getStatus()!!
+
+        println("----- DATA : ${status.toJsonString()}")
+    }
 
 
 }//end class

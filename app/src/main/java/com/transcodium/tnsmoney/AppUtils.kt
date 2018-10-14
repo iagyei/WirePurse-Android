@@ -25,6 +25,7 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.media.FaceDetector
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
@@ -33,6 +34,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import com.firebase.jobdispatcher.*
@@ -553,3 +555,26 @@ fun generateQRCode(
 
  fun Context.hasCamera(): Boolean =  packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
 
+
+/**
+ * Intent.putStatus
+ **/
+fun Intent.setStatus(data: Status): Intent {
+     this.data = Uri.parse(data.toJsonString())
+    return this
+}//end fun
+
+/**
+ * Intent.getStatus
+ **/
+fun Intent.getStatus(): Status? {
+    val statusStr = dataString ?: return null
+    return Status.fromJson(JSONObject(statusStr))
+}//end fun
+
+
+fun Activity.dialog(block: AlertDialog.Builder.() -> Unit){
+    AlertDialog.Builder(this).apply {
+        block(this)
+    }
+}
