@@ -6,11 +6,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.util.TimeUtils
 import androidx.core.os.CancellationSignal
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.IntentCompat
 import androidx.core.content.edit
 import com.transcodium.tnsmoney.classes.Account
 import com.transcodium.tnsmoney.classes.FingerprintCore
@@ -21,8 +19,6 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
-import java.time.Instant
-import java.util.concurrent.TimeUnit
 
 class PinCodeAuthActivity : RootActivity() {
 
@@ -46,6 +42,7 @@ class PinCodeAuthActivity : RootActivity() {
 
     //lets get pincode
     val savePinCodeHash by lazy { sharedPref().getString("pin_code", null) }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -218,7 +215,13 @@ class PinCodeAuthActivity : RootActivity() {
 
         Log.e("FINGERPRINT_ERROR","Error Code: $errCode : Message: $errMsg")
 
-        longToast(R.string.fingerprint_init_failed)
+        val err = if(errMsg != null){
+            errMsg
+        }else{
+            getString(R.string.fingerprint_failed_msg)
+        }
+
+        longToast(err)
 
         showPincodeUI(true)
     }//end fun
@@ -289,7 +292,7 @@ class PinCodeAuthActivity : RootActivity() {
                 d.dismiss()
                 Account(mActivity).doLogout()
                 mActivity.finish()
-            }.show()
+            }
         }
 
     }//end

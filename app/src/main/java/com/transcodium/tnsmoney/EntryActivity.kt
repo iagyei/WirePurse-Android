@@ -61,7 +61,6 @@ class AppEntry : AppCompatActivity() {
                     setTitle(R.string.initialization_error)
                     setMessage(R.string.initialization_error_message)
                     setPositiveButton(R.string.ok){_,_ -> mActivity.finish()}
-                    show()
              }
 
             return false

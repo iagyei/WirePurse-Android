@@ -88,11 +88,11 @@
         <activity
             android:name=".ReceiveCryptoAssetActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppDialog" />
+            android:theme="@style/ActivityDialog" />
         <activity
             android:name=".SendCryptoAssetActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppDialog" />
+            android:theme="@style/ActivityDialog" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"

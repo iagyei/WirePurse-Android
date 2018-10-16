@@ -2,11 +2,13 @@ package com.transcodium.tnsmoney
 
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,28 +18,34 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.zxing.integration.android.IntentIntegrator
 import com.transcodium.tnsmoney.classes.AppAlert
+import com.transcodium.tnsmoney.classes.CryptoAddress
 import com.transcodium.tnsmoney.classes.WalletCore
 import kotlinx.android.synthetic.main.send_crypto_asset_external.*
 import kotlinx.android.synthetic.main.send_crypto_asset_external.view.*
+import kotlinx.android.synthetic.main.send_crypto_asset_internal.*
 import org.jetbrains.anko.toast
+import org.json.JSONObject
 import java.net.URL
 
 
 private const val LAYOUT_ID_PARAM = "layout_id"
-private const val ASSET_SYMBOL_PARAM = "asset_symbol"
-private const val ASSET_ID_PARAM = "asset_id"
-private const val ASSET_CHAIN_PARAM = "asset_chain"
+private const val ASSET_INFO_PARAM = "asset_symbol"
+
 
 
 class SendCryptoAssetFragment : Fragment() {
 
-
+    private var assetInfo: JSONObject? = null
     private var assetSymbol: String? = null
     private var assetId: String? = null
     private var assetChain: String? = null
     private var layoutId: Int? = null
+    private var hasPaymentId: Boolean = false
     private  val APP_CAMERA_PERMISSION = 15
-    //private var rootView: View? = null
+
+
+    //dataPair prepared for sending
+    val proccessedDataToSend = mutableListOf<Pair<String,Any>>()
 
 
     val mActivity by lazy{
@@ -57,13 +65,21 @@ class SendCryptoAssetFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            assetSymbol = it.getString(ASSET_SYMBOL_PARAM)
-            assetId = it.getString(ASSET_ID_PARAM)
-            assetChain = it.getString(ASSET_CHAIN_PARAM)
+
             layoutId = it.getInt(LAYOUT_ID_PARAM)
+
+            assetInfo = JSONObject(it.getString(ASSET_INFO_PARAM))
+
+            assetSymbol = assetInfo!!.optString("symbol")
+
+            assetId = assetInfo!!.getString("_id")
+
+            assetChain = assetInfo!!.getString("chain")
+
+            hasPaymentId = assetInfo!!.optBoolean("has_payment_id",false)
         }
 
-    }
+    }//end fun
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -86,12 +102,23 @@ class SendCryptoAssetFragment : Fragment() {
 
         val chainNameAndSymbol = "$chainName (${assetChain?.toUpperCase()})"
 
-        rootView.addressToSendInputLayout?.hint = getString(
+
+        //external address input hint
+        rootView?.externalAddressToSendInputLayout?.hint = getString(
                 R.string.asset_name_space_address,chainNameAndSymbol
         )
 
+        //if chain has payment id or destination tag requirement, lets make the input visible
+        if(hasPaymentId){
+            rootView?.externalpaymetIdInputInputLayout?.visibility = View.VISIBLE
+        }
+
+
+        //process send External
+        rootView?.sendExternal?.setOnClickListener { processSendExternal() }
+
         return rootView
-    }
+    }//end fun
 
     /**
      * qrCodeScanner
@@ -122,6 +149,104 @@ class SendCryptoAssetFragment : Fragment() {
             alert.show()
         }
     }//end
+
+    /**
+     * processSendExternal
+     */
+    fun processSendExternal(){
+
+        //lets proccess the data
+        val externalAddress = externalAddressToSendInput.text.toString()
+
+        val amountToSend = externalAmountToSendInput.text.toString().toDoubleOrNull()
+
+        externalAddressToSendInputLayout.error = ""
+
+        externalAmountToSendInputLayout.error = ""
+
+        var hasError = false
+
+        if(!CryptoAddress.isValid(assetChain!!,externalAddress)){
+            externalAddressToSendInputLayout.error = getString(R.string.invalid_crypto_address,assetChain?.toUpperCase())
+            hasError = true
+        }
+
+
+        if(amountToSend == null || amountToSend <= 0){
+            externalAmountToSendInputLayout.error = getString(R.string.invalid_amount_to_send)
+            hasError = true
+        }
+
+        if(hasError){ return }
+
+        val paymentId: String? = externalpaymetIdInput.text?.toString()
+
+        //lets show send confirmation
+        showSendConfirmation(
+                sendMode = getString(R.string.internal),
+                address = externalAddress,
+                amount = amountToSend!!,
+                paymentId = paymentId
+        )
+    }//end fun
+
+
+    /**
+     * sendConfrimation
+     */
+    fun showSendConfirmation(
+            sendMode: String,
+            address: String,
+            amount: Double,
+            paymentId: String? = null
+    ){
+
+        //clear data
+        proccessedDataToSend.clear()
+
+        var dialogContent = """
+            <div>${getString(R.string.amount)} : $amount ${assetSymbol!!.toUpperCase()}</div>
+             <div>${getString(R.string.send_mode)} : ${sendMode.capitalize()}</div>
+            <div>${getString(R.string.recipient_address)} : $address</div>
+        """.trimIndent()
+
+        if(paymentId != null){
+            dialogContent += "<div>${getString(R.string.payment_id_or_destination_tag)} : $paymentId</div>"
+        }
+
+        mActivity!!.dialog {
+            setCancelable(false)
+            setTitle(R.string.confirm_transfer)
+            setMessage(Html.fromHtml(dialogContent))
+            setNegativeButton(R.string.cancel){d,_-> d.cancel() }
+            setPositiveButton(R.string.confirm){d,_->
+
+                //lets process the data
+                proccessedDataToSend.apply {
+                        add(Pair("send_mode", sendMode))
+                        add(Pair("amount", amount))
+                        add(Pair("recipient_address", address))
+                        add(Pair("payment_id", paymentId ?: ""))
+                        add(Pair("asset", assetSymbol!!))
+                        add(Pair("asset_id", assetId!!))
+                }
+
+                mActivity!!.startInAppAuth()
+            }
+        }
+
+    }//end fun
+
+
+    /**
+     *  sendAssetTransferToServer()
+     */
+    fun  sendAssetTransferToServer(){
+
+       // if(proccessedDataToSend.isEmpty()){return}
+
+        println("---HAHAHAHA - $proccessedDataToSend")
+    }//end fun
 
     /**
      * parse And Proccess QR Data
@@ -179,19 +304,26 @@ class SendCryptoAssetFragment : Fragment() {
           }//end for loop
 
 
-
-            paymentAddress = paymentAddress.substringBefore("?")
+          paymentAddress = paymentAddress.substringBefore("?")
 
         }//end if
 
         //fill form with data
-        addressToSendInput?.setText(paymentAddress)
-        amountToSendInput?.setText(amount.toString())
+        externalAddressToSendInput?.setText(paymentAddress)
+        externalAmountToSendInput?.setText(amount.toString())
 
     }//end fun
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+
+        //if pincode auth is successful
+        if(requestCode == INAPP_AUTH_REQUEST_CODE && resultCode == RESULT_OK){
+            sendAssetTransferToServer()
+            return
+        }//end if
+
 
         val barcodeResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data)
 
@@ -219,6 +351,8 @@ class SendCryptoAssetFragment : Fragment() {
     ) {
 
         when(requestCode){
+
+            //if its Bar Code stuff
             APP_CAMERA_PERMISSION -> {
 
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -237,16 +371,12 @@ class SendCryptoAssetFragment : Fragment() {
         @JvmStatic
         fun newInstance(
                 layoutId: Int,
-                assetSymbol: String,
-                assetId: String,
-                assetChain: String
+               assetInfo: JSONObject
         ) = SendCryptoAssetFragment().apply {
 
                 arguments = Bundle().apply {
                     putInt(LAYOUT_ID_PARAM,layoutId)
-                    putString(ASSET_SYMBOL_PARAM, assetSymbol)
-                    putString(ASSET_ID_PARAM, assetId)
-                    putString(ASSET_CHAIN_PARAM, assetChain)
+                    putString(ASSET_INFO_PARAM, assetInfo.toString())
                 }
 
         } //end apply

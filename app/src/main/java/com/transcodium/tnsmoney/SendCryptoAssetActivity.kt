@@ -15,10 +15,6 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
     var cryptoSymbol: String? = null
 
-    var assetId: String? = null
-
-    var chain: String? = null
-
     var assetInfo: JSONObject? = null
 
     val mActivity by lazy { this }
@@ -43,7 +39,7 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
             val assetInfoStatus = WalletCore.getAssetInfo(mActivity, cryptoSymbol!!)
 
             if (assetInfoStatus.isError()) {
-                opError(assetInfoStatus)
+                opError(assetInfoStatus); return@launch
             }
 
             assetInfo = assetInfoStatus.getData<JSONObject>()
@@ -52,11 +48,6 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
                 opError(); return@launch
             }
 
-            val assetId = assetInfo!!.getString("_id")
-
-            val assetChain = assetInfo!!.getString("chain")
-
-            val assetName = assetInfo!!.getString("name")
 
             dialogTitle.text = mActivity.getString(R.string.send_space_asset, cryptoSymbol!!.toUpperCase())
 
@@ -71,9 +62,7 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
                 adapter.addFragment(
                         SendCryptoAssetFragment.newInstance(
                                 layoutId = R.layout.send_crypto_asset_external,
-                                assetSymbol = cryptoSymbol!!,
-                                assetId = assetId,
-                                assetChain = assetChain
+                                assetInfo = assetInfo!!
                         ),
                         mActivity.getString(R.string.send_to_address)
                 )
@@ -82,9 +71,7 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
                         SendCryptoAssetFragment.newInstance(
                                 layoutId = R.layout.send_crypto_asset_internal,
-                                assetSymbol = cryptoSymbol!!,
-                                assetId = assetId,
-                                assetChain = assetChain
+                                assetInfo = assetInfo!!
                         ),
 
                         mActivity.getString(R.string.send_to_user)
@@ -109,9 +96,11 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
         val allFragments = supportFragmentManager.fragments
 
-        for(fragment in allFragments) {
-            fragment.onActivityResult(requestCode, resultCode, data)
-        }
+        //for(fragment in allFragments) {
+        //since we are using 1 class dor all fragments here, no  need to loop
+        //as we saw duplicate in event call
+          allFragments[0].onActivityResult(requestCode, resultCode, data)
+       // }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -123,9 +112,9 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
         val allFragments = supportFragmentManager.fragments
 
-        for(fragment in allFragments) {
-            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
+        //for(fragment in allFragments) {
+        allFragments[0].onRequestPermissionsResult(requestCode, permissions, grantResults)
+       // }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

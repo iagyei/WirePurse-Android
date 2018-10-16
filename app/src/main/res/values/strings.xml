@@ -212,4 +212,15 @@
         InApp Authentication Failed, You will be locked out for %1$s minutes
     </string>
     <string name="in_app_auth_success">InApp Authentication Successful</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="confirm">Confirm</string>
+    <string name="invalid_crypto_address">Invalid %1$s address</string>
+    <string name="invalid_amount_to_send">Invalid amount to send</string>
+    <string name="payment_id">Payment ID</string>
+    <string name="recipient_address">Recipient Address</string>
+    <string name="send_mode">Send Mode</string>
+    <string name="internal">Internal</string>
+    <string name="confirm_transfer">Confirm Transfer</string>
+    <string name="fingerprint_failed_msg">Fingerprint failed to initialize or was closed by user</string>
+    <string name="payment_id_or_destination_tag">Payment ID / Destination Tag</string>
 </resources>

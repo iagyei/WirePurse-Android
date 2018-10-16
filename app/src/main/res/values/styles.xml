@@ -76,10 +76,11 @@
         <item name="android:activityCloseExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
-    <style name="AppDialog" parent="Theme.AppCompat.Dialog">
+    <style name="ActivityDialog" parent="Theme.AppCompat.Dialog">
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/DialogAnim</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
+
 </resources>

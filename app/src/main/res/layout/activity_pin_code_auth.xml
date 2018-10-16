@@ -176,7 +176,7 @@
                     android:layout_marginTop="6dp"
                     android:textColor="@color/whiteAlpha30"
                     android:text="@string/_continue"
-                    android:foreground="?android:attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
                     />
 
 

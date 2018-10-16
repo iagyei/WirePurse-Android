@@ -18,11 +18,13 @@ package com.transcodium.tnsmoney
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.drawable.ColorDrawable
 import android.media.FaceDetector
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -35,6 +37,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import com.firebase.jobdispatcher.*
@@ -453,6 +457,7 @@ fun String.toSha256(): String? {
     return hashData(this,"SHA-256")
 }
 
+
 /**
  * hashData
  */
@@ -573,10 +578,34 @@ fun Intent.getStatus(): Status? {
 }//end fun
 
 
-fun Activity.dialog(block: AlertDialog.Builder.() -> Unit){
-    AlertDialog.Builder(this).apply {
-        block(this)
-    }
+fun Activity.dialog(block: AlertDialog.Builder.() -> AlertDialog.Builder){
+    val d = AlertDialog.Builder(this,R.style.Theme_AppCompat_Light_Dialog)
+
+    val a = block(d).create()
+
+    a.show()
+
+    val negativeBtn = a.getButton(DialogInterface.BUTTON_NEGATIVE)
+
+    negativeBtn.setBackgroundColor(Color.TRANSPARENT)
+
+    negativeBtn
+            .setTextColor(getColorRes(R.color.colorAccent))
+
+    val positionBtn = a.getButton(DialogInterface.BUTTON_POSITIVE)
+
+    positionBtn.setBackgroundColor(Color.TRANSPARENT)
+
+    positionBtn
+            .setTextColor(getColorRes(R.color.colorPrimary))
+}//end class
+
+
+/**
+ * colorId
+ */
+fun Activity.getColorRes(colorId: Int) : Int{
+ return ContextCompat.getColor(this,colorId)
 }
 
 
