@@ -218,4 +218,8 @@
     <string name="confirm_transfer">Confirm Transfer</string>
     <string name="fingerprint_failed_msg">Fingerprint failed to initialize or was closed by user</string>
     <string name="payment_id_or_destination_tag">Payment ID / Destination Tag</string>
+    <string name="free_internal_tx">0% fees on all internal transfers</string>
+    <string name="invalid_email_address">Invalid Email Address</string>
+    <string name="external">External</string>
+    <string name="default_loading_text">Stay calmed, processing your request</string>
 </resources>

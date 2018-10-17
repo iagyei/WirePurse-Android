@@ -6,12 +6,15 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.viewpager.widget.ViewPager
 import com.transcodium.tnsmoney.classes.AppAlert
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.WalletCore
 import com.transcodium.tnsmoney.db.entities.AssetAddress
 import kotlinx.android.synthetic.main.activity_receive_crypto_asset.*
+import kotlinx.android.synthetic.main.activity_send_crypto_asset.*
 import kotlinx.android.synthetic.main.circular_progress_bar.*
 import kotlinx.android.synthetic.main.dialog_header.*
 import kotlinx.coroutines.experimental.launch
@@ -71,6 +74,9 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
 
             chain = assetInfo!!.getString("chain")
 
+            val hasPaymentId = assetInfo!!.optBoolean("has_payment_id",false)
+
+
             dialogTitle.text = mActivity.getString(R.string.receive_space_asset, cryptoSymbol!!.toUpperCase())
 
             val cryptoAddressesStatus = WalletCore.fetchDBAssetAddress(
@@ -108,6 +114,8 @@ class ReceiveCryptoAssetActivity : ActivityDialogBase() {
         closeModal.setOnClickListener { mActivity.finish() }
 
     }//end fun
+
+
 
     /**
      * fetchAddress

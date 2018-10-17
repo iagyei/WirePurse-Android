@@ -2,6 +2,9 @@ package com.transcodium.tnsmoney
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
 import com.transcodium.tnsmoney.classes.Status
 import com.transcodium.tnsmoney.classes.ViewPagerAdapter
 import com.transcodium.tnsmoney.classes.WalletCore
@@ -18,6 +21,8 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
     var assetInfo: JSONObject? = null
 
     val mActivity by lazy { this }
+
+    var hasPaymentId : Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +56,13 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
             dialogTitle.text = mActivity.getString(R.string.send_space_asset, cryptoSymbol!!.toUpperCase())
 
+            hasPaymentId = assetInfo!!.optBoolean("has_payment_id",false)
 
             UI.launch {
+
+                if(hasPaymentId){
+                    changeViewPagerHeight()
+                }
 
                 //close dialog
                 closeModal.setOnClickListener { mActivity.finish() }
@@ -89,6 +99,32 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
     }//end onCreate
 
+
+    /**
+     * changeViewPagerHeight
+     */
+    fun changeViewPagerHeight(type: String? = "increase") {
+
+
+        val noToAdd = if (type == "increase") {
+            180
+        } else {
+            -180
+        }
+
+        val lp = viewPager.layoutParams
+
+        val newHeight = lp.height + noToAdd
+
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT
+        lp.height = newHeight
+
+        viewPager.requestLayout()
+
+        Log.e("NEW_H", viewPager.layoutParams.height.toString())
+     }//end fun
+
+
     /**
      * forward all onActivityResults to fragments
      */
@@ -96,11 +132,10 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
         val allFragments = supportFragmentManager.fragments
 
-        //for(fragment in allFragments) {
-        //since we are using 1 class dor all fragments here, no  need to loop
-        //as we saw duplicate in event call
-          allFragments[0].onActivityResult(requestCode, resultCode, data)
-       // }
+        //send to fragments
+        for(fragment in allFragments) {
+          fragment.onActivityResult(requestCode, resultCode, data)
+        }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -112,9 +147,9 @@ class SendCryptoAssetActivity : ActivityDialogBase() {
 
         val allFragments = supportFragmentManager.fragments
 
-        //for(fragment in allFragments) {
-        allFragments[0].onRequestPermissionsResult(requestCode, permissions, grantResults)
-       // }
+        for(fragment in allFragments) {
+           fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
+       }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

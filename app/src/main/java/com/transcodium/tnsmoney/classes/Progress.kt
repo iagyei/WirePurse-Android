@@ -27,8 +27,8 @@ class Progress(val activity: Activity) {
      * show
      */
     fun show(
-            title: Any? = "",
-            text: Any? = "",
+            title: Any? = R.string.loading,
+            text: Any? = R.string.default_loading_text,
             bgColor: Int = R.color.colorPrimaryDark,
             blockUI: Boolean = true,
             dismissable: Boolean = false
