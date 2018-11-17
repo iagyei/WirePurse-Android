@@ -88,23 +88,22 @@ class SendCryptoAssetFragment : Fragment() {
 
 
         //listen to viewPage changes and clear the processedDataToSend
-        //to avoid mutiple requests
+        //to avoid multiple requests
         mActivity?.viewPager?.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
 
             override fun onPageScrollStateChanged(state: Int) {
-                println("-----CLearing Data 1")
                 proccessedDataToSend = null
             }
 
             override fun onPageSelected(position: Int) {
-                println("-----CLearing Data 2")
                 proccessedDataToSend = null
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
         })//end page  changes
 
-    }//end fun
+        
+    }//end onCreate
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -337,8 +336,6 @@ class SendCryptoAssetFragment : Fragment() {
            blockUI = true
         )
 
-       println("-------DATA $proccessedDataToSend")
-
         val sendStatus = TnsApi(mActivity!!)
                     .post(
                             requestPath = "wallet/withdraw",
@@ -349,7 +346,7 @@ class SendCryptoAssetFragment : Fragment() {
         mProgress.hide()
 
         //clear proccessedDataToSend
-        proccessedDataToSend = null 
+        proccessedDataToSend = null
 
         if(sendStatus.isError()){
              AppAlert(mActivity!!).showStatus(sendStatus)
