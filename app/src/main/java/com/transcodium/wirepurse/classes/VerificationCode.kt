@@ -26,6 +26,57 @@ import org.json.JSONObject
 
 class VerificationCode(val activity: AppCompatActivity) {
 
+    /**
+     * sendCode
+     */
+    suspend fun sendCode(
+            emailAddress: String? = "",
+            activityGroup: String,
+            hasAuth:Boolean? = true
+    ): Status{
+
+        val p = Progress(activity)
+
+        p.show(
+                text = R.string.resending_verification_code,
+                bgColor = R.color.colorPrimaryDark
+        )
+
+
+        val uri = "/auth/verification-code/send"
+
+        val params = listOf(
+                Pair("email",emailAddress as Any),
+                Pair("group",activityGroup as Any)
+        )
+
+        val resendStatus = TnsApi(activity)
+                .post(
+                   requestPath = uri,
+                   hasAuth = hasAuth!!,
+                   params = params
+                )
+
+
+        p.hide()
+
+        if(resendStatus.isError()){
+            AppAlert(activity).showStatus(resendStatus)
+            return resendStatus
+        }
+
+        AppAlert(activity).success(R.string.code_sent_to_your_email,true)
+
+        //lets get validation data and reshow the count down
+        val verificationData = resendStatus.getData<JSONObject>()!!
+
+        processWaitTime(verificationData)
+
+        return resendStatus
+
+    }//end fun
+
+
 
     /**
      * resend

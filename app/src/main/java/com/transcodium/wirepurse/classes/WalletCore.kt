@@ -37,7 +37,7 @@ import com.transcodium.wirepurse.db.entities.AssetStats
 import com.transcodium.wirepurse.db.entities.UserAssets
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import java.lang.Exception
 import java.util.*

@@ -15,8 +15,7 @@ import com.transcodium.wirepurse.view_models.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.circular_progress_bar.*
 import kotlinx.android.synthetic.main.home_coin_info.*
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.*
 import org.jetbrains.anko.toast
 import org.json.JSONObject
 

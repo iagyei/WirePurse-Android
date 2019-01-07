@@ -21,7 +21,7 @@ import com.tapadoo.alerter.Alerter
 import com.transcodium.wirepurse.R
 import com.transcodium.wirepurse.UI
 import com.transcodium.wirepurse.vibrate
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 
 class AppAlert(val activity: Activity) {
 

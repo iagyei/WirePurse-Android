@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_receive_crypto_asset.*
 import kotlinx.android.synthetic.main.activity_send_crypto_asset.*
 import kotlinx.android.synthetic.main.circular_progress_bar.*
 import kotlinx.android.synthetic.main.dialog_header.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.toast
 import org.json.JSONObject

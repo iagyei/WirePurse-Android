@@ -25,13 +25,12 @@ import com.squareup.picasso.Picasso
 import com.transcodium.wirepurse.classes.Account
 import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.jetbrains.anko.*
 import org.json.JSONObject
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 
 open class DrawerActivity : AppCompatActivity(), CoroutineScope {

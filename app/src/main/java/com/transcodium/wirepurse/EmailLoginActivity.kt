@@ -7,9 +7,7 @@ import com.transcodium.wirepurse.classes.Account
 import com.transcodium.wirepurse.classes.AppAlert
 import com.transcodium.wirepurse.classes.Progress
 import kotlinx.android.synthetic.main.activity_email_login.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.delay
 
 
 class EmailLoginActivity : RootActivity() {

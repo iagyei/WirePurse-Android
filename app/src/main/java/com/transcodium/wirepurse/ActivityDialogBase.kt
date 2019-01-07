@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import com.transcodium.wirepurse.classes.AppAlert
 import com.transcodium.wirepurse.classes.Status
 import kotlinx.android.synthetic.main.circular_progress_bar.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 
 open class ActivityDialogBase  : RootActivity()  {
 

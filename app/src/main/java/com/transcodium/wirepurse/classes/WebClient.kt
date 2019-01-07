@@ -19,8 +19,8 @@ package com.transcodium.wirepurse.classes
 import android.util.Log
 import com.transcodium.wirepurse.IO
 import com.transcodium.wirepurse.R
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import okhttp3.*
 
 class WebClient {

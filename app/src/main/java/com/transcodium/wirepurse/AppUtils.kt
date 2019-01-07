@@ -50,13 +50,14 @@ import com.transcodium.wirepurse.classes.Account
 import com.transcodium.wirepurse.classes.AppAlert
 import com.transcodium.wirepurse.classes.Status
 import kotlinx.android.synthetic.main.app_bar.*
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KClass
 
 

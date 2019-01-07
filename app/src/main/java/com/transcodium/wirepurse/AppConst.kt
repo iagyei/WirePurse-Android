@@ -28,6 +28,8 @@ const val TWITTER_CONSUMER_KEY = "KzlgJDEPYtPHlmaFzsFAN6Kjk"
 
 const val TWITTER_CONSUMER_SECRET = "RfJA98EHqOet9RsLyGDE7k85w1iF0LW5KE5KJiPwKIQ9r5eHA2"
 
+const val GOOGLE_RECAPTCHA_SITE_KEY = "6LdiVIcUAAAAAG2tFnpmuYPSNgQ2L2KUxRuMeVwA"
+
 //Encrypted Keys Name
 const val APP_KEY_NAME = "__tnsm_k_"
 

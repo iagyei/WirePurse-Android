@@ -7,8 +7,6 @@ import android.view.View
 import com.transcodium.wirepurse.classes.*
 import kotlinx.android.synthetic.main.activity_social_login_verification.*
 import kotlinx.android.synthetic.main.verification_code_layout.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import org.json.JSONObject
 import java.lang.Integer.parseInt
 

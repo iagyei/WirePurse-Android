@@ -21,9 +21,9 @@ import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import com.transcodium.wirepurse.classes.Account
 import com.transcodium.wirepurse.classes.WalletCore
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.*
 
-import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.coroutines.CoroutineContext
 
 class AssetsDataJob : JobService(), CoroutineScope {
 

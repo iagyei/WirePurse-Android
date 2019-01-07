@@ -14,9 +14,9 @@ import com.transcodium.wirepurse.classes.Account
 import com.transcodium.wirepurse.classes.FingerprintCore
 import com.transcodium.wirepurse.classes.Status
 import kotlinx.android.synthetic.main.activity_pin_code_auth.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 

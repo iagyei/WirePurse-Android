@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.send_crypto_asset_external.*
 import kotlinx.android.synthetic.main.send_crypto_asset_external.view.*
 import kotlinx.android.synthetic.main.send_crypto_asset_internal.*
 import kotlinx.android.synthetic.main.send_crypto_asset_internal.view.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import org.json.JSONObject

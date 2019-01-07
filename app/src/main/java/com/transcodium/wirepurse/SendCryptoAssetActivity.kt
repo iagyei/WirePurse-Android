@@ -10,7 +10,7 @@ import com.transcodium.wirepurse.classes.ViewPagerAdapter
 import com.transcodium.wirepurse.classes.WalletCore
 import kotlinx.android.synthetic.main.activity_send_crypto_asset.*
 import kotlinx.android.synthetic.main.dialog_header.*
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class SendCryptoAssetActivity : com.transcodium.wirepurse.ActivityDialogBase() {
