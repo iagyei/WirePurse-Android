@@ -222,4 +222,10 @@
     <string name="invalid_email_address">Invalid Email Address</string>
     <string name="external">External</string>
     <string name="default_loading_text">Stay calmed, processing your request</string>
+    <string name="login_home">Login Home</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="request">Request</string>
+    <string name="verification_code_instruction">Click on \'Send or Resend\' to get code in your inbox</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="full_name">Full Name</string>
 </resources>

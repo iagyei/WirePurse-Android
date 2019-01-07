@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TNSMoney</string>
+    <string name="app_name">Wire Purse</string>
 
     <string name="facebook_app_id">548131418855435</string>
     <string name="fb_login_protocol_scheme">fb548131418855435</string>
@@ -227,4 +227,10 @@
     <string name="invalid_email_address">Invalid Email Address</string>
     <string name="external">External</string>
     <string name="default_loading_text">Stay calmed, processing your request</string>
+    <string name="login_home">Login Home</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="request">Request</string>
+    <string name="verification_code_instruction">Click on \'Send or Resend\' to get code in your inbox</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="full_name">Full Name</string>
 </resources>
