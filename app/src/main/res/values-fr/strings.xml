@@ -1,0 +1,235 @@
+<resources>
+    <string name="app_name">Wire Purse</string>
+
+    <string name="facebook_app_id">548131418855435</string>
+    <string name="fb_login_protocol_scheme">fb548131418855435</string>
+
+    <string name="multi_coin_wallet">Portefeuille Multi Devises</string>
+    <string name="multi_coin_wallet_desc">Stocker en toute sécurité plusieurs devises cryptographiques</string>
+    <string name="cutting_edge_sucurity">Sécurité de pointe</string>
+    <string name="builtin_security_desc">
+       Protégez vos actifs avec des fonctionnalités de sécurité de pointe
+    </string>
+    <string name="builtin_exchange">Échange intégré</string>
+    <string name="builtin_exchange_desc">Échange crypto-monétaire très facile à utiliser avec prise en charge fiat</string>
+
+    <string name="extra_premium_service">Services extra premium</string>
+    <string name="extra_premium_service_desc">
+        Des services extra premium à votre disposition à votre convenance
+    </string>
+
+    <string name="email_address">Adresse électronique</string>
+    <string name="password">Mot de passe</string>
+
+    <string name="login">S'identifier</string>
+    <string name="login_with_google">Connectez-vous avec Google</string>
+
+    <string name="login_with_facebook">Se connecter avec Facebook</string>
+
+    <string name="login_with_email">Se connecter avec Email</string>
+
+    <string name="login_with_twitter">Se connecter avec Twitter</string>
+
+    <string name="go_back">Retourner</string>
+
+    <string name="valid_email_required">Une adresse email valide est exigée</string>
+
+    <string name="password_required">Mot de passe requis</string>
+    <string name="app_logo">Logo App</string>
+
+    <string name="copyright_transcodium">&#169; Transcodium</string>
+    <string name="secure_url_required">Un point de terminaison API sécurisé est requis</string>
+    <string name="network_request_failed">La requête réseau a échoué, réessayez plus tard</string>
+
+    <string name="unexpected_error">Une erreur inattendue s'est produite, réessayez plus tard</string>
+    <string name="code">Code</string>
+    <string name="login_success">Connexion réussie</string>
+    <string name="loading">Chargement</string>
+    <string name="login_progress_text">Restez calme, traiter votre demande</string>
+    <string name="google_login_failed">Échec de la connexion à Google. Réessayez ultérieurement.</string>
+    <string name="ooops">Ooops!</string>
+    <string name="unknown_social_provider">Nom social inconnu %1$s</string>
+    <string name="social_account_verification">%1$s Vérification du compte social</string>
+    <string name="social_login_verification_info">
+      La connexion à un compte existant avec un nouveau fournisseur social nécessite une vérification ponctuelle.
+        Veuillez vérifier la boîte de réception ou de courrier indésirable de l'adresse e-mail associée à ce compte pour le
+       code de vérification.
+    </string>
+    <string name="verification_code">Code de vérification</string>
+    <string name="verify">Vérifier</string>
+    <string name="cancel">Annuler</string>
+    <string name="resend">resoumettre</string>
+
+    <string name="resend_after">Soumettre à nouveau après</string>
+    <string name="resending_verification_code">Renvoi du code de vérification</string>
+    <string name="code_sent_to_your_email">Le code a été renvoyé à votre email</string>
+    <string name="invalid_code">Code invalide</string>
+    <string name="verifying_code">Vérification du code</string>
+
+    <string name="rsa_data_encryption_failed">Échec du cryptage initial des données</string>
+    <string name="rsa_data_decryption_failed">Échec du déchiffrement initial des données</string>
+
+    <string name="data_encryption_error">Le chiffrement des données a échoué 2, réinstallez l'application si l'erreur persiste</string>
+    <string name="data_decryption_error">Le déchiffrement des données a échoué 2, réinstallez l'application si l'erreur persiste</string>
+
+    <string name="security_logout_message">Le traitement des données sécurisé a échoué. S'il vous plaît, connectez-vous à nouveau comme mesure de sécurité</string>
+
+    <string name="encrypted_data_part_extract_error">Échec d'extraction des éléments de données chiffrés, réinstallez l'application si l'erreur persiste.</string>
+    <string name="data_decryption_failed_error">Échec du déchiffrement des données. Veuillez réinstaller l'application si l'erreur persiste.</string>
+
+    <string name="facebook_login_failed">Échec de la connexion Facebook</string>
+
+    <string name="facebook_login_cancelled">Demande de connexion Facebook annulée</string>
+
+    <string name="twitter_login_failed">Échec de la connexion à Twitter</string>
+
+    <string name="missing_app_key">Clé d'application manquante</string>
+    <string name="initialization_error">Erreur d'initialisation</string>
+    <string name="initialization_error_message">La vérification de l'initialisation avant le démarrage a échoué, l'application va fermer</string>
+    <string name="ok">Okay !</string>
+
+    <string name="reset_password">réinitialiser le mot de passe</string>
+
+    <string name="signup">S'inscrire</string>
+
+    <string name="critical_error_message">Une erreur critique s'est produite, veuillez reconnecter. (Code: %1$s)</string>
+
+    <string name="failed_to_generate_security_keys">Impossible de créer des clés de sécurité</string>
+
+    <string name="auth_required">Identification requise</string>
+
+    <string name="drawer_open">Tiroir ouvert</string>
+
+    <string name="drawer_close">Fermer le tiroir</string>
+
+    <string name="setting">Réglage</string>
+
+    <string name="support">Soutien</string>
+
+    <string name="logout">Déconnexion</string>
+
+    <string name="about">propos</string>
+
+    <string name="wallet">Portefeuille</string>
+
+    <string name="exchange">Échange</string>
+    <string name="w">w</string>
+    <string name="e">e</string>
+    <string name="current_balance">Solde actuel</string>
+
+    <string name="auth_not_found">Authentification non trouvée</string>
+
+    <string name="send">envoi</string>
+    <string name="receive">obtenir</string>
+
+    <string name="history">histoire</string>
+    <string name="network_not_available">La connexion réseau ou internet ne peut pas être détectée,
+         S'il vous plaît résoudre le problème et essayez à nouveau</string>
+
+    <string name="updating">Updating..</string>
+
+    <string name="more">Plus</string>
+
+    <string name="server_request_failed">requête du serveur a échoué, réessayez plus tard</string>
+
+    <string name="date_colon">Rendez-vous amoureux:</string>
+    <string name="price_colon">Prix:</string>
+
+    <string name="hello_greeting">Bonjour !, %1$s</string>
+    <string name="confirm_logout_message">Vous serez déconnecté, souhaitez-vous continuer ?</string>
+    <string name="yes">Oui</string>
+    <string name="no_comma_cancel">Non, annuler</string>
+    <string name="logout_cancelled">Déconnexion annulée</string>
+    <string name="no">Non</string>
+    <string name="http_error">Erreur de demande HTTP</string>
+    <string name="server_connection_failed">Connexion au serveur a échoué</string>
+    <string name="deposit">Dépôt</string>
+    <string name="receive_space_asset">reçoive %1$s</string>
+    <string name="no_assets_available">Aucun actif disponible, contactez le support si le problème persiste</string>
+    <string name="deposit_asset">Actif de dépôt</string>
+    <string name="unknown_asset">Actif inconnu %1$s</string>
+    <string name="copy">Copie</string>
+    <string name="generate">produire</string>
+    <string name="address_copied_to_clipboard">Adresse copiée dans presse-papier</string>
+    <string name="app_loading_data">Application est en cours de chargement, veuillez patienter</string>
+    <string name="send_space_asset">envoi %1$s</string>
+
+    <string name="send_to_address">Envoyer à l'adresse</string>
+    <string name="send_to_user">Envoyer à utilisateur</string>
+    <string name="scan_with_camera">Scannez avec appareil photo</string>
+
+    <string name="camera_permission_message">To use the scanner, please select \'Allow\' when prompted on camera\'s permission</string>
+    <string name="camera_perm_denied">permission de caméra est refusée</string>
+    <string name="qr_scanner_message">Placez code à barres dans la boîte</string>
+    <string name="scanner_toggle_torch">Volume up / down for torch</string>
+    <string name="qrcode_has_empty_data">QRCode ne contient aucune donnée</string>
+    <string name="unsupported_payment_address">Adresse de paiement non prise en charge</string>
+    <string name="invalid_qr_code">QRCode ne contient pas de valide %1$s données</string>
+    <string name="address">Adresse</string>
+    <string name="asset_name_space_address">%1$s Adresse</string>
+    <string name="amount">Montant</string>
+    <string name="save_address">Enregistrer l'adresse</string>
+    <string name="label">Étiquette</string>
+    <string name="label_optional">Étiquette (optionnel)</string>
+    <string name="receipient_email_address">Adresse email du destinataire</string>
+    <string name="amount_to_send">Montant à envoyer</string>
+    <string name="operation_aborted_by_user">Opération abandonnée par utilisateur</string>
+    <string name="set_app_pin_message">
+      Vous devez définir un code PIN d'accès à l'application, 4 caractères numériques.
+         Qui sera utilisé pour empêcher tout accès non autorisé.
+    </string>
+    <string name="four_digits_pin_code">Code Pin à 4 chiffres</string>
+    <string name="confirm_pin_code">Confirmer le PIN code </string>
+    <string name="enable_fingerprint_support">Activer la prise en charge d'empreintes digitales</string>
+    <string name="save">sauvegarder</string>
+    <string name="pincode_lenght_error">Le champ de code Pin nécessite 4 caractères numériques</string>
+    <string name="pincodes_dont_match">Les codes PIN ne correspondent pas</string>
+
+    <string name="enable_fingerprint_setting">
+      Le matériel d’empreinte digitale de votre appareil n’est pas activé,
+        vous serez redirigé vers les paramètres,
+        activez-le avant de continuer.
+    </string>
+    <string name="pincode_saved">PINCode stocké avec succès</string>
+    <string name="enter_pincode">Entrez le code PIN</string>
+    <string name="_continue">poursuivre</string>
+    <string name="fingerprint_init_failed">Échec d'initialisation de l'empreinte digitale en raison de nombreuses tentatives infructueuses</string>
+    <string name="fingerprint_auth_failed">L'authentification d'empreinte digitale a échoué</string>
+    <string name="fingerprint">Empreinte digitale</string>
+    <string name="fingerint_auth_msg">Veuillez confirmer votre empreinte digitale pour continuer</string>
+    <string name="fingerprint_auth_instruction">
+        Touchez le capteur d'empreintes digitales de votre appareil
+    </string>
+    <string name="use_pin_code">Utiliser le code PIN</string>
+    <string name="use_fingerprint">Utiliser les empreintes digitales</string>
+    <string name="pin_code">Code PIN</string>
+    <string name="idle_fingerprint_ui_closed">Fenêtre d'empreinte digitale inactive fermée pour économiser des ressources</string>
+    <string name="fingerprint_records_not_found">Vos données d'empreinte digitale n'ont pas été trouvées sur l'appareil, désactivant la prise en charge de l'empreinte digitale</string>
+    <string name="retry_msg">Tu as %1$s tentative</string>
+    <string name="invalid_pincode">Code PIN invalide, vous avez %1$s tentative</string>
+    <string name="in_app_auth_failed">
+        Échec de l’authentification InApp, vous serez bloqué pour %1$s minute
+    </string>
+    <string name="in_app_auth_success">Authentification InApp réussie</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="confirm">confirmer</string>
+    <string name="invalid_crypto_address">Invalide %1$s adresse</string>
+    <string name="invalid_amount_to_send">Montant non valide à envoyer</string>
+    <string name="payment_id">Paiement ID</string>
+    <string name="recipient_address">Adresse de récipiend</string>
+    <string name="send_mode">Mode d'envoi</string>
+    <string name="internal">Interne</string>
+    <string name="confirm_transfer">Confirmer transfert</string>
+    <string name="fingerprint_failed_msg">Echec de l'initialisation de l'empreinte digitale ou a été fermé par l'utilisateur</string>
+    <string name="payment_id_or_destination_tag">ID de paiement / balise de destination</string>
+    <string name="free_internal_tx">0% frais sur tous les transferts internes</string>
+    <string name="invalid_email_address">Adresse e-mail invalide</string>
+    <string name="external">Externe</string>
+    <string name="default_loading_text">Restez calme en répondant à votre demande</string>
+    <string name="login_home">Connexion Accueil</string>
+    <string name="confirm_password">Confirmez mot de passe</string>
+    <string name="request">Demande</string>
+    <string name="verification_code_instruction">Cliquez sur \ 'Envoyer ou renvoyer \' pour obtenir le code dans votre boîte de réception.</string>
+    <string name="passwords_do_not_match">Les mots de passe ne correspondent pas</string>
+    <string name="full_name">Nom complet</string>
+</resources>
